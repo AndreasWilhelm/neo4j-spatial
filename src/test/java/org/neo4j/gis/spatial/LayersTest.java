@@ -119,31 +119,31 @@ public class LayersTest extends Neo4jTestCase
         assertEquals( 1, results.size() );
     }
 
-    @Test
-    public void testSnapToLine()
-    {
-        SpatialDatabaseService db = new SpatialDatabaseService( graphDb() );
-        EditableLayer layer = (EditableLayer) db.getOrCreateEditableLayer( "roads" );
-        Coordinate crossing_bygg_förstadsgatan = new Coordinate( 13.0171471,
-                55.6074148 );
-        Coordinate[] waypoints_förstadsgatan = {
-                new Coordinate( 13.0201511, 55.6066846 ),
-                crossing_bygg_förstadsgatan };
-        LineString östra_förstadsgatan_malmö = layer.getGeometryFactory().createLineString(
-                waypoints_förstadsgatan );
-        Coordinate[] waypoints_byggmästaregatan = {
-                crossing_bygg_förstadsgatan,
-                new Coordinate( 13.0182092, 55.6088238 ) };
-        LineString byggmästaregatan_malmö = layer.getGeometryFactory().createLineString(
-                waypoints_byggmästaregatan );
-        LineString[] test_way_segments = { byggmästaregatan_malmö,
-                östra_förstadsgatan_malmö };
-        MultiLineString test_way = layer.getGeometryFactory().createMultiLineString(
-                test_way_segments );
-        Coordinate slussgatan14 = new Coordinate( 13.0181127, 55.608236 );
-        //TODO now determine the nearest point on test_way to slussis
-
-    }
+//    @Test
+//    public void testSnapToLine()
+//    {
+//        SpatialDatabaseService db = new SpatialDatabaseService( graphDb() );
+//        EditableLayer layer = (EditableLayer) db.getOrCreateEditableLayer( "roads" );
+//        Coordinate crossing_bygg_förstadsgatan = new Coordinate( 13.0171471,
+//                55.6074148 );
+//        Coordinate[] waypoints_förstadsgatan = {
+//                new Coordinate( 13.0201511, 55.6066846 ),
+//                crossing_bygg_förstadsgatan };
+//        LineString östra_förstadsgatan_malmö = layer.getGeometryFactory().createLineString(
+//                waypoints_förstadsgatan );
+//        Coordinate[] waypoints_byggmästaregatan = {
+//                crossing_bygg_förstadsgatan,
+//                new Coordinate( 13.0182092, 55.6088238 ) };
+//        LineString byggmästaregatan_malmö = layer.getGeometryFactory().createLineString(
+//                waypoints_byggmästaregatan );
+//        LineString[] test_way_segments = { byggmästaregatan_malmö,
+//                östra_förstadsgatan_malmö };
+//        MultiLineString test_way = layer.getGeometryFactory().createMultiLineString(
+//                test_way_segments );
+//        Coordinate slussgatan14 = new Coordinate( 13.0181127, 55.608236 );
+//        //TODO now determine the nearest point on test_way to slussis
+//
+//    }
 
     @Test
     public void testEditableLayers()

@@ -167,23 +167,14 @@ public abstract class Neo4jTestCase extends TestCase {
     protected void deleteDatabase(boolean synchronous) {
         if (synchronous)
         {
-            try {
-                FileUtils.deleteRecursively(getNeoPath());
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            FileUtils.deleteFile(getNeoPath());
         }
         else
         {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        FileUtils.deleteRecursively(getNeoPath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    FileUtils.deleteFile(getNeoPath());
                 }
             }).start();
         }
