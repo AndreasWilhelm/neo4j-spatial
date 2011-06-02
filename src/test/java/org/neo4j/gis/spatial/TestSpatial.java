@@ -339,7 +339,7 @@ public class TestSpatial extends Neo4jTestCase {
         Search searchQuery = new SearchIntersect(layer.getGeometryFactory().toGeometry(bbox));
         for (SpatialIndexReader index : new SpatialIndexReader[] {fakeIndex, rtreeIndex}) {
             ArrayList<TestGeometry> foundData = new ArrayList<TestGeometry>();
-            index.executeSearch(searchQuery);
+            index.execute(searchQuery);
             List<SpatialDatabaseRecord> results = searchQuery.getResults();
             System.out.println("\tIndex[" + index.getClass() + "] found results: " + results.size());
             int ri = 0;

@@ -48,12 +48,12 @@ public class TestSimplePointLayer extends Neo4jTestCase {
 		assertNotNull(record);
 		// finds geometries that contain the given geometry
 		SearchContain searchQuery = new SearchContain(layer.getGeometryFactory().toGeometry(new Envelope(15.0, 16.0, 56.0, 57.0)));
-		layer.getIndex().executeSearch(searchQuery);
+		layer.getIndex().execute(searchQuery);
 		List<SpatialDatabaseRecord> results = searchQuery.getResults();
 		// should not be contained
 		assertEquals(0, results.size());
 		SearchWithin withinQuery = new SearchWithin(layer.getGeometryFactory().toGeometry(new Envelope(15.0, 16.0, 56.0, 57.0)));
-		layer.getIndex().executeSearch(withinQuery);
+		layer.getIndex().execute(withinQuery);
 		results = withinQuery.getResults();
 		assertEquals(1, results.size());
 	}
@@ -109,7 +109,7 @@ public class TestSimplePointLayer extends Neo4jTestCase {
 
 		Envelope bbox = layer.getIndex().getLayerBoundingBox();
 		SearchPointsWithinOrthodromicDistance distanceQuery = new SearchPointsWithinOrthodromicDistance(bbox.centre(), 10.0, false);
-		layer.getIndex().executeSearch(distanceQuery);
+		layer.getIndex().execute(distanceQuery);
 		List<SpatialDatabaseRecord> results = distanceQuery.getResults();
 
 		saveResultsAsImage(results, "temporary-results-layer-" + layer.getName(), 150, 150);

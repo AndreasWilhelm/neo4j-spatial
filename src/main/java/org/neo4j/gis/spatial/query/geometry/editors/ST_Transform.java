@@ -2,7 +2,7 @@ package org.neo4j.gis.spatial.query.geometry.editors;
 
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
-import org.neo4j.gis.spatial.AbstractSearch;
+import org.neo4j.gis.spatial.AbstractOperation;
 import org.neo4j.graphdb.Node;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
@@ -15,7 +15,12 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 
-public class ST_Transform extends AbstractSearch {
+/**
+ * 
+ * @author Andreas Wilhelm
+ *
+ */
+public class ST_Transform extends AbstractOperation {
 
 	private static final String EPSG = "EPSG:";
 	private CoordinateReferenceSystem targetCRS;

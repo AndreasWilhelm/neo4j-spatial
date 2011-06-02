@@ -149,7 +149,7 @@ public class SpatialPlugin extends ServerPlugin {
 		    layer = spatialService.getLayer(layerName);
 		}
 		SearchWithin withinQuery = new SearchWithin(layer.getGeometryFactory().toGeometry(new Envelope(minx, maxx, miny, maxy)));
-		layer.getIndex().executeSearch(withinQuery);
+		layer.getIndex().execute(withinQuery);
 		List<SpatialDatabaseRecord> results = withinQuery.getResults();
 		return toIterable(results);
 	}

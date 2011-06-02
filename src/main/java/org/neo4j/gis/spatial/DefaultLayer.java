@@ -117,7 +117,7 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
             return (Integer) layerNode.getProperty(PROP_TYPE);
         } else {
             GuessGeometryTypeSearch geomTypeSearch = new GuessGeometryTypeSearch();
-            index.executeSearch(geomTypeSearch);
+            index.execute(geomTypeSearch);
             if (geomTypeSearch.firstFoundType != null) {
                 return geomTypeSearch.firstFoundType;
             } else {

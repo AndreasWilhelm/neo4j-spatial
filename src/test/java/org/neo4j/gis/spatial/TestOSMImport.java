@@ -247,7 +247,7 @@ public class TestOSMImport extends Neo4jTestCase {
 
 	private void runSearch(OSMLayer layer, SearchWithin search, boolean willHaveResult) {
 		long start = System.currentTimeMillis();
-		layer.getIndex().executeSearch(search);
+		layer.getIndex().execute(search);
 		List<SpatialDatabaseRecord> results = search.getResults();
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Took " + time + "ms to find " + results.size() + " search results in layer " + layer.getName()

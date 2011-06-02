@@ -139,7 +139,7 @@ public class TestsForDocs extends Neo4jTestCase {
 
 			Envelope bbox = new Envelope(12.94, 12.96, 56.04, 56.06);
 			Search searchQuery = new SearchIntersectWindow(bbox);
-			spatialIndex.executeSearch(searchQuery);
+			spatialIndex.execute(searchQuery);
 			List<SpatialDatabaseRecord> results = searchQuery.getResults();
 			doGeometryTestsOnResults(bbox, results);
 		} finally {
@@ -207,7 +207,7 @@ public class TestsForDocs extends Neo4jTestCase {
 
 			Envelope bbox = new Envelope(12.94, 12.96, 56.04, 56.06);
 			Search searchQuery = new SearchIntersectWindow(bbox);
-			spatialIndex.executeSearch(searchQuery);
+			spatialIndex.execute(searchQuery);
 			List<SpatialDatabaseRecord> results = searchQuery.getResults();
 
 			spatialService.createResultsLayer("results", results);

@@ -79,11 +79,18 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
         return result;
     }
     
-    public void executeSearch(Search search) {
+    public void execute(Search search) {
         long start = System.currentTimeMillis();
-        spatialIndex.executeSearch(search);
+        spatialIndex.execute(search);
         long stop = System.currentTimeMillis();
         System.out.println("# exec time(executeSearch(" + search + ")): " + (stop - start) + "ms");
+    }
+    
+    public void execute(Update update) {
+        long start = System.currentTimeMillis();
+        spatialIndex.execute(update);
+        long stop = System.currentTimeMillis();
+        System.out.println("# exec time(executeSearch(" + update + ")): " + (stop - start) + "ms");
     }
 
     public Iterable<Node> getAllGeometryNodes() {

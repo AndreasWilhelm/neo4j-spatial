@@ -457,7 +457,7 @@ public class Neo4jSpatialDataStore extends AbstractDataStore implements Constant
 	
     protected FeatureReader<SimpleFeatureType, SimpleFeature> getFeatureReader(String typeName, Search search) throws IOException {
     	Layer layer = spatialDatabase.getLayer(typeName);		
-    	layer.getIndex().executeSearch(search);
+    	layer.getIndex().execute(search);
     	Iterator<SpatialDatabaseRecord> results = search.getResults().iterator();
     	return new Neo4jSpatialFeatureReader(layer, getSchema(typeName), results);
     }

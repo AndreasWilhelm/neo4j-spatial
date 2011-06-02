@@ -27,27 +27,27 @@ import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
 
-
 /**
  * @author Davide Savazzi
  */
 public class FakeIndex implements SpatialIndexReader, Constants {
 
 	// Constructor
-	
+
 	public FakeIndex(Layer layer) {
 		this.layer = layer;
 	}
-		
-	
+
 	// Public methods
-	
+
 	public int count() {
 		int count = 0;
-        // @TODO: Consider adding a count method to Layer or SpatialDataset to allow for
-        // optimization of this if this kind of code gets used elsewhere
-		for (@SuppressWarnings("unused") Node node: layer.getDataset().getAllGeometryNodes()) {
-		    count++;
+		// @TODO: Consider adding a count method to Layer or SpatialDataset to
+		// allow for
+		// optimization of this if this kind of code gets used elsewhere
+		for (@SuppressWarnings("unused")
+		Node node : layer.getDataset().getAllGeometryNodes()) {
+			count++;
 		}
 		return count;
 	}
@@ -55,44 +55,51 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 	public boolean isEmpty() {
 		return count() == 0;
 	}
-	
+
 	public Envelope getLayerBoundingBox() {
 		Envelope bbox = null;
-		for (Node node: layer.getDataset().getAllGeometryNodes()) {
+		for (Node node : layer.getDataset().getAllGeometryNodes()) {
 			if (bbox == null) {
 				bbox = layer.getGeometryEncoder().decodeEnvelope(node);
 			} else {
-				bbox.expandToInclude(layer.getGeometryEncoder().decodeEnvelope(node));
+				bbox.expandToInclude(layer.getGeometryEncoder().decodeEnvelope(
+						node));
 			}
 		}
 		return bbox;
 	}
 
 	public SpatialDatabaseRecord get(Long geomNodeId) {
-		return new SpatialDatabaseRecord(layer, layer.getSpatialDatabase().getDatabase().getNodeById(geomNodeId));
+		return new SpatialDatabaseRecord(layer, layer.getSpatialDatabase()
+				.getDatabase().getNodeById(geomNodeId));
 	}
-	
-    public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
-    	List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
 
-    	for (Long geomNodeId : geomNodeIds) {
-    		results.add(get(geomNodeId));
-    	}
-    	
-    	return results;
-    }	
-	
-	public void executeSearch(Search search) {
-        search.setLayer(layer);
-		for (Node node: layer.getDataset().getAllGeometryNodes()) {
+	public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
+		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
+
+		for (Long geomNodeId : geomNodeIds) {
+			results.add(get(geomNodeId));
+		}
+
+		return results;
+	}
+
+	public void execute(Search search) {
+		search.setLayer(layer);
+		for (Node node : layer.getDataset().getAllGeometryNodes()) {
 			search.onIndexReference(node);
 		}
 	}
 	
+	public void execute(Update update) throws UnsupportedOperationException {
+		// TODO Implement update!
+	}
+
 	// Attributes
 	private Layer layer;
 
 	public Iterable<Node> getAllGeometryNodes() {
-	    return layer.getIndex().getAllGeometryNodes();
-    }
+		return layer.getIndex().getAllGeometryNodes();
+	}
+
 }

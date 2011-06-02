@@ -26,7 +26,7 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
- * @author Davide Savazzi
+ * @author Davide Savazzi, Andreas Wilhelm
  */
 public interface SpatialIndexReader {
 
@@ -40,7 +40,9 @@ public interface SpatialIndexReader {
 	
 	List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds);
 	
-	void executeSearch(Search search);
+	void execute(Search search);
+	
+	void execute(Update update);
 
     Iterable<Node> getAllGeometryNodes();
 

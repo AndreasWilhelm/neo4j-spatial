@@ -41,10 +41,10 @@ import com.vividsolutions.jts.geom.Envelope;
  * The RTreeIndex is the first and still standard index for Neo4j Spatial. It
  * implements both SpatialIndexReader and SpatialIndexWriter for read and write
  * support. In addition it implements SpatialTreeIndex which allows it to be
- * wrapped with modifying search functions to thatcustom classes can be used to
- * perform filterintg searches on the tree.
+ * wrapped with modifying search functions to that custom classes can be used to
+ * perform filtering searches on the tree.
  * 
- * @author Davide Savazzi
+ * @author Davide Savazzi, Andreas Wilhelm
  */
 public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constants {
 
@@ -218,11 +218,18 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 		return results;
 	}
 
-	public void executeSearch(Search search) {
+	public void execute(Search search) {
 		if (isEmpty()) return;
 		
 		search.setLayer(layer);
 		visit(search, getIndexRoot());
+	}
+	
+	public void execute(Update update){
+		if (isEmpty()) return;
+		
+		update.setLayer(layer);
+		visitInTx(update, getIndexRoot().getId());
 	}
 	
 	public void warmUp() {
@@ -294,7 +301,14 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 			Transaction tx = database.beginTx();
 			try {
 				for (Relationship rel : indexNode.getRelationships(SpatialRelationshipTypes.RTREE_REFERENCE, Direction.OUTGOING)) {
-					visitor.onIndexReference(rel.getEndNode());
+					//visitor.onIndexReference(rel.getEndNode());
+					// TODO: Find a better solution.
+					if(visitor instanceof Update) {
+						Update update = (Update) visitor;
+						update.update(rel.getEndNode());
+					} else {
+						visitor.onIndexReference(rel.getEndNode());
+					}
 				}
 			
 				tx.success();

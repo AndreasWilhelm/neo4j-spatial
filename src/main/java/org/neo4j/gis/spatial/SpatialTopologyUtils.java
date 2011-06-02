@@ -115,7 +115,7 @@ public class SpatialTopologyUtils {
 			Layer layer, Geometry filter) {
 		ArrayList<PointResult> results = new ArrayList<PointResult>();
 		Search searchQuery = new SearchIntersect(filter);
-		layer.getIndex().executeSearch(searchQuery);
+		layer.getIndex().execute(searchQuery);
 		for (SpatialDatabaseRecord record : searchQuery.getResults()) {
 			Geometry geom = record.getGeometry();
 			if (geom instanceof LineString) {

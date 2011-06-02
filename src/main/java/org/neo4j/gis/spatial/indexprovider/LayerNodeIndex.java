@@ -110,7 +110,7 @@ public class LayerNodeIndex implements Index<Node>
             SearchWithin withinQuery = new SearchWithin(
                     layer.getGeometryFactory().toGeometry(
                             new Envelope( bounds[0], bounds[1], bounds[2], bounds[3] ) ) );
-            layer.getIndex().executeSearch( withinQuery );
+            layer.getIndex().execute( withinQuery );
             List<SpatialDatabaseRecord> res = withinQuery.getResults();
             IndexHits<Node> results = new SpatialRecordHits( res );
             return results;
@@ -122,7 +122,7 @@ public class LayerNodeIndex implements Index<Node>
 			Double distance = (Double) p.get( DISTANCE_IN_KM_PARAMETER );
 			Search withinDistanceQuery = 
 				new SearchPointsWithinOrthodromicDistance( new Coordinate( point[1], point[0] ), distance, true );
-			layer.getIndex().executeSearch( withinDistanceQuery );
+			layer.getIndex().execute( withinDistanceQuery );
 			List<SpatialDatabaseRecord> res = withinDistanceQuery.getResults();
 			IndexHits<Node> results = new SpatialRecordHits( res );
 			return results;

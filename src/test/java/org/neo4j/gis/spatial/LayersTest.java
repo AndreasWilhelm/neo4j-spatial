@@ -68,14 +68,14 @@ public class LayersTest extends Neo4jTestCase
         SearchContain searchQuery = new SearchContain(
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
-        layer.getIndex().executeSearch( searchQuery );
+        layer.getIndex().execute( searchQuery );
         List<SpatialDatabaseRecord> results = searchQuery.getResults();
         // should not be contained
         assertEquals( 0, results.size() );
         SearchWithin withinQuery = new SearchWithin(
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
-        layer.getIndex().executeSearch( withinQuery );
+        layer.getIndex().execute( withinQuery );
         results = withinQuery.getResults();
         assertEquals( 1, results.size() );
     }
@@ -107,14 +107,14 @@ public class LayersTest extends Neo4jTestCase
         SearchContain searchQuery = new SearchContain(
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
-        layer.getIndex().executeSearch( searchQuery );
+        layer.getIndex().execute( searchQuery );
         List<SpatialDatabaseRecord> results = searchQuery.getResults();
         // should not be contained
         assertEquals( 0, results.size() );
         SearchWithin withinQuery = new SearchWithin(
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
-        layer.getIndex().executeSearch( withinQuery );
+        layer.getIndex().execute( withinQuery );
         results = withinQuery.getResults();
         assertEquals( 1, results.size() );
     }
@@ -221,7 +221,7 @@ public class LayersTest extends Neo4jTestCase
     private void doSearch( Layer layer, Search searchQuery )
     {
         System.out.println( "Testing search intersection:" );
-        layer.getIndex().executeSearch( searchQuery );
+        layer.getIndex().execute( searchQuery );
         List<SpatialDatabaseRecord> results = searchQuery.getResults();
         System.out.println( "\tTesting layer '" + layer.getName() + "' (class "
                             + layer.getClass() + "), found results: "

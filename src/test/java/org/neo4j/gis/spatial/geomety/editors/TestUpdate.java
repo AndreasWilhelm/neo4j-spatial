@@ -3,18 +3,21 @@ package org.neo4j.gis.spatial.geomety.editors;
 import java.io.File;
 import java.util.List;
 
-import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.Neo4jTestCase;
-import org.neo4j.gis.spatial.Search;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.SpatialIndexReader;
+import org.neo4j.gis.spatial.Update;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
-import org.neo4j.graphdb.Node;
 
 
+/**
+ * 
+ * @author Andreas Wilhelm
+ *
+ */
 public class TestUpdate extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService;
@@ -39,43 +42,18 @@ public class TestUpdate extends Neo4jTestCase {
 		Layer layer = spatialService.getLayer(Default.LAYER_NAME);
 		SpatialIndexReader spatialIndex = layer.getIndex();
 		
-		List<SpatialDatabaseRecord> results = null;
-		Search searchQuery = new ST_Transform(Default.WORLD_MERCATOR_SRID);
-		spatialIndex.executeSearch(searchQuery);
-		results = searchQuery.getResults();
-		update(results);
-		System.out.println("Search results: " + results.size());
+		Update update = new ST_Transform(Default.WORLD_MERCATOR_SRID);
+		spatialIndex.execute(update);
+		
+		List<SpatialDatabaseRecord> results = update.getResults();
+		
 		printTestResults(results);
+
 		assertEquals(2, results.size());
 		deleteDatabase(true);
 		
 	}
 	
-	
-
-	
-	private void update(List<SpatialDatabaseRecord> results) {
-		
-		
-		
-		//TODO: It would be nice when editlayer would offer update method for List<SpatialDatabaseRecord>
-		EditableLayer editlayer = (EditableLayer) spatialService.getLayer(Default.LAYER_NAME);
-		
-		
-		SpatialIndexReader spatialIndex = editlayer.getIndex();
-		SpatialDatabaseRecord oldnode = spatialIndex.get(55L);
-		System.out.println("OldGeomValue: " +oldnode.getGeometry());
-		
-		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			//TODO:  Failed to decode OSM geometry: More than one relationship[GEOM, INCOMING] found for NodeImpl#55
-			editlayer.update(spatialDatabaseRecord.getId(), spatialDatabaseRecord.getGeometry());
-		}
-		
-		System.out.println("Layer updated!");
-		SpatialDatabaseRecord node = spatialIndex.get(55L);
-		System.out.println("Updated: " +node.getGeometry());
-	}
-
 	public void printTestResults(List<SpatialDatabaseRecord> results) {
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
 			System.out.println("ID: " + spatialDatabaseRecord.getId() + ";"

@@ -53,15 +53,12 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 			tx.finish();
 		}
 	}
-
+	
 	public void update(long geomNodeId, Geometry geometry) {
-		Transaction tx = getDatabase().beginTx();
+		Transaction tx = this.getDatabase().beginTx();
 		try {
-			index.remove(geomNodeId, false);
-
-			Node geomNode = getDatabase().getNodeById(geomNodeId);
-			getGeometryEncoder().encodeGeometry(geometry, geomNode);
-			index.add(geomNode);
+			Node geomNode = this.getDatabase().getNodeById(geomNodeId);
+			this.getGeometryEncoder().encodeGeometry(geometry, geomNode);
 			tx.success();
 		} finally {
 			tx.finish();

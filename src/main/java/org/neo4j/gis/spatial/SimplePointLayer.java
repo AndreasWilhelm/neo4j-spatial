@@ -50,7 +50,7 @@ public class SimplePointLayer extends EditableLayerImpl {
 	}
 
 	private List<SpatialDatabaseRecord> findClosestPoints(SearchPointsWithinOrthodromicDistance distanceQuery) {
-		getIndex().executeSearch(distanceQuery);
+		getIndex().execute(distanceQuery);
 		List<SpatialDatabaseRecord> results = distanceQuery.getResults();
 		Collections.sort(results, new Comparator<SpatialDatabaseRecord>(){
 

@@ -44,7 +44,7 @@ public class TestGeometyEditors extends Neo4jTestCase {
 		
 		List<SpatialDatabaseRecord> results = null;
 		Search searchQuery = new ST_Transform(Default.WORLD_MERCATOR_SRID);
-		spatialIndex.executeSearch(searchQuery);
+		spatialIndex.execute(searchQuery);
 		results = searchQuery.getResults();
 		System.out.println("Search results: " + results.size());
 		printTestResults(results);

@@ -87,7 +87,7 @@ public class ServerPluginTest extends Neo4jTestCase {
 		assertNotNull(spatialService.getLayer(LAYER));
 		Layer layer2 = spatialService.getLayer(LAYER);
 		SearchWithin withinQuery = new SearchWithin(layer2.getGeometryFactory().toGeometry(new Envelope(15.0, 16.0, 60.0, 61.0)));
-		layer2.getIndex().executeSearch(withinQuery);
+		layer2.getIndex().execute(withinQuery);
 		List<SpatialDatabaseRecord> results = withinQuery.getResults();
 		assertEquals(0, results.size());
 
@@ -100,7 +100,7 @@ public class ServerPluginTest extends Neo4jTestCase {
 		tx2.finish();
 		plugin.addNodeToLayer(graphDb(), point, LAYER);
 		plugin.addGeometryWKTToLayer(graphDb(), "POINT(15.2 60.1)", LAYER);
-		layer2.getIndex().executeSearch(withinQuery);
+		layer2.getIndex().execute(withinQuery);
 		results = withinQuery.getResults();
 		assertEquals(2, results.size());
 	}
