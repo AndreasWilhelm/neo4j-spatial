@@ -53,7 +53,7 @@ public class LineStringNetworkGenerator {
 	
 	// Public methods
 	
-	public void add(SpatialDatabaseRecord record) {
+	public void add(SpatialDatabaseRecordImpl record) {
 		Geometry geometry = record.getGeometry();
 		if (geometry instanceof MultiLineString) {
 			add((MultiLineString) geometry, record);
@@ -76,13 +76,13 @@ public class LineStringNetworkGenerator {
 
 	// Private methods
 
-	protected void add(MultiLineString line, SpatialDatabaseRecord record) {
+	protected void add(MultiLineString line, SpatialDatabaseRecordImpl record) {
 		for (int i = 0; i < line.getNumGeometries(); i++) {
 			add((LineString) line.getGeometryN(i), record);
 		}
 	}
 	
-	protected void add(LineString line, SpatialDatabaseRecord edge) {
+	protected void add(LineString line, SpatialDatabaseRecordImpl edge) {
 		if (edge == null) {
 			edge = edgesLayer.add(line);
 		}
@@ -99,12 +99,12 @@ public class LineStringNetworkGenerator {
 		
 		Search search = new SearchIntersect(edgePoint);
 		pointsLayer.getIndex().execute(search);
-		List<SpatialDatabaseRecord> results = search.getResults();
+		List<SpatialDatabaseRecordImpl> results = search.getResults();
 		if (results.size() == 0) {
-			SpatialDatabaseRecord point = pointsLayer.add(edgePoint);
+			SpatialDatabaseRecordImpl point = pointsLayer.add(edgePoint);
 			edge.createRelationshipTo(point.getGeomNode(), SpatialRelationshipTypes.NETWORK);
 		} else {
-			for (SpatialDatabaseRecord point : results) {
+			for (SpatialDatabaseRecordImpl point : results) {
 				edge.createRelationshipTo(point.getGeomNode(), SpatialRelationshipTypes.NETWORK);
 			}
 		}

@@ -140,7 +140,7 @@ public class TestsForDocs extends Neo4jTestCase {
 			Envelope bbox = new Envelope(12.94, 12.96, 56.04, 56.06);
 			Search searchQuery = new SearchIntersectWindow(bbox);
 			spatialIndex.execute(searchQuery);
-			List<SpatialDatabaseRecord> results = searchQuery.getResults();
+			List<SpatialDatabaseRecordImpl> results = searchQuery.getResults();
 			doGeometryTestsOnResults(bbox, results);
 		} finally {
 			database.shutdown();
@@ -208,7 +208,7 @@ public class TestsForDocs extends Neo4jTestCase {
 			Envelope bbox = new Envelope(12.94, 12.96, 56.04, 56.06);
 			Search searchQuery = new SearchIntersectWindow(bbox);
 			spatialIndex.execute(searchQuery);
-			List<SpatialDatabaseRecord> results = searchQuery.getResults();
+			List<SpatialDatabaseRecordImpl> results = searchQuery.getResults();
 
 			spatialService.createResultsLayer("results", results);
 			ShapefileExporter shpExporter = new ShapefileExporter(database);
@@ -221,7 +221,7 @@ public class TestsForDocs extends Neo4jTestCase {
 		}
 	}
 
-	private void doGeometryTestsOnResults(Envelope bbox, List<SpatialDatabaseRecord> results) {
+	private void doGeometryTestsOnResults(Envelope bbox, List<SpatialDatabaseRecordImpl> results) {
 		System.out.println("Found " + results.size() + " geometries in " + bbox);
 		Geometry geometry = results.get(0).getGeometry();
 		System.out.println("First geometry is " + geometry);

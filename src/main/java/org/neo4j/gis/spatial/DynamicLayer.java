@@ -36,6 +36,10 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.gis.spatial.geotools.data.Neo4jFeatureBuilder;
+import org.neo4j.gis.spatial.operation.Delete;
+import org.neo4j.gis.spatial.operation.Insert;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Update;
 import org.opengis.filter.Filter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.feature.simple.SimpleFeature;
@@ -96,14 +100,11 @@ public class DynamicLayer extends EditableLayerImpl {
 			index.execute(search);
 		}
 		
-		public void execute(Update update) {
-			index.execute(update);
-		}
-		public SpatialDatabaseRecord get(Long geomNodeId) {
+		public SpatialDatabaseRecordImpl get(Long geomNodeId) {
 			return index.get(geomNodeId);
 		}
 
-		public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
+		public List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds) {
 			return index.get(geomNodeIds);
 		}
 
@@ -118,6 +119,30 @@ public class DynamicLayer extends EditableLayerImpl {
 		public Iterable<Node> getAllGeometryNodes() {
 	        return index.getAllGeometryNodes();
         }
+
+		@Override
+		public List<SpatialDatabaseRecord> execute(Select select) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public int execute(Update update) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int execute(Insert insert) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int execute(Delete delete) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 
 	}
 
@@ -167,7 +192,7 @@ public class DynamicLayer extends EditableLayerImpl {
                 this.delegate = delegate;
             }
 
-            public List<SpatialDatabaseRecord> getResults() {
+            public List<SpatialDatabaseRecordImpl> getResults() {
                 return delegate.getResults();
             }
 
@@ -191,8 +216,8 @@ public class DynamicLayer extends EditableLayerImpl {
         }
 
         private boolean queryLeafNode(Node indexNode) {
-            SpatialDatabaseRecord dbRecord = 
-                new SpatialDatabaseRecord(DynamicLayer.this, indexNode); 
+            SpatialDatabaseRecordImpl dbRecord = 
+                new SpatialDatabaseRecordImpl(DynamicLayer.this, indexNode); 
             SimpleFeature feature = builder.buildFeature(dbRecord);
             return filter.evaluate(feature);
         }
@@ -324,7 +349,7 @@ public class DynamicLayer extends EditableLayerImpl {
 		public void executeSearch(final Search search) {
 			index.execute(new Search() {
 
-				public List<SpatialDatabaseRecord> getResults() {
+				public List<SpatialDatabaseRecordImpl> getResults() {
 					return search.getResults();
 				}
 
@@ -405,7 +430,7 @@ public class DynamicLayer extends EditableLayerImpl {
 			return (String) configNode.getProperty(PROP_QUERY);
 		}
 
-		public SpatialDatabaseRecord add(Node geomNode) {
+		public SpatialDatabaseRecordImpl add(Node geomNode) {
 			throw new SpatialDatabaseException("Cannot add nodes to dynamic layers, add the node to the base layer instead");
 		}
 
@@ -490,6 +515,31 @@ public class DynamicLayer extends EditableLayerImpl {
 		public String toString() {
 			return getName();
 		}
+
+		@Override
+		public List<SpatialDatabaseRecord> execute(Select select) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public int execute(Insert insert) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int execute(Delete delete) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int execute(Update update) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
 	}
 
 	private synchronized Map<String, Layer> getLayerMap() {

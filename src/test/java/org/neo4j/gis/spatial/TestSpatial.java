@@ -340,10 +340,10 @@ public class TestSpatial extends Neo4jTestCase {
         for (SpatialIndexReader index : new SpatialIndexReader[] {fakeIndex, rtreeIndex}) {
             ArrayList<TestGeometry> foundData = new ArrayList<TestGeometry>();
             index.execute(searchQuery);
-            List<SpatialDatabaseRecord> results = searchQuery.getResults();
+            List<SpatialDatabaseRecordImpl> results = searchQuery.getResults();
             System.out.println("\tIndex[" + index.getClass() + "] found results: " + results.size());
             int ri = 0;
-            for (SpatialDatabaseRecord r : results) {
+            for (SpatialDatabaseRecordImpl r : results) {
                 if (ri++ < 10) {
                     StringBuffer props = new StringBuffer();
                     for (String prop : r.getPropertyNames()) {

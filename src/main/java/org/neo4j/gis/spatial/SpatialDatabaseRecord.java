@@ -19,31 +19,21 @@
  */
 package org.neo4j.gis.spatial;
 
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGML;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+public interface SpatialDatabaseRecord extends Constants,
+		Comparable<SpatialDatabaseRecordImpl> {
 
-/**
- * @author Davide Savazzi
- * @author Craig Taverner
- */
-public class SpatialDatabaseRecord implements Constants, Comparable<SpatialDatabaseRecord> {
+	public long getId();
 
-	public SpatialDatabaseRecord(Layer layer, Node geomNode) {
-		this(layer, geomNode, null);
-	}
+	public Node getGeomNode();
 	
-	// Public methods
 	
-	public long getId() {
-		return geomNode.getId();
-	}
-	
-	public Node getGeomNode() {
-		return geomNode;
-	}
+	public String asText();
 	
 	/**
 	 * This method returns a simple integer representation of the geometry. Some
@@ -56,25 +46,14 @@ public class SpatialDatabaseRecord implements Constants, Comparable<SpatialDatab
 	 * @deprecated This method is of questionable value, since it is better to
 	 *             query the geometry object directly, outside the result
 	 */
-	public int getType() {
-		//TODO: Get the type from the geometryEncoder
-		return SpatialDatabaseService.convertJtsClassToGeometryType(getGeometry().getClass());
-	}
-	
-	public Geometry getGeometry() {
-		if (geometry == null)
-			geometry = layer.getGeometryEncoder().decodeGeometry(geomNode);
-		return geometry;
-	}
-	
-	public CoordinateReferenceSystem getCoordinateReferenceSystem() {
-		return layer.getCoordinateReferenceSystem();
-	}
-	
-	public String getLayerName() {
-		return layer.getName();
-	}
-	
+	public int getType();
+
+	public Geometry getGeometry();
+
+	public CoordinateReferenceSystem getCoordinateReferenceSystem();
+
+	public String getLayerName();
+
 	/**
 	 * Not all geometry records have the same attribute set, so we should test
 	 * for each specific record if it contains that property.
@@ -82,98 +61,34 @@ public class SpatialDatabaseRecord implements Constants, Comparable<SpatialDatab
 	 * @param name
 	 * @return
 	 */
-	public boolean hasProperty(String name) {
-		return layer.getGeometryEncoder().hasAttribute(geomNode,name);
-	}
+	public boolean hasProperty(String name);
 
-	public String[] getPropertyNames() {
-		return layer.getExtraPropertyNames();
-	}
-	
-	public Object[] getPropertyValues() {
-		String[] names = getPropertyNames();
-		if (names == null) return null;
-		Object[] values = new Object[names.length];
-		for (int i = 0; i < names.length; i++) {
-			values[i] = getProperty(names[i]);
-		}
-		return values;
-	}
+	public String[] getPropertyNames();
 
-	public Object getProperty(String name) {
-		return layer.getGeometryEncoder().getAttribute(geomNode,name);
-	}
-	
-	public void setProperty(String name, Object value) {
-		checkIsNotReservedProperty(name);
-		geomNode.setProperty(name, value);
-	}
-	
-	public int hashcode() {
-		return ((Long) geomNode.getId()).hashCode();
-	}
-	
-	public boolean equals(Object anotherObject) {
-		if (!(anotherObject instanceof SpatialDatabaseRecord)) return false;
-		
-		SpatialDatabaseRecord anotherRecord = (SpatialDatabaseRecord) anotherObject;
-		return getId() == anotherRecord.getId();
-	}
-	
-	public String toString() {
-	    return "SpatialDatabaseRecord[" + getId() + "]: type='" + getType() + "', props[" + getPropString() + "]";
-	}
+	public Object[] getPropertyValues();
 
-	
-	// Protected Constructors
-	
-	protected SpatialDatabaseRecord(Layer layer, Node geomNode, Geometry geometry) {
-		this.layer = layer;
-		this.geomNode = geomNode;
-		this.geometry = geometry;
-	}
+	public Object getProperty(String name);
 
-	// Private methods
-	
-	private void checkIsNotReservedProperty(String name) {
-		for (String property : RESERVED_PROPS) {
-			if (property.equals(name)) {
-				throw new SpatialDatabaseException("Updating not allowed for Reserved Property: " + name);
-			}
-		}
-	}
-	
-	private String getPropString() {
-	    StringBuffer text = new StringBuffer();
-	    for (String key : geomNode.getPropertyKeys()) {
-	        if (text.length() > 0) text.append(", ");
-            text.append(key).append(": ").append(geomNode.getProperty(key).toString());
-	    }
-	    return text.toString();
-	}
+	@Deprecated
+	//Why deprected well we should not do abny changes to the node but this should be useable for dynamic proeprties which
+	//only use for search querys..
+	public void setProperty(String name, Object value);
+
+	public int hashcode();
+
+	public boolean equals(Object anotherObject);
+
+	public String toString();
 
 	@SuppressWarnings("rawtypes")
-	public Comparable getUserData() {
-		return userData;
-	}
+	public Comparable getUserData();
 
 	@SuppressWarnings("rawtypes")
-	public void setUserData(Comparable object) {
-		userData = object;
-	}
+	public void setUserData(Comparable object);
 
 	@SuppressWarnings("unchecked")
-	public int compareTo(SpatialDatabaseRecord other) {
-		getUserData().compareTo(other.getUserData());
-		return 0;
-	}
+	public int compareTo(SpatialDatabaseRecordImpl other);
 
-	// Attributes
-	
-	private Node geomNode;
-	private Geometry geometry;
-	private Layer layer;
-	@SuppressWarnings("rawtypes")
-	private Comparable userData;
+
 
 }

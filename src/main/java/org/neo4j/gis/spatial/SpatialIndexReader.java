@@ -22,6 +22,10 @@ package org.neo4j.gis.spatial;
 import java.util.List;
 import java.util.Set;
 
+import org.neo4j.gis.spatial.operation.Delete;
+import org.neo4j.gis.spatial.operation.Insert;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -36,14 +40,29 @@ public interface SpatialIndexReader {
 
 	int count();
 
-	SpatialDatabaseRecord get(Long geomNodeId);
+	SpatialDatabaseRecordImpl get(Long geomNodeId);
 	
-	List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds);
+	List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds);
 	
 	void execute(Search search);
 	
-	void execute(Update update);
+	
+	List<SpatialDatabaseRecord> execute(Select select);
+	
+	int execute(Update update);
+	
+	int execute(Insert insert);
+	
+	int execute(Delete delete);
+	
 
     Iterable<Node> getAllGeometryNodes();
+
+    
+
+
+
+
+
 
 }

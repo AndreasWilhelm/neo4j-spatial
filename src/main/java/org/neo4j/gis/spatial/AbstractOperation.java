@@ -22,8 +22,10 @@ package org.neo4j.gis.spatial;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -35,18 +37,20 @@ import com.vividsolutions.jts.geom.Geometry;
 public abstract class AbstractOperation implements Search, Update {
 	
 	private Layer layer = null;
-	private List<SpatialDatabaseRecord> results = null;
+	private List<SpatialDatabaseRecordImpl> results = null;
 	private boolean update = false;
+	private CoordinateReferenceSystem layerCRS = null;
 	
 	public AbstractOperation() {
-		this.results = new ArrayList<SpatialDatabaseRecord>();
+		this.results = new ArrayList<SpatialDatabaseRecordImpl>();
 	}
 	
 	public void setLayer(Layer layer) {
 		this.layer = layer;
+		this.layerCRS = layer.getCoordinateReferenceSystem();
 	}	
 	
-	public List<SpatialDatabaseRecord> getResults() {
+	public List<SpatialDatabaseRecordImpl> getResults() {
 		return this.results;
 	}
 	
@@ -63,20 +67,30 @@ public abstract class AbstractOperation implements Search, Update {
 		//TODO
 	}
 	
+	protected CoordinateReferenceSystem getCRS() {
+		return layerCRS;
+	}
 	
 	protected void add(Node geomNode) {
-		results.add(new SpatialDatabaseRecord(layer, geomNode));
+		results.add(new SpatialDatabaseRecordImpl(layer, geomNode));
 	}
 
 	protected void add(Node geomNode, Geometry geom) {
 		if(this.update) {
 			update(geomNode, geom);
 		}
-		results.add(new SpatialDatabaseRecord(layer, geomNode, geom));
+		results.add(new SpatialDatabaseRecordImpl(layer, geomNode, geom));
 	}
 	
+	protected void add(Node geomNode, String property) {
+		System.out.println(property);
+		SpatialDatabaseRecordImpl result = new SpatialDatabaseRecordImpl(layer, geomNode);
+		this.results.add(result);
+	}
+	
+	
 	protected void add(Node geomNode, Geometry geom, String property, Comparable<?> value) {
-		SpatialDatabaseRecord result = new SpatialDatabaseRecord(layer, geomNode, geom);
+		SpatialDatabaseRecordImpl result = new SpatialDatabaseRecordImpl(layer, geomNode, geom);
 		Transaction tx = geomNode.getGraphDatabase().beginTx();
 		try {
 			result.setProperty(property, value);

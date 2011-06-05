@@ -22,6 +22,10 @@ package org.neo4j.gis.spatial;
 import java.util.List;
 import java.util.Set;
 
+import org.neo4j.gis.spatial.operation.Delete;
+import org.neo4j.gis.spatial.operation.Insert;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -63,17 +67,17 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
         return count;
     }
     
-    public SpatialDatabaseRecord get(Long geomNodeId) {
+    public SpatialDatabaseRecordImpl get(Long geomNodeId) {
         long start = System.currentTimeMillis();
-        SpatialDatabaseRecord result = spatialIndex.get(geomNodeId);
+        SpatialDatabaseRecordImpl result = spatialIndex.get(geomNodeId);
         long stop = System.currentTimeMillis();
         System.out.println("# exec time(get(" + geomNodeId + ")): " + (stop - start) + "ms");    	
         return result;    	
     }
     
-    public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
+    public List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds) {
         long start = System.currentTimeMillis();
-        List<SpatialDatabaseRecord> result = spatialIndex.get(geomNodeIds);
+        List<SpatialDatabaseRecordImpl> result = spatialIndex.get(geomNodeIds);
         long stop = System.currentTimeMillis();
         System.out.println("# exec time(get(" + geomNodeIds + ")): " + (stop - start) + "ms");    	
         return result;
@@ -86,12 +90,7 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
         System.out.println("# exec time(executeSearch(" + search + ")): " + (stop - start) + "ms");
     }
     
-    public void execute(Update update) {
-        long start = System.currentTimeMillis();
-        spatialIndex.execute(update);
-        long stop = System.currentTimeMillis();
-        System.out.println("# exec time(executeSearch(" + update + ")): " + (stop - start) + "ms");
-    }
+
 
     public Iterable<Node> getAllGeometryNodes() {
 	    return spatialIndex.getAllGeometryNodes();
@@ -101,4 +100,28 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
 
     private SpatialIndexReader spatialIndex;
 
+	@Override
+	public List<SpatialDatabaseRecord> execute(Select select) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int execute(Insert insert) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int execute(Delete delete) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+    public int execute(Update update) {
+        long start = System.currentTimeMillis();
+        spatialIndex.execute(update);
+        long stop = System.currentTimeMillis();
+        System.out.println("# exec time(executeSearch(" + update + ")): " + (stop - start) + "ms");
+        return 0;
+    }
 }

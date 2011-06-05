@@ -366,9 +366,9 @@ public class SpatialDatabaseService implements Constants {
 	 * @param results
 	 * @return new Layer with copy of all geometries
 	 */
-	public Layer createResultsLayer(String layerName, List<SpatialDatabaseRecord> results) {
+	public Layer createResultsLayer(String layerName, List<SpatialDatabaseRecordImpl> results) {
 		EditableLayer layer = (EditableLayer) createWKBLayer(layerName);
-		for (SpatialDatabaseRecord record : results) {
+		for (SpatialDatabaseRecordImpl record : results) {
 			layer.add(record.getGeometry());
 		}
 		return layer;

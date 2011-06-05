@@ -35,20 +35,20 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 	/**
 	 * Add a geometry to this layer.
 	 */
-	public SpatialDatabaseRecord add(Geometry geometry) {
+	public SpatialDatabaseRecordImpl add(Geometry geometry) {
 		return add(geometry, null, null);
 	}
 
 	/**
 	 * Add a geometry to this layer, including properties.
 	 */
-	public SpatialDatabaseRecord add(Geometry geometry, String[] fieldsName, Object[] fields) {
+	public SpatialDatabaseRecordImpl add(Geometry geometry, String[] fieldsName, Object[] fields) {
 		Transaction tx = getDatabase().beginTx();
 		try {
 			Node geomNode = addGeomNode(geometry, fieldsName, fields);
 			index.add(geomNode);
 			tx.success();
-			return new SpatialDatabaseRecord(this, geomNode, geometry);
+			return new SpatialDatabaseRecordImpl(this, geomNode, geometry);
 		} finally {
 			tx.finish();
 		}

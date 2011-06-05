@@ -1,6 +1,8 @@
 package org.neo4j.gis.spatial.geomety.editors;
 
-public class Default {
+public class Dataset {
+	
+	//Hier enum mit zwei ENUM WETEN SMALL, MIDDLE AND LARGE DATASET
 	
 	public final static String OSM_DIR = ".";
 	public final static String LAYER_NAME = "two-street.osm";

@@ -335,15 +335,19 @@ public class OSMGeometryEncoder extends AbstractGeometryEncoder {
 	@Override
 	/**
 	 * For OSM data we can build basic geometry shapes as sub-graphs.
-	 *  This code should produce the same kinds of structures that the utilities in the OSMDataset create.
-	 *   However those structures are created from original OSM data, while here we attempt to create equivalent 
-	 *   graphs from JTS Geometries. 
-	 *   Note that this code is unable to connect the resulting sub-graph into the OSM data model,
-	 *    since the only node it has is the geometry node. 
-	 *    Those connections to the rest of the OSM model need to be done in OSMDataset.
+	 * This code should produce the same kinds of structures that the
+	 * utilities in the OSMDataset create.
+	 * However those structures are created from original OSM data, 
+	 * while here we attempt to create equivalent 
+	 * graphs from JTS Geometries. 
+	 * Note that this code is unable to connect the resulting sub-graph 
+	 * into the OSM data model,
+	 * since the only node it has is the geometry node. 
+	 * Those connections to the rest of the OSM model need to be 
+	 * done in OSMDataset.
 	 */
 	protected void encodeGeometryShape(Geometry geometry, PropertyContainer container) {
-
+/*
 		Node geomNode = testIsNode(container);
 		vertices = 0;
 		int gtype = SpatialDatabaseService.convertJtsClassToGeometryType(geometry.getClass());
@@ -371,7 +375,7 @@ public class OSMGeometryEncoder extends AbstractGeometryEncoder {
 			throw new SpatialDatabaseException("Unsupported geometry: " + geometry.getClass());
 		}
 		geomNode.setProperty("vertices", vertices);
-	
+	*/
 	}
 
 	private Node makeOSMNode(Geometry geometry, Node geomNode) {

@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Envelope;
 public class SimplePointLayer extends EditableLayerImpl {
 	public static final int LIMIT_RESULTS = 100;
 
-	public List<SpatialDatabaseRecord> findClosestPointsTo(Coordinate point) {
+	public List<SpatialDatabaseRecordImpl> findClosestPointsTo(Coordinate point) {
 		int count = getIndex().count();
 		double scale = (double) LIMIT_RESULTS / (double) count;
 		Envelope bbox = getIndex().getLayerBoundingBox();
@@ -44,28 +44,28 @@ public class SimplePointLayer extends EditableLayerImpl {
 		return findClosestPoints(distanceQuery);
 	}
 
-	public List<SpatialDatabaseRecord> findClosestPointsTo(Coordinate point, double distanceInKm) {
+	public List<SpatialDatabaseRecordImpl> findClosestPointsTo(Coordinate point, double distanceInKm) {
 		SearchPointsWithinOrthodromicDistance distanceQuery = new SearchPointsWithinOrthodromicDistance(point, distanceInKm, true);
 		return findClosestPoints(distanceQuery);
 	}
 
-	private List<SpatialDatabaseRecord> findClosestPoints(SearchPointsWithinOrthodromicDistance distanceQuery) {
+	private List<SpatialDatabaseRecordImpl> findClosestPoints(SearchPointsWithinOrthodromicDistance distanceQuery) {
 		getIndex().execute(distanceQuery);
-		List<SpatialDatabaseRecord> results = distanceQuery.getResults();
-		Collections.sort(results, new Comparator<SpatialDatabaseRecord>(){
+		List<SpatialDatabaseRecordImpl> results = distanceQuery.getResults();
+		Collections.sort(results, new Comparator<SpatialDatabaseRecordImpl>(){
 
-			public int compare(SpatialDatabaseRecord arg0, SpatialDatabaseRecord arg1) {
+			public int compare(SpatialDatabaseRecordImpl arg0, SpatialDatabaseRecordImpl arg1) {
 				return ((Double) arg0.getUserData()).compareTo((Double) arg1.getUserData());
 			}
 		});
 		return results;
 	}
 
-	public SpatialDatabaseRecord add(Coordinate coordinate) {
+	public SpatialDatabaseRecordImpl add(Coordinate coordinate) {
 		return add(getGeometryFactory().createPoint(coordinate));
 	}
 
-	public SpatialDatabaseRecord add(double x, double y) {
+	public SpatialDatabaseRecordImpl add(double x, double y) {
 		return add(getGeometryFactory().createPoint(new Coordinate(x, y)));
 	}
 

@@ -31,7 +31,7 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.feature.type.BasicFeatureTypes;
 import org.geotools.resources.Classes;
 import org.neo4j.gis.spatial.Layer;
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -61,7 +61,7 @@ public class Neo4jFeatureBuilder {
         this(getTypeFromLayer(layer), Arrays.asList(layer.getExtraPropertyNames()));
     } 
 
-    public SimpleFeature buildFeature(SpatialDatabaseRecord rec) {
+    public SimpleFeature buildFeature(SpatialDatabaseRecordImpl rec) {
         builder.reset();
         builder.set(FEATURE_PROP_GEOM, rec.getGeometry());
         if (extraPropertyNames != null) {

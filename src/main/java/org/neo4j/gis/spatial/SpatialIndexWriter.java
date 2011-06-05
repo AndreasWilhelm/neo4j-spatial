@@ -23,6 +23,7 @@ import org.neo4j.graphdb.Node;
 
 
 /**
+ * @deprecated
  * @author Davide Savazzi
  */
 public interface SpatialIndexWriter extends SpatialIndexReader {

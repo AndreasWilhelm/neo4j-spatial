@@ -17,41 +17,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.indexprovider;
+package org.neo4j.gis.spatial.operation;
 
 import java.util.List;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 
-import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
-import org.neo4j.graphdb.Node;
-import org.neo4j.index.impl.lucene.AbstractIndexHits;
+/**
+ * 
+ * @author Andreas Wilhelm
+ *
+ */
+public abstract class AbstractReadOperation extends AbstractDeleteOperation implements Select {
 
-public class SpatialRecordHits extends AbstractIndexHits<Node>
-{
-    private final int size;
-    private final List<SpatialDatabaseRecordImpl> hits;
-    private int index;
-    
-    public SpatialRecordHits( List<SpatialDatabaseRecordImpl> hits )
-    {
-        this.size = hits.size();
-        this.hits = hits;
-    }
+	private List<SpatialDatabaseRecord> results;
+	private String propertyKey;
+	/**
+	 * 
+	 */
+	public List<SpatialDatabaseRecord> getResults() {
+		return results;
+	}
+	
 
-    @Override
-    protected Node fetchNextOrNull()
-    {
-        int i = index++;
-        return i < size() ? hits.get( i ).getGeomNode() : null;
-    }
-    
-    public int size()
-    {
-        return this.size;
-    }
-
-    public float currentScore()
-    {
-        return 0;
-    }
 }
-

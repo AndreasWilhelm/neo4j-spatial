@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.neo4j.gis.spatial.operation.Delete;
+import org.neo4j.gis.spatial.operation.Insert;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -69,13 +73,13 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 		return bbox;
 	}
 
-	public SpatialDatabaseRecord get(Long geomNodeId) {
-		return new SpatialDatabaseRecord(layer, layer.getSpatialDatabase()
+	public SpatialDatabaseRecordImpl get(Long geomNodeId) {
+		return new SpatialDatabaseRecordImpl(layer, layer.getSpatialDatabase()
 				.getDatabase().getNodeById(geomNodeId));
 	}
 
-	public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
-		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
+	public List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds) {
+		List<SpatialDatabaseRecordImpl> results = new ArrayList<SpatialDatabaseRecordImpl>();
 
 		for (Long geomNodeId : geomNodeIds) {
 			results.add(get(geomNodeId));
@@ -90,16 +94,37 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 			search.onIndexReference(node);
 		}
 	}
-	
-	public void execute(Update update) throws UnsupportedOperationException {
-		// TODO Implement update!
-	}
+
 
 	// Attributes
 	private Layer layer;
 
 	public Iterable<Node> getAllGeometryNodes() {
 		return layer.getIndex().getAllGeometryNodes();
+	}
+
+	@Override
+	public List<SpatialDatabaseRecord> execute(Select select) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int execute(Insert insert) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int execute(Delete delete) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int execute(Update update) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -29,6 +29,6 @@ public interface Search extends SpatialIndexVisitor {
 
 	void setLayer(Layer layer);
 	
-	List<SpatialDatabaseRecord> getResults();
+	List<SpatialDatabaseRecordImpl> getResults();
 	
 }

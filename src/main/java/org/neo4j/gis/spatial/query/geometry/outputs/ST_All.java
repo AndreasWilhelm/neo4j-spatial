@@ -17,22 +17,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial;
+package org.neo4j.gis.spatial.query.geometry.outputs;
 
-import java.util.List;
-
+import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
+import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.graphdb.Node;
+
+import com.vividsolutions.jts.geom.Envelope;
 
 
 /**
+ * Get Geometry
  * @author Andreas Wilhelm
+ *
  */
-public interface Update extends SpatialIndexVisitor {
+public class ST_All extends AbstractReadOperation {
 
-	public abstract void setLayer(Layer layer);
-	
-	public abstract void update(Node node);
-	
-	public abstract List<SpatialDatabaseRecord> getResults();
-	
+	public boolean needsToVisit(Envelope indexNodeEnvelope) {
+		return true;
+	}
+
+	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
+			Layer layer) {
+		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
+		return databaseRecord;
+	}
+
+
 }

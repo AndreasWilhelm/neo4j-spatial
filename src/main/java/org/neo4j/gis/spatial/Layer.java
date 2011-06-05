@@ -19,6 +19,12 @@
  */
 package org.neo4j.gis.spatial;
 
+import java.util.List;
+
+import org.neo4j.gis.spatial.operation.Delete;
+import org.neo4j.gis.spatial.operation.Insert;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -34,6 +40,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * 
  * @author Davide Savazzi
  * @author Craig Taverner
+ * @author Andreas Wilhelm
  */
 public interface Layer {
 
@@ -63,7 +70,7 @@ public interface Layer {
      * @param geomNode
      * @return SpatialDatabaseRecord representation of the geometry added to the database
      */
-    SpatialDatabaseRecord add(Node geomNode);
+    SpatialDatabaseRecordImpl add(Node geomNode);
 
     GeometryFactory getGeometryFactory();
 
@@ -150,5 +157,13 @@ public interface Layer {
 	 * @return Style, String, File or null
 	 */
 	Object getStyle();
+	
+	
+	
+	List<SpatialDatabaseRecord> execute(Select select);
+	int execute(Insert insert);
+	int execute(Delete delete);
+	int execute(Update update);
+	
 
 }

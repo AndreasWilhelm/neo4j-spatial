@@ -22,11 +22,16 @@ package org.neo4j.gis.spatial;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.geotools.factory.FactoryRegistryException;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.neo4j.gis.spatial.encoders.Configurable;
+import org.neo4j.gis.spatial.operation.Delete;
+import org.neo4j.gis.spatial.operation.Insert;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -67,11 +72,11 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
     /**
      * Add the geometry encoded in the given Node. This causes the geometry to appear in the index.
      */
-    public SpatialDatabaseRecord add(Node geomNode) {
+    public SpatialDatabaseRecordImpl add(Node geomNode) {
         Geometry geometry = getGeometryEncoder().decodeGeometry(geomNode);      
         
         index.add(geomNode);
-        return new SpatialDatabaseRecord(this, geomNode, geometry);
+        return new SpatialDatabaseRecordImpl(this, geomNode, geometry);
     }
 
     public GeometryFactory getGeometryFactory() {
@@ -399,6 +404,26 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
 	 */
 	public Object getStyle() {
 		return null;
+	}
+
+	
+	public List<SpatialDatabaseRecord> execute(Select select) {
+		return getIndex().execute(select);
+	}
+
+
+	public int execute(Insert insert) {
+		return getIndex().execute(insert);
+	}
+
+
+	public int execute(Delete delete) {
+		return getIndex().execute(delete);
+	}
+
+	
+	public int execute(Update update) {
+		return getIndex().execute(update);
 	}
 
 }

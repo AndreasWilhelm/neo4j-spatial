@@ -17,41 +17,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.indexprovider;
+package org.neo4j.gis.spatial.operation;
 
-import java.util.List;
-
-import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
+import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.graphdb.Node;
-import org.neo4j.index.impl.lucene.AbstractIndexHits;
 
-public class SpatialRecordHits extends AbstractIndexHits<Node>
-{
-    private final int size;
-    private final List<SpatialDatabaseRecordImpl> hits;
-    private int index;
-    
-    public SpatialRecordHits( List<SpatialDatabaseRecordImpl> hits )
-    {
-        this.size = hits.size();
-        this.hits = hits;
-    }
+import com.vividsolutions.jts.geom.Envelope;
 
-    @Override
-    protected Node fetchNextOrNull()
-    {
-        int i = index++;
-        return i < size() ? hits.get( i ).getGeomNode() : null;
-    }
-    
-    public int size()
-    {
-        return this.size;
-    }
+/**
+ * @author Andreas Wilhelm
+ */
+public interface SpatialQuery {
 
-    public float currentScore()
-    {
-        return 0;
-    }
+	public abstract boolean needsToVisit(Envelope indexNodeEnvelope);
+
+	public abstract SpatialDatabaseRecord onIndexReference(int mode, Node node,
+			Layer layer);
+
+	public abstract void setLayer(Layer layer);
+
 }
-
