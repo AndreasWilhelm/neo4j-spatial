@@ -22,11 +22,30 @@ package org.neo4j.gis.spatial.operation;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 
 /**
+ * This interface provides the public APIs to execute the spatial type insert.
  * 
  * @author Andreas Wilhelm
- *
  */
-public interface Insert extends SpatialQuery {
+public interface Insert extends SpatialTypeOperation {
 	
-	public abstract boolean insert(SpatialDatabaseRecord record);
+	/**
+	 * 
+	 * @param record
+	 * @return
+	 */
+	public abstract void insert(SpatialDatabaseRecord record);
+	
+	/**
+	 * 
+	 * @param record
+	 * @return
+	 */
+	public abstract void insert(SpatialDatabaseRecord ... record);
+	
+	/**
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public abstract void addProperty(String key, Object value);
 }

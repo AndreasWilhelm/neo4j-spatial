@@ -17,34 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.operation;
-
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+package org.neo4j.gis.spatial.operation.restriction;
 
 /**
+ * The available restriction types for spatial type operations.
  * 
  * @author Andreas Wilhelm
- * 
+ *
  */
-public abstract class AbstractWriteOperation extends AbstractReadOperation implements Update,
-		Insert {
-
-
-	/**
-	 * 
-	 * @param spatialDatabaseRecord
-	 */
-	public boolean update(SpatialDatabaseRecord record) {
-		this.encodeGeometry(record.getGeometry(), record.getGeomNode());
-		return true;
-	}
-
-	/**
-	 * 
-	 */
-	public boolean insert(SpatialDatabaseRecord record) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+public enum RestrictionType {
+	HAS_PROPERTY, HAS_NOT_PROPERTY, HAS_RELATIONSHIP, HAS_NOT_RELATIONSHIP, IN_BBOX;
 }

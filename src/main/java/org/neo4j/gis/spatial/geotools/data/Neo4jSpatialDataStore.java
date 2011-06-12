@@ -62,6 +62,7 @@ import org.neo4j.gis.spatial.Constants;
 import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.Search;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.query.SearchAll;
@@ -385,7 +386,7 @@ public class Neo4jSpatialDataStore extends AbstractDataStore implements Constant
 		} else if (filter instanceof FidFilterImpl) {
 			// filter by Feature unique id
 			Layer layer = spatialDatabase.getLayer(typeName);
-			List<SpatialDatabaseRecordImpl> results = layer.getIndex().get(convertToGeomNodeIds((FidFilterImpl) filter));
+			List<SpatialDatabaseRecord> results = layer.getIndex().get(convertToGeomNodeIds((FidFilterImpl) filter));
 			System.out.println("found results for FidFilter: " + results.size());
 			return new Neo4jSpatialFeatureReader(layer, getSchema(typeName), results.iterator());
 		}    	
@@ -458,7 +459,7 @@ public class Neo4jSpatialDataStore extends AbstractDataStore implements Constant
     protected FeatureReader<SimpleFeatureType, SimpleFeature> getFeatureReader(String typeName, Search search) throws IOException {
     	Layer layer = spatialDatabase.getLayer(typeName);		
     	layer.getIndex().execute(search);
-    	Iterator<SpatialDatabaseRecordImpl> results = search.getResults().iterator();
+    	Iterator<SpatialDatabaseRecord> results = search.getResults().iterator();
     	return new Neo4jSpatialFeatureReader(layer, getSchema(typeName), results);
     }
 		

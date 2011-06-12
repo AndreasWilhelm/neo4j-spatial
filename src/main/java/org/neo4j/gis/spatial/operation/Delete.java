@@ -19,17 +19,33 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
+import org.neo4j.graphdb.Node;
 
 /**
+ * The <code>Delete</code> interface provides the public APIs to execute spatial
+ * type delete operations.
  * 
  * @author Andreas Wilhelm
- *
  */
-public interface Delete extends SpatialQuery {
-	
-	public abstract boolean delete(SpatialDatabaseRecord record);
-	
-	public abstract void where();
+public interface Delete extends SpatialTypeOperation {
 
+	/**
+	 * Add a restriction to filter the delete operation.
+	 * 
+	 * @param type
+	 *            The {@link RestrictionType}.
+	 * @param value
+	 *            The property value for the restriction type.
+	 */
+	public abstract void addRestriction(RestrictionType type, String value);
+
+	/**
+	 * Determine if the node is restricted and should not be returned.
+	 * 
+	 * @param node
+	 *            The node to determine for restrictions.
+	 * @return Returns true if a restriction found on the node.
+	 */
+	public abstract boolean isRestricted(Node node);
 }

@@ -23,12 +23,13 @@ import java.util.List;
 
 
 /**
+ * @deprecated
  * @author Davide Savazzi
  */
 public interface Search extends SpatialIndexVisitor {
 
 	void setLayer(Layer layer);
 	
-	List<SpatialDatabaseRecordImpl> getResults();
+	List<SpatialDatabaseRecord> getResults();
 	
 }

@@ -19,22 +19,12 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import org.neo4j.gis.spatial.Layer;
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
-import org.neo4j.graphdb.Node;
-
-import com.vividsolutions.jts.geom.Envelope;
-
 /**
+ * TODO: If a spatial type operation failed we should throw a exception.
+ * 
  * @author Andreas Wilhelm
+ *
  */
-public interface SpatialQuery {
-
-	public abstract boolean needsToVisit(Envelope indexNodeEnvelope);
-
-	public abstract SpatialDatabaseRecord onIndexReference(int mode, Node node,
-			Layer layer);
-
-	public abstract void setLayer(Layer layer);
+public class SpatialTypeException extends Exception {
 
 }

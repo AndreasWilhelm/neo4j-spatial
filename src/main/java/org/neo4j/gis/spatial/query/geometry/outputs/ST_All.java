@@ -35,10 +35,6 @@ import com.vividsolutions.jts.geom.Envelope;
  */
 public class ST_All extends AbstractReadOperation {
 
-	public boolean needsToVisit(Envelope indexNodeEnvelope) {
-		return true;
-	}
-
 	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
 			Layer layer) {
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);

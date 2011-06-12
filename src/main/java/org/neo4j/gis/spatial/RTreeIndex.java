@@ -27,8 +27,9 @@ import java.util.Set;
 import org.neo4j.gis.spatial.operation.Delete;
 import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.operation.Select;
-import org.neo4j.gis.spatial.operation.SpatialQuery;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.gis.spatial.operation.Update;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.gis.spatial.query.SearchAll;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -116,10 +117,10 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 			SearchAll search = new SearchAll();
 			search.setLayer(layer);
 			visit(search, lastParentNodeToDelete);
-			List<SpatialDatabaseRecordImpl> orphanedGeometryNodes = search.getResults();
+			List<SpatialDatabaseRecord> orphanedGeometryNodes = search.getResults();
 
 			// remove all geomNode in the subtree
-			for (SpatialDatabaseRecordImpl orphan : orphanedGeometryNodes) {
+			for (SpatialDatabaseRecord orphan : orphanedGeometryNodes) {
 				orphan.getGeomNode().getSingleRelationship(SpatialRelationshipTypes.RTREE_REFERENCE, Direction.INCOMING).delete();
 			}
 			
@@ -130,7 +131,7 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 			adjustPathBoundingBox(getIndexNodeParent(lastParentNodeToDelete));
 			
 			// add orphaned geomNodes
-			for (SpatialDatabaseRecordImpl orphan : orphanedGeometryNodes) {
+			for (SpatialDatabaseRecord orphan : orphanedGeometryNodes) {
 				add(orphan.getGeomNode());
 			}			
 		} else {
@@ -217,14 +218,14 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 		return new SpatialDatabaseRecordImpl(layer,geomNode);
 	}
 	
-	public List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds) {
-		List<SpatialDatabaseRecordImpl> results = new ArrayList<SpatialDatabaseRecordImpl>();
+	public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
+		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
 		for (Long geomNodeId : geomNodeIds) {
 			results.add(get(geomNodeId));
 		}
 		return results;
 	}
-/*
+
 	public void execute(Search search) {
 		if (isEmpty()) return;
 		
@@ -232,17 +233,9 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 		visit(search, getIndexRoot());
 	}
 	
-	public int execute(Update update){
-		if (isEmpty()) return 0;
-		update.setLayer(this.layer);
-		visitInTx(update, getIndexRoot().getId());
-		return 1;
-	}
-*/
-	
 	private void visitInTx(Update update, Long indexNodeId) {
         	Node indexNode = database.getNodeById(indexNodeId);
-	        if(!update.needsToVisit(getIndexNodeEnvelope(indexNode))) return;
+	      //  if(!update.needsToVisit(getIndexNodeEnvelope(indexNode))) return;
 			
 			if (indexNode.hasRelationship(SpatialRelationshipTypes.RTREE_CHILD, Direction.OUTGOING)) {
 				// Node is not a leaf
@@ -924,13 +917,15 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 		}
 	}
 
-	@Override
+	/**
+	 * @see 
+	 */
 	public List<SpatialDatabaseRecord> execute(Select select) {
 		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
 		if (isEmpty()) return results;
 		
-		select.setLayer(layer);
-		visit(0, select, getIndexRoot(), results);
+		select.setLayer(this.layer);
+		search(0, select, getIndexRoot(), results);
 		return results;
 	}
 	
@@ -942,22 +937,23 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 	 * @param indexNode
 	 * @param results
 	 */
-	public void visit(int mode, SpatialQuery query, Node indexNode, List<SpatialDatabaseRecord> results) {
-		if (!query.needsToVisit(getIndexNodeEnvelope(indexNode))) return;
-		
+	public void search(int mode, Select select, Node indexNode, List<SpatialDatabaseRecord> results) {
 		if (indexNode.hasRelationship(SpatialRelationshipTypes.RTREE_CHILD, Direction.OUTGOING)) {
 			// Node is not a leaf
 			for (Relationship rel : indexNode.getRelationships(SpatialRelationshipTypes.RTREE_CHILD, Direction.OUTGOING)) {
 				Node child = rel.getEndNode();
 				// collect children results
-				visit(mode, query, child, results);
+				search(mode, select, child, results);
 			}
 		} else if (indexNode.hasRelationship(SpatialRelationshipTypes.RTREE_REFERENCE, Direction.OUTGOING)) {
 			// Node is a leaf
 			for (Relationship rel : indexNode.getRelationships(SpatialRelationshipTypes.RTREE_REFERENCE, Direction.OUTGOING)) {
 				Node node = rel.getEndNode();
-				SpatialDatabaseRecord resultObj = query.onIndexReference(mode, node, this.layer);
-				results.add(resultObj);	
+				// Determine node for restrictions.
+				if(!select.isRestricted(node)) {
+					SpatialDatabaseRecord resultObj = select.onIndexReference(mode, node, this.layer);
+					results.add(resultObj);	
+				}
 			}
 		}
 	}
@@ -966,7 +962,6 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 	 * return coutnt or -1 when isEmpty...
 	 */
 	public int execute(Update update) {
-		
 		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
 		if (isEmpty()) return -1;
 		update.setLayer(layer);
@@ -985,7 +980,6 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 			List<SpatialDatabaseRecord> results) {
 		
     	Node indexNode = database.getNodeById(indexNodeId);
-        if(!update.needsToVisit(getIndexNodeEnvelope(indexNode))) return;
 		
 		if (indexNode.hasRelationship(SpatialRelationshipTypes.RTREE_CHILD, Direction.OUTGOING)) {
 			// Node is not a leaf
@@ -1007,8 +1001,8 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 				for (Relationship rel : indexNode.getRelationships(SpatialRelationshipTypes.RTREE_REFERENCE, Direction.OUTGOING)) {
 					Node node = rel.getEndNode();
 					SpatialDatabaseRecord resultObj = update.onIndexReference(mode, node, this.layer);
-					boolean successfull = update.update(resultObj);
-					if(successfull)results.add(resultObj);	
+					update.update(resultObj);
+					results.add(resultObj);	
 				}
 				tx.success();
 			} finally {
@@ -1018,23 +1012,59 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 		
 	}
 
-	@Override
-	public int execute(Insert insert) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public int execute(Delete delete) {
-		// TODO Auto-generated method stub
-		return 0;
+		if (isEmpty()) return 0;
+		int count = 0;
+		delete.setLayer(this.layer);
+		return delete(delete, getIndexRoot().getId(), count);
 	}
 
-	@Override
-	public void execute(Search search) {
-		// TODO Auto-generated method stub
+	private int delete(Delete delete, long indexNodeId, int count) {
+		
+		Node indexNode = database.getNodeById(indexNodeId);
+
+		if (indexNode.hasRelationship(SpatialRelationshipTypes.RTREE_CHILD, Direction.OUTGOING)) {
+			// Node is not a leaf
+			
+			// collect children
+			List<Long> children = new ArrayList<Long>();
+            for (Relationship rel : indexNode.getRelationships(SpatialRelationshipTypes.RTREE_CHILD, Direction.OUTGOING)) {
+                children.add(rel.getEndNode().getId());
+            }
+
+			// visit children
+			for (Long child : children) {
+				delete(delete, child, count);	
+			}
+		} else if (indexNode.hasRelationship(SpatialRelationshipTypes.RTREE_REFERENCE, Direction.OUTGOING)) {
+			// Node is a leaf
+			Transaction tx = database.beginTx();
+			try {
+				for (Relationship rel : indexNode.getRelationships(SpatialRelationshipTypes.RTREE_REFERENCE, Direction.OUTGOING)) {
+					Node node = rel.getEndNode();
+					// Determine node for restrictions.
+					if(!delete.isRestricted(node)) {
+						delete.onIndexReference(2, node, this.layer);
+						// TODO: Seems not working
+						deleteNode(node);
+						count++;
+					}
+					
+				}
+				tx.success();
+			} finally {
+				tx.finish();
+			}
+		}
+		return count;
 		
 	}
 
+	public int execute(Insert insert) {
+		// TODO:
+		//Node node = GeomNodeFactory.getInstance();
+		//add(node, long indexNodeId, int count);
+		return 0;
+	}
 
 }

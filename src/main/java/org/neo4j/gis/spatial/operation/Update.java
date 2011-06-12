@@ -20,13 +20,40 @@
 package org.neo4j.gis.spatial.operation;
 
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
+import org.neo4j.graphdb.Node;
 
 /**
+ * The <code>Update</code> interface provides the public APIs to execute the
+ * spatial type update operations.
+ * 
  * @author Andreas Wilhelm
  */
-public interface Update extends SpatialQuery {
+public interface Update extends SpatialTypeOperation {
 
-	public abstract void where();
+	/**
+	 * Update a single {@link SpatialDatabaseRecord}.
+	 * 
+	 * @param record The record to update.
+	 */
+	public abstract void update(SpatialDatabaseRecord record);
 
-	public abstract boolean update(SpatialDatabaseRecord record);
+	/**
+	 * Add a restriction to filter the update operation.
+	 * 
+	 * @param type
+	 *            The {@link RestrictionType}.
+	 * @param value
+	 *            The property value for the restriction type.
+	 */
+	public abstract void addRestriction(RestrictionType type, String value);
+
+	/**
+	 * Determine if the node is restricted and should not be returned.
+	 * 
+	 * @param node
+	 *            The node to determine for restrictions.
+	 * @return Returns true if a restriction found on the node.
+	 */
+	public abstract boolean isRestricted(Node node);
 }

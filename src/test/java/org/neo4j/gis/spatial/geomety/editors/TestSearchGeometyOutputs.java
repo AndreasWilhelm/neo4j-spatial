@@ -27,10 +27,15 @@ import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.gis.spatial.osm.OSMImporter;
+import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGML;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGeoJSON;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsKML;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * This unit test testing all available geometry editors queries: - ST_Transform
@@ -57,43 +62,33 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 		}
 	}
 	
-
 	public void testAsGML() throws Exception {
 		Select select = new ST_AsGML();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
-		//TODO optimize this:
-		String property = ST_AsGML.class.getName(); 
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testAsGML", results, property);
+			printTestResults("testAsGML", results);
 		}
 	}
 	
-	
-
 	public void testAsKML() throws Exception {
 		Select select = new ST_AsKML();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
-		//TODO optimize this:
-		String property = ST_AsKML.class.getName(); 
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testAsKML", results, property);
+			printTestResults("testAsKML", results);
 		}
 	}
 	
 	public void testAsGeoJSON() throws Exception {
 		Select select = new ST_AsGeoJSON();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
-		//TODO optimize this:
-		String property = ST_AsGeoJSON.class.getName(); 
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testAsGeoJSON", results, property);
+			printTestResults("testAsGeoJSON", results);
 		}
 	}
-
-
+	
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;
@@ -106,13 +101,12 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 		importer.reIndex(graphDb(), commitInterval);
 	}
 
-	
 	private void printTestResults(String mode,
-			List<SpatialDatabaseRecord> results, String property) {
+			List<SpatialDatabaseRecord> results) {
 		System.out.println("----------------------  " + mode
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println(spatialDatabaseRecord.getProperty(property));
+			System.out.println(spatialDatabaseRecord.getResultAsString());
 		}
 		System.out.println("------------------------------------------------");
 	}

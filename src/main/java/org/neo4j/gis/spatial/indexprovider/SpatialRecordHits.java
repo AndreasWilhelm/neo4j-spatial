@@ -21,6 +21,7 @@ package org.neo4j.gis.spatial.indexprovider;
 
 import java.util.List;
 
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.graphdb.Node;
 import org.neo4j.index.impl.lucene.AbstractIndexHits;
@@ -28,10 +29,10 @@ import org.neo4j.index.impl.lucene.AbstractIndexHits;
 public class SpatialRecordHits extends AbstractIndexHits<Node>
 {
     private final int size;
-    private final List<SpatialDatabaseRecordImpl> hits;
+    private final List<SpatialDatabaseRecord> hits;
     private int index;
     
-    public SpatialRecordHits( List<SpatialDatabaseRecordImpl> hits )
+    public SpatialRecordHits( List<SpatialDatabaseRecord> hits )
     {
         this.size = hits.size();
         this.hits = hits;

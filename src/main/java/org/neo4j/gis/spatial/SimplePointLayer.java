@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Envelope;
 public class SimplePointLayer extends EditableLayerImpl {
 	public static final int LIMIT_RESULTS = 100;
 
-	public List<SpatialDatabaseRecordImpl> findClosestPointsTo(Coordinate point) {
+	public List<SpatialDatabaseRecord> findClosestPointsTo(Coordinate point) {
 		int count = getIndex().count();
 		double scale = (double) LIMIT_RESULTS / (double) count;
 		Envelope bbox = getIndex().getLayerBoundingBox();
@@ -44,17 +44,17 @@ public class SimplePointLayer extends EditableLayerImpl {
 		return findClosestPoints(distanceQuery);
 	}
 
-	public List<SpatialDatabaseRecordImpl> findClosestPointsTo(Coordinate point, double distanceInKm) {
+	public List<SpatialDatabaseRecord> findClosestPointsTo(Coordinate point, double distanceInKm) {
 		SearchPointsWithinOrthodromicDistance distanceQuery = new SearchPointsWithinOrthodromicDistance(point, distanceInKm, true);
 		return findClosestPoints(distanceQuery);
 	}
 
-	private List<SpatialDatabaseRecordImpl> findClosestPoints(SearchPointsWithinOrthodromicDistance distanceQuery) {
+	private List<SpatialDatabaseRecord> findClosestPoints(SearchPointsWithinOrthodromicDistance distanceQuery) {
 		getIndex().execute(distanceQuery);
-		List<SpatialDatabaseRecordImpl> results = distanceQuery.getResults();
-		Collections.sort(results, new Comparator<SpatialDatabaseRecordImpl>(){
+		List<SpatialDatabaseRecord> results = distanceQuery.getResults();
+		Collections.sort(results, new Comparator<SpatialDatabaseRecord>(){
 
-			public int compare(SpatialDatabaseRecordImpl arg0, SpatialDatabaseRecordImpl arg1) {
+			public int compare(SpatialDatabaseRecord arg0, SpatialDatabaseRecord arg1) {
 				return ((Double) arg0.getUserData()).compareTo((Double) arg1.getUserData());
 			}
 		});

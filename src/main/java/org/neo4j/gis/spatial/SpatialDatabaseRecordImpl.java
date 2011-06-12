@@ -30,6 +30,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
+ *  * TODO: Clean the complete interface and SpatialDatabaseRecordImpl
  * @author Davide Savazzi, Craig Taverner, Andreas Wilhelm
  */
 public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
@@ -39,7 +40,11 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 	private Layer layer;
 	@SuppressWarnings("rawtypes")
 	private Comparable userData;
+	// Temporary properties of a spatial type operation.
 	private HashMap<String, String> dynamicProperties = new HashMap<String, String>();
+	// Temporary propertie key of a spatial type operation. Maybe list when we have more than one? or have we always only one?
+	private String key = null;
+	
 	/**
 	 * 
 	 * @param layer
@@ -134,9 +139,13 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 		return obj;
 	}
 	
+	/**
+	 * 
+	 */
 	public void setProperty(String key, Object value) {
 	//	checkIsNotReservedProperty(name);
 	//	geomNode.setProperty(name, value);
+		this.key = key;
 		dynamicProperties.put(key, (String) value);
 		
 	}
@@ -192,9 +201,11 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 		return 0;
 	}
 
-	@Override
-	public String asText() {
-	    return "SpatialDatabaseRecord[" + getId() + "]: type='" + getType() + "', props[" + getPropString() + "]";
+	/**
+	 * @see SpatialDatabaseRecord#getResultAsString()
+	 */
+	public String getResultAsString() {
+	    return dynamicProperties.get(this.key);
 	}
 
 }

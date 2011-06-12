@@ -19,15 +19,51 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import java.util.HashMap;
+
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 
 /**
+ * <p>
+ * The <code>AbstractWriteOperation</code> is the abstract implementation of the
+ * {@link Insert}, {@link Select}, {@link Update} and {@link Delete} interface.
+ * </p>
+ * 
+ * <p>
+ * This class should be extend by spatial type implementation which should be
+ * capable to do all operations.
+ * </p>
  * 
  * @author Andreas Wilhelm
  * 
  */
-public abstract class AbstractFullOperation extends AbstractWriteOperation {
+public abstract class AbstractFullOperation extends AbstractUpdateOperation
+		implements Insert {
+	// Relationship??
+	private HashMap<String, Object> properties = new HashMap<String, Object>();
 
-	public void add(Object object){};
+	/**
+	 * @see Insert#insert(SpatialDatabaseRecord)
+	 */
+	public void insert(SpatialDatabaseRecord record) {
+
+	}
+
+	/**
+	 * @see Insert#insert(SpatialDatabaseRecord...)
+	 */
+	public void insert(SpatialDatabaseRecord... record) {
+		for (SpatialDatabaseRecord spatialDatabaseRecord : record) {
+			insert(spatialDatabaseRecord);
+		}
+
+	}
+
+	public void addProperty(String key, Object value) {
+		properties.put(key, value);
+	}
 	
-
+	public HashMap<String, Object> getProperties() {
+		return properties;
+	}
 }

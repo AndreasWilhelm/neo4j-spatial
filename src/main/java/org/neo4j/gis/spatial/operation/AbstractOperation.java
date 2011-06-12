@@ -19,7 +19,12 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.neo4j.gis.spatial.GeometryEncoder;
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.operation.restriction.Restriction;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -27,74 +32,98 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * <p>
+ * The <code>AbstractOperation</code> is a abstract superclass for spatial type
+ * operation. It contains the basic implementation which a necessary to execute
+ * spatial type operations.
+ * </p>
+ * <p>
+ * This class <b>should not</b> extend directly by spatial type operations.
+ * </p>
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public abstract class AbstractOperation {
-	
+
+	// The layer which execute this operation.
 	private Layer layer = null;
+	// The CoordinateReferenceSystem of the layer.
 	private CoordinateReferenceSystem crs = null;
+	// Contains the delete restrictions.
+	protected List<Restriction> restrictions;
 	
 	/**
-	 * This should restrrict the operation only on nodes which have this property..
+	 * Default constructor.
 	 */
-	public void where() {
-		// TODO Auto-generated method stub
-		
+	public AbstractOperation() {
+		this.restrictions = new ArrayList<Restriction>();
 	}
 
+	/**
+	 * Sets the {@link Layer} and the CoordinateReferenceSystem of layer which
+	 * execute this operation.
+	 * 
+	 * @param layer
+	 *            The {@link Layer} which execute this operation.
+	 */
 	public void setLayer(Layer layer) {
 		this.layer = layer;
 		this.crs = layer.getCoordinateReferenceSystem();
 	}
-	
-	
+
 	/**
+	 * Gets the {@link Layer} which execute this operation.
 	 * 
-	 * @return
+	 * @return Returns the {@link Layer} which execute this operation.
+	 */
+	public Layer getLayer() {
+		return this.layer;
+	}
+
+	/**
+	 * Gets the {@link CoordinateReferenceSystem} of the {@link Layer} which
+	 * execute this operation.
+	 * 
+	 * @return Return the {@link CoordinateReferenceSystem} of the {@link Layer}
+	 *         which execute this operation.
 	 */
 	public CoordinateReferenceSystem getCoordinateReferenceSystem() {
 		return this.crs;
 	}
-	
+
 	/**
+	 * Sets the {@link CoordinateReferenceSystem} of the {@link Layer} which
+	 * execute this operation.
 	 * 
 	 * @param crs
+	 *            The {@link CoordinateReferenceSystem} of the {@link Layer}
+	 *            which execute this operation.
 	 */
 	protected void setCoordinateReferenceSystem(CoordinateReferenceSystem crs) {
 		this.crs = crs;
-		//TODO: When ST_Translate was succesfull we have to update the layer
-		//layer.setCoordinateReferenceSystem(this.crs);
+		// TODO: When ST_Translate was successful we have to update the layer.
+		// this.layer.setCoordinateReferenceSystem(this.crs);
 	}
-	
-	
+
 	/**
-	 * 
-	 * @param geometry
-	 * @param geomNode
+	 * @see GeometryEncoder#encodeGeometry(Geometry, org.neo4j.graphdb.PropertyContainer)
 	 */
 	protected void encodeGeometry(Geometry geometry, Node node) {
 		this.layer.getGeometryEncoder().encodeGeometry(geometry, node);
 	}
-	
-	
+
 	/**
-	 * 
-	 * @param geomNode
-	 * @return
+	 * @see GeometryEncoder#decodeEnvelope(org.neo4j.graphdb.PropertyContainer)
 	 */
 	protected Envelope getEnvelope(Node node) {
-		return this.layer.getGeometryEncoder().decodeEnvelope(node);	
+		return this.layer.getGeometryEncoder().decodeEnvelope(node);
 	}
 
 	/**
-	 * 
-	 * @param geomNode
-	 * @return
+	 * @see GeometryEncoder#decodeGeometry(org.neo4j.graphdb.PropertyContainer)
 	 */
 	protected Geometry decodeGeometry(Node node) {
 		return this.layer.getGeometryEncoder().decodeGeometry(node);
 	}
-	
 }

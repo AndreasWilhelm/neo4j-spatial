@@ -78,8 +78,8 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 				.getDatabase().getNodeById(geomNodeId));
 	}
 
-	public List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds) {
-		List<SpatialDatabaseRecordImpl> results = new ArrayList<SpatialDatabaseRecordImpl>();
+	public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
+		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
 
 		for (Long geomNodeId : geomNodeIds) {
 			results.add(get(geomNodeId));

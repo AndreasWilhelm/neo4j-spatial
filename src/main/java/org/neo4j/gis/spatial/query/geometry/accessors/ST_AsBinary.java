@@ -37,10 +37,6 @@ import com.vividsolutions.jts.io.WKBWriter;
  */
 public class ST_AsBinary extends AbstractReadOperation {
 
-	public boolean needsToVisit(Envelope indexNodeEnvelope) {
-		return true;
-	}
-
 	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
 			Layer layer) {
 		Geometry geometry = decodeGeometry(node);
@@ -52,8 +48,5 @@ public class ST_AsBinary extends AbstractReadOperation {
 		databaseRecord.setProperty(ST_AsBinary.class.getName(), hex);
 		return databaseRecord;
 	}
-
-
-
 
 }

@@ -40,29 +40,33 @@ public interface SpatialIndexReader {
 
 	int count();
 
-	SpatialDatabaseRecordImpl get(Long geomNodeId);
+	SpatialDatabaseRecord get(Long geomNodeId);
 	
-	List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds);
-	
-	void execute(Search search);
-	
-	
-	List<SpatialDatabaseRecord> execute(Select select);
-	
-	int execute(Update update);
-	
-	int execute(Insert insert);
-	
-	int execute(Delete delete);
-	
-
-    Iterable<Node> getAllGeometryNodes();
-
+	List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds);
     
-
-
-
-
-
-
+    /**
+     * @see Layer#execute(Select)
+     */
+    List<SpatialDatabaseRecord> execute(Select select);
+    
+    /**
+     * @see Layer#execute(Delete)
+     */
+    int execute(Delete delete);
+    
+    /**
+     * @see Layer#execute(Update)
+     */
+    int execute(Update update);
+    
+    /**
+     * @see Layer#execute(Insert)
+     */
+    int execute(Insert insert);
+    
+	
+	@Deprecated
+	void execute(Search search);
+	@Deprecated
+    Iterable<Node> getAllGeometryNodes();
 }

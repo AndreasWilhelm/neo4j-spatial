@@ -78,7 +78,7 @@ public class TestSearch extends Neo4jTestCase {
 
 						long qStart = System.currentTimeMillis();
 						rtreeIndex.execute(searchQuery);
-						List<SpatialDatabaseRecordImpl> rtreeResults = searchQuery.getResults();
+						List<SpatialDatabaseRecord> rtreeResults = searchQuery.getResults();
 						long qStop = System.currentTimeMillis();
 						long qElapsedTime = qStop - qStart;
 
@@ -132,7 +132,7 @@ public class TestSearch extends Neo4jTestCase {
 
 				Search searchQuery = new SearchIntersectWindow(new Envelope(xmin, xmax, ymin, ymax));
 				spatialIndex.execute(searchQuery);
-				List<SpatialDatabaseRecordImpl> results = searchQuery.getResults();
+				List<SpatialDatabaseRecord> results = searchQuery.getResults();
 				System.out.println("Search returned: " + results);
 				tx.success();
 			} finally {

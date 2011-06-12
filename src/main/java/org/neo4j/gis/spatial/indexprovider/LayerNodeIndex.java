@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Search;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.query.SearchPointsWithinOrthodromicDistance;
@@ -111,7 +112,7 @@ public class LayerNodeIndex implements Index<Node>
                     layer.getGeometryFactory().toGeometry(
                             new Envelope( bounds[0], bounds[1], bounds[2], bounds[3] ) ) );
             layer.getIndex().execute( withinQuery );
-            List<SpatialDatabaseRecordImpl> res = withinQuery.getResults();
+            List<SpatialDatabaseRecord> res = withinQuery.getResults();
             IndexHits<Node> results = new SpatialRecordHits( res );
             return results;
         }
@@ -123,7 +124,7 @@ public class LayerNodeIndex implements Index<Node>
 			Search withinDistanceQuery = 
 				new SearchPointsWithinOrthodromicDistance( new Coordinate( point[1], point[0] ), distance, true );
 			layer.getIndex().execute( withinDistanceQuery );
-			List<SpatialDatabaseRecordImpl> res = withinDistanceQuery.getResults();
+			List<SpatialDatabaseRecord> res = withinDistanceQuery.getResults();
 			IndexHits<Node> results = new SpatialRecordHits( res );
 			return results;
 		}

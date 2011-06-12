@@ -26,6 +26,7 @@ import java.util.NoSuchElementException;
 import org.geotools.data.FeatureReader;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
@@ -41,7 +42,7 @@ public class Neo4jSpatialFeatureReader implements FeatureReader<SimpleFeatureTyp
 
 	// Constructor
 	
-	protected Neo4jSpatialFeatureReader(Layer layer, SimpleFeatureType featureType, Iterator<SpatialDatabaseRecordImpl> results) {
+	protected Neo4jSpatialFeatureReader(Layer layer, SimpleFeatureType featureType, Iterator<SpatialDatabaseRecord> results) {
 		this.layer = layer;
 		this.extraPropertyNames = layer.getExtraPropertyNames();		
 		this.featureType = featureType;
@@ -63,7 +64,7 @@ public class Neo4jSpatialFeatureReader implements FeatureReader<SimpleFeatureTyp
 	public SimpleFeature next() throws IOException, IllegalArgumentException, NoSuchElementException {
 		if (results == null) return null;
 		
-		SpatialDatabaseRecordImpl record = results.next();
+		SpatialDatabaseRecord record = results.next();
 		if (record == null) return null;
 		
 		builder.reset();
@@ -96,7 +97,7 @@ public class Neo4jSpatialFeatureReader implements FeatureReader<SimpleFeatureTyp
 	private Layer layer;
 	private SimpleFeatureType featureType;
     private SimpleFeatureBuilder builder;
-	private Iterator<SpatialDatabaseRecordImpl> results;
+	private Iterator<SpatialDatabaseRecord> results;
 	private String[] extraPropertyNames;
 	
 	protected static final String FEATURE_PROP_GEOM = "the_geom";

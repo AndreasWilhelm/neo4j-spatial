@@ -19,21 +19,22 @@
  */
 package org.neo4j.gis.spatial;
 
-import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGML;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+/**
+ * 
+ * TODO: Clean the complete interface
+ *
+ */
 public interface SpatialDatabaseRecord extends Constants,
 		Comparable<SpatialDatabaseRecordImpl> {
 
 	public long getId();
 
 	public Node getGeomNode();
-	
-	
-	public String asText();
 	
 	/**
 	 * This method returns a simple integer representation of the geometry. Some
@@ -53,6 +54,12 @@ public interface SpatialDatabaseRecord extends Constants,
 	public CoordinateReferenceSystem getCoordinateReferenceSystem();
 
 	public String getLayerName();
+	
+	/**
+	 * 
+	 * @return Returns the result as a String.
+	 */
+	public String getResultAsString();
 
 	/**
 	 * Not all geometry records have the same attribute set, so we should test

@@ -100,11 +100,11 @@ public class DynamicLayer extends EditableLayerImpl {
 			index.execute(search);
 		}
 		
-		public SpatialDatabaseRecordImpl get(Long geomNodeId) {
+		public SpatialDatabaseRecord get(Long geomNodeId) {
 			return index.get(geomNodeId);
 		}
 
-		public List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds) {
+		public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
 			return index.get(geomNodeIds);
 		}
 
@@ -192,7 +192,7 @@ public class DynamicLayer extends EditableLayerImpl {
                 this.delegate = delegate;
             }
 
-            public List<SpatialDatabaseRecordImpl> getResults() {
+            public List<SpatialDatabaseRecord> getResults() {
                 return delegate.getResults();
             }
 
@@ -349,7 +349,7 @@ public class DynamicLayer extends EditableLayerImpl {
 		public void executeSearch(final Search search) {
 			index.execute(new Search() {
 
-				public List<SpatialDatabaseRecordImpl> getResults() {
+				public List<SpatialDatabaseRecord> getResults() {
 					return search.getResults();
 				}
 

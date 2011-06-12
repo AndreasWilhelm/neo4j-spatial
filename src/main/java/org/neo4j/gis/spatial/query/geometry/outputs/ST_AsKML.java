@@ -30,7 +30,6 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.graphdb.Node;
 import org.geotools.xml.Encoder;
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -39,10 +38,6 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  */
 public class ST_AsKML extends AbstractReadOperation {
-
-	public boolean needsToVisit(Envelope indexNodeEnvelope) {
-		return true;
-	}
 
 	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
 			Layer layer) {

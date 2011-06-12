@@ -19,24 +19,62 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
+import org.neo4j.graphdb.Node;
 
 /**
+ * <p>
+ * The <code>AbstractReadOperation</code> is the abstract implementation of the
+ * {@link Select} interface.
+ * </p>
+ * 
+ * <p>
+ * This class should be extend by spatial type implementation which should be
+ * capable to do only search operations.
+ * </p>
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
-public abstract class AbstractReadOperation extends AbstractDeleteOperation implements Select {
+public abstract class AbstractReadOperation extends AbstractOperation
+		implements Select {
 
+	// Contains the search results.
 	private List<SpatialDatabaseRecord> results;
-	private String propertyKey;
+
 	/**
-	 * 
+	 * Default constructor.
+	 */
+	public AbstractReadOperation() {
+		this.results = new ArrayList<SpatialDatabaseRecord>();
+	}
+
+	/**
+	 * @see Select#getResults()
 	 */
 	public List<SpatialDatabaseRecord> getResults() {
-		return results;
+		return this.results;
 	}
-	
 
+	/**
+	 * @see Select#addRestriction(RestrictionType, String)
+	 */
+	public void addRestriction(RestrictionType restrictionType, String value) {
+		this.restrictions.add(new Restriction(restrictionType, value));
+	}
+
+	/**
+	 * @see Select#isRestricted(Node)
+	 */
+	public boolean isRestricted(Node node) {
+		for (Restriction res : this.restrictions) {
+			if (res.hasRestriction(node))
+				return true;
+		}
+		return false;
+	}
 }

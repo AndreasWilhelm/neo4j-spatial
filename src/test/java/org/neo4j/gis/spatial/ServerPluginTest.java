@@ -88,7 +88,7 @@ public class ServerPluginTest extends Neo4jTestCase {
 		Layer layer2 = spatialService.getLayer(LAYER);
 		SearchWithin withinQuery = new SearchWithin(layer2.getGeometryFactory().toGeometry(new Envelope(15.0, 16.0, 60.0, 61.0)));
 		layer2.getIndex().execute(withinQuery);
-		List<SpatialDatabaseRecordImpl> results = withinQuery.getResults();
+		List<SpatialDatabaseRecord> results = withinQuery.getResults();
 		assertEquals(0, results.size());
 
 		Transaction tx2 = graphDb().beginTx();

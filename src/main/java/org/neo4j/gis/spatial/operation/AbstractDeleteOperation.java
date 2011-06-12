@@ -19,21 +19,44 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
+import org.neo4j.graphdb.Node;
 
 /**
+ * <p>
+ * The <code>AbstractReadOperation</code> is the abstract implementation of the
+ * {@link Delete} and {@link Select} interface.
+ * </p>
+ * 
+ * <p>
+ * This class should be extend by spatial type implementation which should be
+ * capable to do search and delete operations.
+ * </p>
  * 
  * @author Andreas Wilhelm
  *
  */
-public abstract class AbstractDeleteOperation extends AbstractOperation implements Delete {
-
+public abstract class AbstractDeleteOperation extends AbstractReadOperation implements Delete {
+	
 	/**
-	 * 
-	 * @param spatialDatabaseRecord
+	 * @see Delete#addRestriction(RestrictionType, String)
 	 */
-	public boolean delete(SpatialDatabaseRecord record) {
-		return true;
+	public void addRestriction(RestrictionType restrictionType, String value) {
+		this.restrictions.add(new Restriction(restrictionType, value));
+	}
+	
+	/**
+	 * @see Delete#isRestricted(Node)
+	 */
+	public boolean isRestricted(Node node) {
+		for (Restriction res : this.restrictions) {
+			if(res.hasRestriction(node)) return true;
+		}
+		return false;
 	}
 
 }

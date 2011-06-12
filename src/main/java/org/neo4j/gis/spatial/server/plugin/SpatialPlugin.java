@@ -25,6 +25,7 @@ import java.util.List;
 import org.neo4j.gis.spatial.DynamicLayer;
 import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.query.SearchWithin;
@@ -150,7 +151,7 @@ public class SpatialPlugin extends ServerPlugin {
 		}
 		SearchWithin withinQuery = new SearchWithin(layer.getGeometryFactory().toGeometry(new Envelope(minx, maxx, miny, maxy)));
 		layer.getIndex().execute(withinQuery);
-		List<SpatialDatabaseRecordImpl> results = withinQuery.getResults();
+		List<SpatialDatabaseRecord> results = withinQuery.getResults();
 		return toIterable(results);
 	}
 
@@ -161,9 +162,9 @@ public class SpatialPlugin extends ServerPlugin {
 		return result;
 	}
 
-	private Iterable<Node> toIterable(List<SpatialDatabaseRecordImpl> records) {
+	private Iterable<Node> toIterable(List<SpatialDatabaseRecord> records) {
 		ArrayList<Node> result = new ArrayList<Node>();
-		for (SpatialDatabaseRecordImpl record : records) {
+		for (SpatialDatabaseRecord record : records) {
 			result.add(record.getGeomNode());
 		}
 		return result;

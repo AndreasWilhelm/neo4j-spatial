@@ -37,7 +37,7 @@ public abstract class AbstractSearch implements Search {
 	// Constructor
 	
 	public AbstractSearch() {
-		this.results = new ArrayList<SpatialDatabaseRecordImpl>();
+		this.results = new ArrayList<SpatialDatabaseRecord>();
 	}
 	
 	
@@ -47,7 +47,7 @@ public abstract class AbstractSearch implements Search {
 		this.layer = layer;
 	}	
 	
-	public List<SpatialDatabaseRecordImpl> getResults() {
+	public List<SpatialDatabaseRecord> getResults() {
 		return results;
 	}
 	
@@ -63,7 +63,7 @@ public abstract class AbstractSearch implements Search {
 	}
 	
 	protected void add(Node geomNode, Geometry geom, String property, Comparable<?> value) {
-		SpatialDatabaseRecordImpl result = new SpatialDatabaseRecordImpl(layer, geomNode, geom);
+		SpatialDatabaseRecord result = new SpatialDatabaseRecordImpl(layer, geomNode, geom);
 		Transaction tx = geomNode.getGraphDatabase().beginTx();
 		try {
 			result.setProperty(property, value);
@@ -91,5 +91,5 @@ public abstract class AbstractSearch implements Search {
 
 	private Layer layer;
 	
-	private List<SpatialDatabaseRecordImpl> results;
+	private List<SpatialDatabaseRecord> results;
 }

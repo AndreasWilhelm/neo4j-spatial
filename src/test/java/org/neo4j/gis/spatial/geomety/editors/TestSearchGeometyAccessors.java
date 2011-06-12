@@ -72,8 +72,6 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 			printTestResults("testAsBinary", results, ST_AsBinary.class.getName());
 		}
 	}
-	
-
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {

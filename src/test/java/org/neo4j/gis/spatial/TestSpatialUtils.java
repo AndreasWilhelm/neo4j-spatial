@@ -76,7 +76,7 @@ public class TestSpatialUtils extends Neo4jTestCase {
 				PointResult closest = edgeResults.get(0);
 				Point closestPoint = closest.getKey();
 
-				SpatialDatabaseRecordImpl wayRecord = closest.getValue();
+				SpatialDatabaseRecord wayRecord = closest.getValue();
 				OSMDataset.Way way = ((OSMDataset)osmLayer.getDataset()).getWayFrom(wayRecord.getGeomNode());
 				OSMDataset.WayPoint wayPoint = way.getPointAt(closestPoint.getCoordinate());
 			}

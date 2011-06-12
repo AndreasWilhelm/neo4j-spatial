@@ -99,12 +99,12 @@ public class LineStringNetworkGenerator {
 		
 		Search search = new SearchIntersect(edgePoint);
 		pointsLayer.getIndex().execute(search);
-		List<SpatialDatabaseRecordImpl> results = search.getResults();
+		List<SpatialDatabaseRecord> results = search.getResults();
 		if (results.size() == 0) {
-			SpatialDatabaseRecordImpl point = pointsLayer.add(edgePoint);
+			SpatialDatabaseRecord point = pointsLayer.add(edgePoint);
 			edge.createRelationshipTo(point.getGeomNode(), SpatialRelationshipTypes.NETWORK);
 		} else {
-			for (SpatialDatabaseRecordImpl point : results) {
+			for (SpatialDatabaseRecord point : results) {
 				edge.createRelationshipTo(point.getGeomNode(), SpatialRelationshipTypes.NETWORK);
 			}
 		}

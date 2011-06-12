@@ -19,44 +19,46 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import java.util.List;
-
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import org.neo4j.gis.spatial.operation.restriction.Restriction;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.graphdb.Node;
 
 /**
- * The <code>Select</code> interface provides the public APIs to execute search
- * operations.
+ * <p>The <code>AbstractUpdateOperation</code> is the abstract implementation of the
+ * {@link Update}, {@link Delete} and {@link Select} interface.</p>
+ * 
+ * <p>
+ * This class should be extend by spatial type implementation which should be
+ * capable to do search, delete and update operations.
+ * </p>
  * 
  * @author Andreas Wilhelm
+ *
  */
-public interface Select extends SpatialTypeOperation {
-
+public abstract class AbstractUpdateOperation extends AbstractDeleteOperation implements Update {
+		
 	/**
-	 * Return the result list of the search operation. If the search operation
-	 * does not find any entries, a empty list is returned.
-	 * 
-	 * @return Returns a list of {@link #SpatialDatabaseRecord},
+	 * @see Update#update(SpatialDatabaseRecord)
 	 */
-	public abstract List<SpatialDatabaseRecord> getResults();
-
+	public void update(SpatialDatabaseRecord record) {
+		this.encodeGeometry(record.getGeometry(), record.getGeomNode());
+	}
+	
 	/**
-	 * Add a restriction to filter search operation.
-	 * 
-	 * @param type
-	 *            the {@link RestrictionType}.
-	 * @param value
-	 *            the property value for restriction type.
+	 * @see Update#addRestriction(RestrictionType, String)
 	 */
-	public abstract void addRestriction(RestrictionType type, String value);
-
+	public void addRestriction(RestrictionType restrictionType, String value) {
+		this.restrictions.add(new Restriction(restrictionType, value));
+	}
+	
 	/**
-	 * Determine if the node is restricted and should not be returned.
-	 * 
-	 * @param node
-	 *            The node to determine for restrictions.
-	 * @return Returns true if a restriction found on the node.
+	 * @see Update#isRestricted(Node)
 	 */
-	public abstract boolean isRestricted(Node node);
+	public boolean isRestricted(Node node) {
+		for (Restriction res : this.restrictions) {
+			if(res.hasRestriction(node)) return true;
+		}
+		return false;
+	}
 }

@@ -67,17 +67,17 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
         return count;
     }
     
-    public SpatialDatabaseRecordImpl get(Long geomNodeId) {
+    public SpatialDatabaseRecord get(Long geomNodeId) {
         long start = System.currentTimeMillis();
-        SpatialDatabaseRecordImpl result = spatialIndex.get(geomNodeId);
+        SpatialDatabaseRecord result = spatialIndex.get(geomNodeId);
         long stop = System.currentTimeMillis();
         System.out.println("# exec time(get(" + geomNodeId + ")): " + (stop - start) + "ms");    	
         return result;    	
     }
     
-    public List<SpatialDatabaseRecordImpl> get(Set<Long> geomNodeIds) {
+    public List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds) {
         long start = System.currentTimeMillis();
-        List<SpatialDatabaseRecordImpl> result = spatialIndex.get(geomNodeIds);
+        List<SpatialDatabaseRecord> result = spatialIndex.get(geomNodeIds);
         long stop = System.currentTimeMillis();
         System.out.println("# exec time(get(" + geomNodeIds + ")): " + (stop - start) + "ms");    	
         return result;

@@ -69,7 +69,7 @@ public class LayersTest extends Neo4jTestCase
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
         layer.getIndex().execute( searchQuery );
-        List<SpatialDatabaseRecordImpl> results = searchQuery.getResults();
+        List<SpatialDatabaseRecord> results = searchQuery.getResults();
         // should not be contained
         assertEquals( 0, results.size() );
         SearchWithin withinQuery = new SearchWithin(
@@ -108,7 +108,7 @@ public class LayersTest extends Neo4jTestCase
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
         layer.getIndex().execute( searchQuery );
-        List<SpatialDatabaseRecordImpl> results = searchQuery.getResults();
+        List<SpatialDatabaseRecord> results = searchQuery.getResults();
         // should not be contained
         assertEquals( 0, results.size() );
         SearchWithin withinQuery = new SearchWithin(
@@ -222,11 +222,11 @@ public class LayersTest extends Neo4jTestCase
     {
         System.out.println( "Testing search intersection:" );
         layer.getIndex().execute( searchQuery );
-        List<SpatialDatabaseRecordImpl> results = searchQuery.getResults();
+        List<SpatialDatabaseRecord> results = searchQuery.getResults();
         System.out.println( "\tTesting layer '" + layer.getName() + "' (class "
                             + layer.getClass() + "), found results: "
                             + results.size() );
-        for ( SpatialDatabaseRecordImpl r : results )
+        for ( SpatialDatabaseRecord r : results )
         {
             System.out.println( "\t\tGeometry: " + r );
         }

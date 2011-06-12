@@ -25,6 +25,9 @@ import org.neo4j.gis.spatial.operation.Delete;
 import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.operation.Update;
+import org.neo4j.gis.spatial.query.ST_Delete;
+import org.neo4j.gis.spatial.query.geometry.constructors.ST_GeomFromText;
+import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -66,7 +69,7 @@ public interface Layer {
 
     /**
      * This method adds existing geometries to the layer for indexing. After this method is called the geometry should be searchable.
-     *
+     * @deprecated We should use the SpatialDatabaseRecord interface and layer.execute
      * @param geomNode
      * @return SpatialDatabaseRecord representation of the geometry added to the database
      */
@@ -159,10 +162,36 @@ public interface Layer {
 	Object getStyle();
 	
 	
-	
+	/**
+	 * Execute a spatial type select query on the layer.
+	 * 
+	 * @param select
+	 * @return
+	 */
 	List<SpatialDatabaseRecord> execute(Select select);
+	
+	/**
+	 * Execute a spatial type insert query on the layer.
+	 * 
+	 * @param insert A spatial type insert query, such as {@link ST_GeomFromText} 
+	 * @return Returns the number of records in a query.
+	 */
 	int execute(Insert insert);
+	
+	/**
+	 * Execute a spatial type delete query on the layer.
+	 * 
+	 * @param delete A spatial type delete query, such as {@link ST_Delete} 
+	 * @return Returns the number of records in a query.
+	 */
 	int execute(Delete delete);
+	
+	/**
+	 * Execute a spatial type update query on the layer.
+	 * 
+	 * @param update A spatial type query, such as {@link ST_Transform} 
+	 * @return Returns the number of records in a query.
+	 */
 	int execute(Update update);
 	
 

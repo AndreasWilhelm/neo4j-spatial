@@ -50,12 +50,12 @@ public class SpatialTopologyUtils {
 	 * @author craig
 	 */
 	public static class PointResult implements
-			Map.Entry<Point, SpatialDatabaseRecordImpl>, Comparable<PointResult> {
+			Map.Entry<Point, SpatialDatabaseRecord>, Comparable<PointResult> {
 		private Point point;
-		private SpatialDatabaseRecordImpl record;
+		private SpatialDatabaseRecord record;
 		private double distance;
 
-		private PointResult(Point point, SpatialDatabaseRecordImpl record,
+		private PointResult(Point point, SpatialDatabaseRecord record,
 				double distance) {
 			this.point = point;
 			this.record = record;
@@ -66,7 +66,7 @@ public class SpatialTopologyUtils {
 			return point;
 		}
 
-		public SpatialDatabaseRecordImpl getValue() {
+		public SpatialDatabaseRecord getValue() {
 			return record;
 		}
 
@@ -74,7 +74,7 @@ public class SpatialTopologyUtils {
 			return distance;
 		}
 
-		public SpatialDatabaseRecordImpl setValue(SpatialDatabaseRecordImpl value) {
+		public SpatialDatabaseRecord setValue(SpatialDatabaseRecord value) {
 			return this.record = value;
 		}
 
@@ -116,7 +116,7 @@ public class SpatialTopologyUtils {
 		ArrayList<PointResult> results = new ArrayList<PointResult>();
 		Search searchQuery = new SearchIntersect(filter);
 		layer.getIndex().execute(searchQuery);
-		for (SpatialDatabaseRecordImpl record : searchQuery.getResults()) {
+		for (SpatialDatabaseRecord record : searchQuery.getResults()) {
 			Geometry geom = record.getGeometry();
 			if (geom instanceof LineString) {
 				LocationIndexedLine line = new LocationIndexedLine(geom);
