@@ -19,9 +19,11 @@
  */
 package org.neo4j.gis.spatial;
 
+import org.neo4j.gis.spatial.operation.Delete;
+import org.neo4j.gis.spatial.operation.Insert;
+import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
@@ -99,6 +101,27 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 		getGeometryEncoder().encodeGeometry(geom, geomNode);
 
 		return geomNode;
+	}
+	
+	/**
+	 * @see EditableLayer#execute(Insert)
+	 */
+	public int execute(Insert insert) {
+		return index.execute(insert);
+	}
+
+	/**
+	 * @see EditableLayer#execute(Delete)
+	 */
+	public int execute(Delete delete) {
+		return index.execute(delete);
+	}
+
+	/**
+	 * @see EditableLayer#execute(Update)
+	 */
+	public int execute(Update update) {
+		return index.execute(update);
 	}
 
 }

@@ -2,18 +2,18 @@ package org.neo4j.gis.spatial.geomety.editors;
 
 import java.io.File;
 
-import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Delete;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.gis.spatial.osm.OSMImporter;
+import org.neo4j.gis.spatial.osm.OSMLayer;
 import org.neo4j.gis.spatial.query.ST_Delete;
 
 public class TestDelete extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService = null;
-	private Layer layer = null;
+	private OSMLayer layer = null;
 
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
@@ -21,7 +21,7 @@ public class TestDelete extends Neo4jTestCase {
 		try {
 			this.loadTestOsmData(Dataset.LAYER_NAME, Dataset.COMMIT_INTERVAL);
 			this.spatialService = new SpatialDatabaseService(graphDb());
-			this.layer = spatialService.getLayer(Dataset.LAYER_NAME);
+			this.layer = (OSMLayer) spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

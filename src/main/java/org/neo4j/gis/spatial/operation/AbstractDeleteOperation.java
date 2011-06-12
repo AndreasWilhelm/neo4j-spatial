@@ -19,9 +19,6 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.neo4j.gis.spatial.operation.restriction.Restriction;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.graphdb.Node;

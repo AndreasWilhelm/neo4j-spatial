@@ -22,6 +22,7 @@ package org.neo4j.gis.spatial.query.geometry.editors;
 import org.apache.log4j.Logger;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -74,10 +75,6 @@ public class ST_Transform extends AbstractFullOperation {
 	 */
 	public ST_Transform(CoordinateReferenceSystem crs) {
 		this.targetCRS = crs;
-	}
-
-	public boolean needsToVisit(Envelope indexNodeEnvelope) {
-		return true;
 	}
 
 	public SpatialDatabaseRecord onIndexReference(int mode, Node geomNode, Layer layer) {

@@ -109,22 +109,4 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 		return null;
 	}
 
-	@Override
-	public int execute(Insert insert) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int execute(Delete delete) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int execute(Update update) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

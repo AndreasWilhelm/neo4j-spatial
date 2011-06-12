@@ -28,10 +28,7 @@ import java.util.Set;
 import org.geotools.factory.FactoryRegistryException;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.neo4j.gis.spatial.encoders.Configurable;
-import org.neo4j.gis.spatial.operation.Delete;
-import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.operation.Select;
-import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -412,18 +409,5 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
 	}
 
 
-	public int execute(Insert insert) {
-		return getIndex().execute(insert);
-	}
-
-
-	public int execute(Delete delete) {
-		return getIndex().execute(delete);
-	}
-
-	
-	public int execute(Update update) {
-		return getIndex().execute(update);
-	}
 
 }

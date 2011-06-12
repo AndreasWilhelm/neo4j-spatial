@@ -25,9 +25,6 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.graphdb.Node;
 
-import com.vividsolutions.jts.geom.Envelope;
-
-
 /**
  * Get Geometry
  * @author Andreas Wilhelm
@@ -40,6 +37,4 @@ public class ST_All extends AbstractReadOperation {
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
 		return databaseRecord;
 	}
-
-
 }

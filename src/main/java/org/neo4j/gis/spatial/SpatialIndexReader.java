@@ -30,7 +30,7 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
- * @author Davide Savazzi, Andreas Wilhelm
+ * @author Davide Savazzi
  */
 public interface SpatialIndexReader {
 
@@ -49,22 +49,6 @@ public interface SpatialIndexReader {
      */
     List<SpatialDatabaseRecord> execute(Select select);
     
-    /**
-     * @see Layer#execute(Delete)
-     */
-    int execute(Delete delete);
-    
-    /**
-     * @see Layer#execute(Update)
-     */
-    int execute(Update update);
-    
-    /**
-     * @see Layer#execute(Insert)
-     */
-    int execute(Insert insert);
-    
-	
 	@Deprecated
 	void execute(Search search);
 	@Deprecated

@@ -106,22 +106,4 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
 		return null;
 	}
 
-	@Override
-	public int execute(Insert insert) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int execute(Delete delete) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-    public int execute(Update update) {
-        long start = System.currentTimeMillis();
-        spatialIndex.execute(update);
-        long stop = System.currentTimeMillis();
-        System.out.println("# exec time(executeSearch(" + update + ")): " + (stop - start) + "ms");
-        return 0;
-    }
 }

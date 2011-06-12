@@ -26,25 +26,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.geotools.filter.text.cql2.CQLException;
+import org.geotools.filter.text.ecql.ECQL;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.neo4j.gis.spatial.RTreeIndex.RecordCounter;
+import org.neo4j.gis.spatial.geotools.data.Neo4jFeatureBuilder;
+import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.DynamicRelationshipType;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.gis.spatial.geotools.data.Neo4jFeatureBuilder;
-import org.neo4j.gis.spatial.operation.Delete;
-import org.neo4j.gis.spatial.operation.Insert;
-import org.neo4j.gis.spatial.operation.Select;
-import org.neo4j.gis.spatial.operation.Update;
+import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.filter.Filter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.feature.simple.SimpleFeature;
-import org.geotools.filter.text.cql2.CQLException;
-import org.geotools.filter.text.ecql.ECQL;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -125,25 +122,6 @@ public class DynamicLayer extends EditableLayerImpl {
 			// TODO Auto-generated method stub
 			return null;
 		}
-
-		@Override
-		public int execute(Update update) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int execute(Insert insert) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int execute(Delete delete) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
 	}
 
 	/**
@@ -520,24 +498,6 @@ public class DynamicLayer extends EditableLayerImpl {
 		public List<SpatialDatabaseRecord> execute(Select select) {
 			// TODO Auto-generated method stub
 			return null;
-		}
-
-		@Override
-		public int execute(Insert insert) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int execute(Delete delete) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int execute(Update update) {
-			// TODO Auto-generated method stub
-			return 0;
 		}
 
 	}

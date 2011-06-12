@@ -27,15 +27,10 @@ import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
-import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGML;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGeoJSON;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsKML;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * This unit test testing all available geometry editors queries: - ST_Transform

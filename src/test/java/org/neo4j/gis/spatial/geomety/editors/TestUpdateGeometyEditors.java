@@ -23,11 +23,11 @@ import java.io.File;
 
 import org.geotools.referencing.CRS;
 import org.junit.Test;
-import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.gis.spatial.osm.OSMImporter;
+import org.neo4j.gis.spatial.osm.OSMLayer;
 import org.neo4j.gis.spatial.query.geometry.editors.ST_Reverse;
 import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -43,18 +43,19 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 public class TestUpdateGeometyEditors extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService = null;
-	private Layer layer = null;
+	private OSMLayer layer = null;
 
-    protected void setUp(boolean deleteDb, boolean useBatchInserter, boolean autoTx) throws Exception {
-        super.setUp(false, true, false);
+	protected void setUp(boolean deleteDb, boolean useBatchInserter,
+			boolean autoTx) throws Exception {
+		super.setUp(false, true, false);
 		try {
 			this.loadTestOsmData(Dataset.LAYER_NAME, Dataset.COMMIT_INTERVAL);
 			this.spatialService = new SpatialDatabaseService(graphDb());
-			this.layer = spatialService.getLayer(Dataset.LAYER_NAME);
+			this.layer = (OSMLayer) spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
+	}
 
 	@Test
 	public void testTransformUpdate() throws Exception {

@@ -962,8 +962,8 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter, Constan
 	 * return coutnt or -1 when isEmpty...
 	 */
 	public int execute(Update update) {
+		if (isEmpty() && !(layer instanceof EditableLayer)) return -1;
 		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
-		if (isEmpty()) return -1;
 		update.setLayer(layer);
 		visitInTx(1, update, getIndexRoot().getId(), results);
 		return results.size();
