@@ -25,7 +25,6 @@ import java.util.Map;
 import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Search;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
-import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.query.SearchPointsWithinOrthodromicDistance;
 import org.neo4j.gis.spatial.query.SearchWithin;

@@ -22,43 +22,26 @@ package org.neo4j.gis.spatial.query;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
-import org.neo4j.gis.spatial.operation.AbstractDeleteOperation;
+import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
-import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.graphdb.Node;
 
 /**
- * The simplest spatial type operation to delete a single node {@link Node} of
- * the layer or all nodes which have no restriction.
+ * The simplest spatial type operation to perform a search on the layer.
  * 
  * @author Andreas Wilhelm
  * 
  */
-public class ST_Delete extends AbstractDeleteOperation {
-	
-	/**
-	 * Delete all nodes which have no restriction.
-	 */
-	public ST_Delete() {
-	}
+public class ST_Select extends AbstractReadOperation {
 
-	/**
-	 * Delete a single node.
-	 * 
-	 * @param nodeid
-	 *            The id of the node to delete.
-	 */
-	public ST_Delete(long nodeid) {
-		this.addRestriction(RestrictionType.EQUAL_TO, "id=" + nodeid);
-	}
-	
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
 			Layer layer) {
-		return new SpatialDatabaseRecordImpl(layer, node);
+		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
+				layer, node);
+		return databaseRecord;
 	}
-
 }

@@ -20,8 +20,8 @@
 package org.neo4j.gis.spatial.operation;
 
 import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
-import org.neo4j.graphdb.Node;
 
 /**
  * <p>
@@ -43,17 +43,14 @@ public abstract class AbstractDeleteOperation extends AbstractReadOperation impl
 	 * @see Delete#addRestriction(RestrictionType, String)
 	 */
 	public void addRestriction(RestrictionType restrictionType, String value) {
-		this.restrictions.add(new Restriction(restrictionType, value));
+		Restriction restriction = new Restriction(restrictionType, value);
+		this.restrictions.put(restriction.getKey(), restriction);
 	}
 	
 	/**
-	 * @see Delete#isRestricted(Node)
+	 * @see Delete#getRestrictions()
 	 */
-	public boolean isRestricted(Node node) {
-		for (Restriction res : this.restrictions) {
-			if(res.hasRestriction(node)) return true;
-		}
-		return false;
+	public RestrictionMap getRestrictions() {
+		return this.restrictions;
 	}
-
 }

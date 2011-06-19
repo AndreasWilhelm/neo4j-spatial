@@ -80,7 +80,7 @@ public class DynamicLayer extends EditableLayerImpl {
 	 * overriding only specific methods. For example, override the
 	 * excecuteSearch method with a modification to the search parameter.
 	 * 
-	 * @author craig, Andreas Wilhelm
+	 * @author craig
 	 */
 	public static class SpatialIndexReaderWrapper implements SpatialIndexReader {
 		protected SpatialTreeIndex index;
@@ -109,8 +109,8 @@ public class DynamicLayer extends EditableLayerImpl {
 			return index.getLayerBoundingBox();
 		}
 
-		public boolean isEmpty() {
-			return index.isEmpty();
+		public boolean hasBoundingBox() {
+			return index.hasBoundingBox();
 		}
 
 		public Iterable<Node> getAllGeometryNodes() {

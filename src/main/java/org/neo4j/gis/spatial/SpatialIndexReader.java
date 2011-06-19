@@ -22,11 +22,9 @@ package org.neo4j.gis.spatial;
 import java.util.List;
 import java.util.Set;
 
-import org.neo4j.gis.spatial.operation.Delete;
-import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.operation.Select;
-import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Node;
+
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
@@ -34,7 +32,7 @@ import com.vividsolutions.jts.geom.Envelope;
  */
 public interface SpatialIndexReader {
 
-	boolean isEmpty();	
+	boolean hasBoundingBox();	
 	
 	Envelope getLayerBoundingBox();
 

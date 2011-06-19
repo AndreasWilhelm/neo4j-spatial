@@ -122,7 +122,7 @@ public class Neo4jSpatialDataStore extends AbstractDataStore implements Constant
             for (int i = 0; i < allTypeNames.length; i++) {
                 // discard empty layers
                 Layer layer = spatialDatabase.getLayer(allTypeNames[i]);
-                if (!layer.getIndex().isEmpty()) {
+                if (!layer.getIndex().hasBoundingBox()) {
                     notEmptyTypes.add(allTypeNames[i]);
                 }
             }

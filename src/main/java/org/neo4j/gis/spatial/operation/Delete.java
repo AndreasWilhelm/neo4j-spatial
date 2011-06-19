@@ -19,8 +19,9 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
-import org.neo4j.graphdb.Node;
 
 /**
  * The <code>Delete</code> interface provides the public APIs to execute spatial
@@ -41,11 +42,9 @@ public interface Delete extends SpatialTypeOperation {
 	public abstract void addRestriction(RestrictionType type, String value);
 
 	/**
-	 * Determine if the node is restricted and should not be returned.
+	 * Returns a list with restrictions of this delete query.
 	 * 
-	 * @param node
-	 *            The node to determine for restrictions.
-	 * @return Returns true if a restriction found on the node.
+	 * @return Returns a list with {@link Restriction}.
 	 */
-	public abstract boolean isRestricted(Node node);
+	public abstract RestrictionMap getRestrictions();
 }

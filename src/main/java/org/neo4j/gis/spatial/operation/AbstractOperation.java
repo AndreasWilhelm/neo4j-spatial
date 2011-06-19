@@ -19,12 +19,9 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.neo4j.gis.spatial.GeometryEncoder;
 import org.neo4j.gis.spatial.Layer;
-import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -51,13 +48,12 @@ public abstract class AbstractOperation {
 	// The CoordinateReferenceSystem of the layer.
 	private CoordinateReferenceSystem crs = null;
 	// Contains the delete restrictions.
-	protected List<Restriction> restrictions;
-	
+	protected RestrictionMap restrictions;
 	/**
 	 * Default constructor.
 	 */
 	public AbstractOperation() {
-		this.restrictions = new ArrayList<Restriction>();
+		this.restrictions = new RestrictionMap();
 	}
 
 	/**
@@ -99,11 +95,19 @@ public abstract class AbstractOperation {
 	 * @param crs
 	 *            The {@link CoordinateReferenceSystem} of the {@link Layer}
 	 *            which execute this operation.
+	 * @throws Exception 
 	 */
-	protected void setCoordinateReferenceSystem(CoordinateReferenceSystem crs) {
-		this.crs = crs;
-		// TODO: When ST_Translate was successful we have to update the layer.
-		// this.layer.setCoordinateReferenceSystem(this.crs);
+	protected void setCoordinateReferenceSystem(CoordinateReferenceSystem crs) throws Exception {
+		
+		//if(this.layer instanceof EditableLayer) {
+			this.crs = crs;
+			//EditableLayer editLayer = (EditableLayer) this.layer;
+		//	editLayer.setCoordinateReferenceSystem(this.crs);
+		//} else {
+			//TODO: Exception which extends from SpatialTypeException.
+			//throw new Exception();
+		//}
+
 	}
 
 	/**

@@ -17,24 +17,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.query.geometry.outputs;
+package org.neo4j.gis.spatial.operation;
 
-import org.neo4j.gis.spatial.Layer;
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
-import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
-import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
 
 /**
- * Get Geometry
+ * The <code>RelationshipItem</code> class provides a simple container to
+ * store {@link Node} and {@link RelationshipType} for relationships.
+ * 
  * @author Andreas Wilhelm
  *
  */
-public class ST_All extends AbstractReadOperation {
-
-	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
-			Layer layer) {
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
-		return databaseRecord;
+public class RelationshipItem {
+	
+	private RelationshipType relationshipType = null;
+	private Node node = null;
+	
+	public RelationshipItem(Node node, RelationshipType type) {
+		this.node = node;
+		this.relationshipType = type;
 	}
+
+	/**
+	 * @return the relationshipType
+	 */
+	public RelationshipType getRelationshipType() {
+		return relationshipType;
+	}
+
+	/**
+	 * @return the node
+	 */
+	public Node getNode() {
+		return node;
+	}
+
+	
 }

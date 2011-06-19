@@ -51,9 +51,9 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
         return result;
     }
 
-    public boolean isEmpty() {
+    public boolean hasBoundingBox() {
         long start = System.currentTimeMillis();    	
-    	boolean result = spatialIndex.isEmpty();
+    	boolean result = spatialIndex.hasBoundingBox();
     	long stop = System.currentTimeMillis();
         System.out.println("# exec time(count): " + (stop - start) + "ms");
         return result;    	

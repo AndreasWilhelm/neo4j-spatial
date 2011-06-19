@@ -23,10 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.neo4j.gis.spatial.operation.Delete;
-import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.operation.Select;
-import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -56,7 +53,7 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 		return count;
 	}
 
-	public boolean isEmpty() {
+	public boolean hasBoundingBox() {
 		return count() == 0;
 	}
 

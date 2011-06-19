@@ -23,19 +23,28 @@ import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
+import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 
 /**
+ * <p>Represent the geometry as Well-Known Text (WKT).</p>
+ * 
+ * <h3>For example:</h3>
+ * LINESTRING (12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317)
  * 
  * @author Andreas Wilhelm
  * 
  */
 public class ST_AsText extends AbstractReadOperation {
 
-	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 */
+	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
 			Layer layer) {
 		Geometry geometry = this.decodeGeometry(node);
 		WKTWriter wktWriter = new WKTWriter();

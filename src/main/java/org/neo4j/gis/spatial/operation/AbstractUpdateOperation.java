@@ -22,7 +22,6 @@ package org.neo4j.gis.spatial.operation;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.operation.restriction.Restriction;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
-import org.neo4j.graphdb.Node;
 
 /**
  * <p>The <code>AbstractUpdateOperation</code> is the abstract implementation of the
@@ -49,16 +48,7 @@ public abstract class AbstractUpdateOperation extends AbstractDeleteOperation im
 	 * @see Update#addRestriction(RestrictionType, String)
 	 */
 	public void addRestriction(RestrictionType restrictionType, String value) {
-		this.restrictions.add(new Restriction(restrictionType, value));
-	}
-	
-	/**
-	 * @see Update#isRestricted(Node)
-	 */
-	public boolean isRestricted(Node node) {
-		for (Restriction res : this.restrictions) {
-			if(res.hasRestriction(node)) return true;
-		}
-		return false;
+		Restriction restriction = new Restriction(restrictionType, value);
+		this.restrictions.put(restriction.getKey(), restriction);
 	}
 }

@@ -22,11 +22,12 @@ package org.neo4j.gis.spatial.query.geometry.editors;
 import org.apache.log4j.Logger;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
-import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
+import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
@@ -35,7 +36,6 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
@@ -56,18 +56,22 @@ public class ST_Transform extends AbstractFullOperation {
 	private CoordinateReferenceSystem targetCRS;
 
 	/**
+	 * Transformation from the geometry coordinate reference system(CRS) to
+	 * another CRS.
 	 * 
 	 * @param targetSRID
 	 * @throws NoSuchAuthorityCodeException
 	 * @throws FactoryException
 	 */
 	public ST_Transform(int targetSRID) throws NoSuchAuthorityCodeException,
-			FactoryException {
+			FactoryException, Exception {
 		this.targetCRS = CRS.decode(EPSG + targetSRID);
 		this.setCoordinateReferenceSystem(this.targetCRS);
 	}
 
 	/**
+	 * Transformation from the geometry coordinate reference system(CRS) to
+	 * another CRS.
 	 * 
 	 * @param crs
 	 * @throws NoSuchAuthorityCodeException
@@ -77,28 +81,32 @@ public class ST_Transform extends AbstractFullOperation {
 		this.targetCRS = crs;
 	}
 
-	public SpatialDatabaseRecord onIndexReference(int mode, Node geomNode, Layer layer) {
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
+	 *      Node, Layer)
+	 */
+	public SpatialDatabaseRecord onIndexReference(OperationType type,
+			Node node, Layer layer) {
 		SpatialDatabaseRecord spatialDatabaseRecord = null;
-		
-		Geometry geom = this.decodeGeometry(geomNode);
+
+		Geometry geom = this.decodeGeometry(node);
 		try {
 			MathTransform transform = CRS.findMathTransform(this
 					.getCoordinateReferenceSystem(), this.targetCRS);
 			Geometry targetGeometry = JTS.transform(geom, transform);
-			spatialDatabaseRecord = new SpatialDatabaseRecordImpl(layer, geomNode, targetGeometry);
+			spatialDatabaseRecord = new SpatialDatabaseRecordImpl(layer, node,
+					targetGeometry);
 		} catch (FactoryException e) {
 			logger.error(e.getMessage());
 		} catch (MismatchedDimensionException e) {
-			logger.error("Mismatched dimension at Node " + geomNode.getId()
-					+ " :" + e.getMessage());
+			logger.error("Mismatched dimension at Node " + node.getId() + " :"
+					+ e.getMessage());
 		} catch (TransformException e) {
-			logger.error("Could not transform Node " + geomNode.getId() + " :"
+			logger.error("Could not transform Node " + node.getId() + " :"
 					+ e.getMessage());
 		}
-		
+
 		return spatialDatabaseRecord;
 	}
-
-
 
 }

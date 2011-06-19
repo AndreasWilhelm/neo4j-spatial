@@ -19,9 +19,12 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
 
 /**
  * <p>
@@ -39,30 +42,38 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
  */
 public abstract class AbstractFullOperation extends AbstractUpdateOperation
 		implements Insert {
-	// Relationship??
+	
+	// The added properties for the insert operations.
 	private HashMap<String, Object> properties = new HashMap<String, Object>();
-
+	// The added relationships for the insert operations.
+	private List<RelationshipItem> relationships = new ArrayList<RelationshipItem>();
+	
 	/**
-	 * @see Insert#insert(SpatialDatabaseRecord)
+	 * @see Insert#addRelationship(Node, RelationshipType)
 	 */
-	public void insert(SpatialDatabaseRecord record) {
-
+	public void addRelationship(Node node, RelationshipType relationshipType) {
+		// TODO Determine if it is a valid relation or throw a exception.
+		relationships.add(new RelationshipItem(node, relationshipType));
 	}
 
 	/**
-	 * @see Insert#insert(SpatialDatabaseRecord...)
+	 * @see Insert#getRelationship()
 	 */
-	public void insert(SpatialDatabaseRecord... record) {
-		for (SpatialDatabaseRecord spatialDatabaseRecord : record) {
-			insert(spatialDatabaseRecord);
-		}
-
+	public List<RelationshipItem> getRelationship() {
+		return relationships;
 	}
 
+	/**
+	 * @see Insert#addProperty(String, Object)
+	 */
 	public void addProperty(String key, Object value) {
+		// TODO Determine if it is a valid property or throw a exception.
 		properties.put(key, value);
 	}
-	
+
+	/**
+	 * @see Insert#getProperties()
+	 */
 	public HashMap<String, Object> getProperties() {
 		return properties;
 	}

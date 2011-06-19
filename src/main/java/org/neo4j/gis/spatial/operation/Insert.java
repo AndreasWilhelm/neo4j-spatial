@@ -19,33 +19,54 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
+import java.util.HashMap;
+import java.util.List;
+
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
 
 /**
- * This interface provides the public APIs to execute the spatial type insert.
+ * This interface provides the public APIs to execute the spatial type insert
+ * operations.
  * 
  * @author Andreas Wilhelm
  */
 public interface Insert extends SpatialTypeOperation {
-	
+
 	/**
-	 * 
-	 * @param record
-	 * @return
-	 */
-	public abstract void insert(SpatialDatabaseRecord record);
-	
-	/**
-	 * 
-	 * @param record
-	 * @return
-	 */
-	public abstract void insert(SpatialDatabaseRecord ... record);
-	
-	/**
+	 * Add a property to the new node.
 	 * 
 	 * @param key
+	 *            The property key.
 	 * @param value
+	 *            The property value.
 	 */
 	public abstract void addProperty(String key, Object value);
+
+	/**
+	 * Get a map of added properties.
+	 * 
+	 * @return Returns a HashMap with node properties.
+	 */
+	public abstract HashMap<String, Object> getProperties();
+
+	/**
+	 * Add a relationship to the new node.
+	 * 
+	 * @param node
+	 *            - The node to which the {@link Relationship} should done.
+	 * @param relationshipType
+	 *            - The {@link RelationshipType} of the new {@link Relationship}
+	 */
+	public abstract void addRelationship(Node node,
+			RelationshipType relationshipType);
+
+	/**
+	 * Get a list of added relationships.
+	 * 
+	 * @return Returns a list with node relationships.
+	 */
+	public abstract List<RelationshipItem> getRelationship();
+
 }

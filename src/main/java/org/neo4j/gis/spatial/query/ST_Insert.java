@@ -22,35 +22,31 @@ package org.neo4j.gis.spatial.query;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
-import org.neo4j.gis.spatial.operation.AbstractDeleteOperation;
+import org.neo4j.gis.spatial.operation.AbstractFullOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
-import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.graphdb.Node;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
- * The simplest spatial type operation to delete a single node {@link Node} of
- * the layer or all nodes which have no restriction.
+ * The simplest spatial type operation to add a new spatial {@link Node} to the
+ * layer.
  * 
  * @author Andreas Wilhelm
  * 
  */
-public class ST_Delete extends AbstractDeleteOperation {
+public class ST_Insert extends AbstractFullOperation  {
+	
+	private Geometry geometry = null;
 	
 	/**
-	 * Delete all nodes which have no restriction.
-	 */
-	public ST_Delete() {
-	}
-
-	/**
-	 * Delete a single node.
+	 * Add a new Node with the provided geometry.
 	 * 
-	 * @param nodeid
-	 *            The id of the node to delete.
+	 * @param geometry The geometry of the new Node.
 	 */
-	public ST_Delete(long nodeid) {
-		this.addRestriction(RestrictionType.EQUAL_TO, "id=" + nodeid);
+	public ST_Insert(Geometry geometry) {
+		this.geometry = geometry;
 	}
 	
 	/**
@@ -58,7 +54,8 @@ public class ST_Delete extends AbstractDeleteOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
 			Layer layer) {
-		return new SpatialDatabaseRecordImpl(layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node, this.geometry);
+		return record;
 	}
 
 }

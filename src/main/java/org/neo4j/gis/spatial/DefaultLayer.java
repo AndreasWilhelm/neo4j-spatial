@@ -403,7 +403,9 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
 		return null;
 	}
 
-	
+	/**
+	 * @see Layer#execute(Select)
+	 */
 	public List<SpatialDatabaseRecord> execute(Select select) {
 		return getIndex().execute(select);
 	}

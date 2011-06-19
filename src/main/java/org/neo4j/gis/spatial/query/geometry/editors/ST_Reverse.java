@@ -23,23 +23,24 @@ import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
+import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * Reverses the order of the vertexes from the node geometry.
  * 
  * @author Andreas Wilhelm
  *
  */
 public class ST_Reverse extends AbstractFullOperation {
 
-	public boolean needsToVisit(Envelope indexNodeEnvelope) {
-		return true;
-	}
-
-	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 */
+	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
 			Layer layer) {
 		Geometry geom = decodeGeometry(node);
 		Geometry targetGeometry = geom.reverse();

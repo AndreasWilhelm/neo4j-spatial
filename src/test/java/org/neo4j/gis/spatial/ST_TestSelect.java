@@ -17,33 +17,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geomety.editors;
+package org.neo4j.gis.spatial;
 
 import java.io.File;
 import java.util.List;
 
-import org.geotools.referencing.CRS;
 import org.junit.Test;
-import org.neo4j.gis.spatial.Layer;
-import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
+import org.neo4j.gis.spatial.geomety.editors.Dataset;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.query.geometry.editors.ST_Reverse;
-import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.neo4j.gis.spatial.osm.OSMLayer;
+import org.neo4j.gis.spatial.query.ST_Select;
 
 /**
- * This unit test testing all available geometry editors queries: - ST_Transform
- * SEARCH | UPDATE -
+ * A simple testcase to test the search operation.
  * 
  * @author Andreas Wilhelm
- * 
+ *
  */
-public class TestSearchGeometyEditors extends Neo4jTestCase {
+public class ST_TestSelect extends Neo4jTestCase {
 
-	private Layer layer = null;
+	private SpatialDatabaseService spatialService = null;
+	private OSMLayer layer = null;
 	private boolean debug = true;
 
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
@@ -51,51 +48,31 @@ public class TestSearchGeometyEditors extends Neo4jTestCase {
 		super.setUp(false, true, false);
 		try {
 			this.loadTestOsmData(Dataset.LAYER_NAME, Dataset.COMMIT_INTERVAL);
-			SpatialDatabaseService spatialService = new SpatialDatabaseService(graphDb());
-			this.layer = spatialService.getLayer(Dataset.LAYER_NAME);
+			this.spatialService = new SpatialDatabaseService(graphDb());
+			this.layer = (OSMLayer) spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test
-	public void testTransformSearch() throws Exception {
-		
-		CoordinateReferenceSystem crs = CRS.decode("EPSG:2002");
-		Select select = new ST_Transform(crs);
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		if (debug) {
-			printTestResults("testTransformSearch", results);
-		}
-	}
 
 	@Test
-	public void testTransformSearch2() throws Exception {
-		Select select = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		if (debug) {
-			printTestResults("testTransformSearch2", results);
-		}
-	
-	}
+	public void testSearch() throws Exception {
 
-	@Test
-	public void testReverseSearch() throws Exception {
-		Select select = new ST_Reverse();
+		Select select = new ST_Select();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testReverseSearch", results);
+			printTestResults("testSelect", results);
 		}
 	}
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;
-		System.out.println("\n=== Loading layer " + layerName + " from "
-				+ osmPath + " ===");
+		if (debug) {
+			System.out.println("\n=== Loading layer " + layerName + " from "
+					+ osmPath + " ===");
+		}
 		reActivateDatabase(false, true, false);
 		OSMImporter importer = new OSMImporter(layerName);
 		importer.importFile(getBatchInserter(), osmPath);
@@ -113,4 +90,5 @@ public class TestSearchGeometyEditors extends Neo4jTestCase {
 		}
 		System.out.println("------------------------------------------------");
 	}
+
 }

@@ -19,12 +19,35 @@
  */
 package org.neo4j.gis.spatial.operation.restriction;
 
+import java.util.HashMap;
+
+import org.neo4j.graphdb.Node;
+
 /**
- * The available restriction types for spatial type operations.
+ * The <code>RestrictionMap</code> class is a hash map based implementation with
+ * additional methods to determine the spatial type restrictions on it.
  * 
  * @author Andreas Wilhelm
- * 
+ *
  */
-public enum RestrictionType {
-	EQUAL_TO, NOT_EQUAL_TO, HAS_PROPERTY, HAS_NOT_PROPERTY, HAS_RELATIONSHIP, HAS_NOT_RELATIONSHIP;
+public class RestrictionMap extends HashMap<String, Restriction>  {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Determine if a given node is restricted.
+	 * 
+	 * @param node Return true when the given node has no restriction.
+	 */
+	public boolean determineNode(Node node) {
+		for (Restriction res : this.values()) {
+			if(res.hasRestriction(node)) return false;
+		}
+		return true;
+		
+	}
+	
 }

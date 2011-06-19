@@ -52,8 +52,8 @@ public interface SpatialTypeOperation {
 	 * will be called from the {@link RTreeIndex} on any node on which the
 	 * spatial type operation should be done.
 	 * 
-	 * @param mode
-	 *            The operation mode(maybe remove this or rename or enum...)
+	 * @param type
+	 *            The operation type, such as DELETE or INSERT
 	 * @param node
 	 *            The {@link Node} on which the spatial type operation should
 	 *            done.
@@ -63,7 +63,7 @@ public interface SpatialTypeOperation {
 	 * @return Returns a {@link SpatialDatabaseRecord} of spatial type
 	 *         operation.
 	 */
-	public abstract SpatialDatabaseRecord onIndexReference(int mode, Node node,
+	public abstract SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
 			Layer layer);
 
 }

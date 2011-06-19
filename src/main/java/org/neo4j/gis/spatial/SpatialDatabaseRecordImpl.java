@@ -19,9 +19,7 @@
  */
 package org.neo4j.gis.spatial;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -143,8 +141,8 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 	 * 
 	 */
 	public void setProperty(String key, Object value) {
-	//	checkIsNotReservedProperty(name);
-	//	geomNode.setProperty(name, value);
+		//checkIsNotReservedProperty(key);
+		//geomNode.setProperty(key, value);
 		this.key = key;
 		dynamicProperties.put(key, (String) value);
 		

@@ -1,52 +1,47 @@
 package org.neo4j.gis.spatial.query.geometry.constructors;
 
-import java.util.List;
-
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
+import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 /**
+ * Creates a geometry node from a Well-known Text(WKT).
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public class ST_GeomFromText extends AbstractFullOperation {
 
 	private Geometry geom = null;
 
 	/**
+	 * Creates a geometry node from a Well-known Text(WKT).
 	 * 
 	 * @param wellKnownText
+	 *            the well known text, such as POINT (48 7)
 	 * @throws ParseException
 	 */
 	public ST_GeomFromText(String wellKnownText) throws ParseException {
-		WKTReader wktReader = new WKTReader(null);
+		WKTReader wktReader = new WKTReader();
 		this.geom = wktReader.read(wellKnownText);
 	}
-	
-	public ST_GeomFromText(String wellKnownText, Relationship relationship) throws ParseException {
-		this(wellKnownText);
-	}
-	
-	
-	public ST_GeomFromText(String wellKnownText, List<Relationship> relationship) throws ParseException {
-		this(wellKnownText);
-	}
-	
-	
-	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
-			Layer layer) {
-		// The node should be carete in RThreeIndex by executing insert...
-		this.encodeGeometry(this.geom, node);
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node);
+
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
+	 *      Node, Layer)
+	 */
+	public SpatialDatabaseRecord onIndexReference(OperationType type,
+			Node node, Layer layer) {
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node, this.geom);
 		return record;
 	}
 

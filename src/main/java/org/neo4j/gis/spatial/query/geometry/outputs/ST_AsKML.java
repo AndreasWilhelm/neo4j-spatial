@@ -28,18 +28,24 @@ import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
+import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 import org.geotools.xml.Encoder;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * Represent the geometry as KML.
  * 
  * @author Andreas Wilhelm
  * 
  */
 public class ST_AsKML extends AbstractReadOperation {
 
-	public SpatialDatabaseRecord onIndexReference(int mode, Node node,
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 */
+	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
 			Layer layer) {
 		Geometry geom = decodeGeometry(node);
 	
