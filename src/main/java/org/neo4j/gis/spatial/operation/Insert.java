@@ -19,12 +19,13 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * This interface provides the public APIs to execute the spatial type insert
@@ -49,7 +50,7 @@ public interface Insert extends SpatialTypeOperation {
 	 * 
 	 * @return Returns a HashMap with node properties.
 	 */
-	public abstract HashMap<String, Object> getProperties();
+	public abstract List<NodeProperty> getProperties();
 
 	/**
 	 * Add a relationship to the new node.
@@ -67,6 +68,12 @@ public interface Insert extends SpatialTypeOperation {
 	 * 
 	 * @return Returns a list with node relationships.
 	 */
-	public abstract List<RelationshipItem> getRelationship();
+	public abstract List<NodeRelation> getRelationships();
+
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract List<Geometry> getGeometries();
 
 }

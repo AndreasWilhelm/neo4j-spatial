@@ -40,6 +40,7 @@ public abstract class AbstractUpdateOperation extends AbstractDeleteOperation im
 	/**
 	 * @see Update#update(SpatialDatabaseRecord)
 	 */
+	@Deprecated
 	public void update(SpatialDatabaseRecord record) {
 		this.encodeGeometry(record.getGeometry(), record.getGeomNode());
 	}

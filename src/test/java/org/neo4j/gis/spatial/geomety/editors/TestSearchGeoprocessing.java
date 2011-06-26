@@ -28,22 +28,13 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.query.geometry.accessors.ST_AsBinary;
-import org.neo4j.gis.spatial.query.geometry.accessors.ST_AsText;
-import org.neo4j.gis.spatial.query.geometry.accessors.ST_EndPoint;
-import org.neo4j.gis.spatial.query.geometry.accessors.ST_StartPoint;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Simplify;
 
 /**
- * This unit test testing all available geometry accessor queries:
- *   - ST_AsText
- *   - ST_AsBinary
- * 	 - ST_StartPoint
- *   - ST_EndPoint
- *   
  * @author Andreas Wilhelm
  * 
  */
-public class TestSearchGeometyAccessors extends Neo4jTestCase {
+public class TestSearchGeoprocessing extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService = null;
 	private Layer layer = null;
@@ -60,40 +51,16 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 			e.printStackTrace();
 		}
 	}
-	
-	public void testAsText() throws Exception {
-		Select select = new ST_AsText();
+
+	public void testSimplify() throws Exception {
+		String wkt = "LINESTRING (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885)";
+
+		Select select = new ST_Simplify();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
+		assertEquals(wkt, results.get(1).getGeometry().toText());
 		if (debug) {
-			printTestResults("textAsText", results, ST_AsText.class.getName());
-		}
-	}
-	public void testAsBinary() throws Exception {
-		Select select = new ST_AsBinary();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		if (debug) {
-			printTestResults("testAsBinary", results, ST_AsBinary.class.getName());
-		}
-	}
-	
-	
-	public void testGetStartPoint() throws Exception {
-		Select select = new ST_StartPoint();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		if (debug) {
-			printTestResults("testGetStartPoint", results);
-		}
-	}
-	
-	public void testGetEndPoint() throws Exception {
-		Select select = new ST_EndPoint();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		if (debug) {
-			printTestResults("testGetEndPoint", results);
+			printTestResults("testSimplify", results);
 		}
 	}
 
@@ -110,22 +77,11 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 	}
 
 	private void printTestResults(String mode,
-			List<SpatialDatabaseRecord> results, String property) {
-		System.out.println("----------------------  " + mode
-				+ "  -------------------");
-		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println(spatialDatabaseRecord.getProperty(property));
-		}
-		System.out.println("------------------------------------------------");
-	}
-	
-	
-	private void printTestResults(String mode,
 			List<SpatialDatabaseRecord> results) {
 		System.out.println("----------------------  " + mode
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println(spatialDatabaseRecord.getGeometry());
+			System.out.println(spatialDatabaseRecord.getGeometry().toText());
 		}
 		System.out.println("------------------------------------------------");
 	}

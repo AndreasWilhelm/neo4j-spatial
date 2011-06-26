@@ -20,6 +20,8 @@
 package org.neo4j.gis.spatial;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.geomety.editors.Dataset;
@@ -31,10 +33,12 @@ import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 /**
- * A simple testcase to test the insert operation with a Relationship.
+ * A simple testcase to test the insert operation with a Relationship and Properties.
+ * 
  * 
  * @author Andreas Wilhelm
  *
@@ -44,7 +48,9 @@ public class ST_TestInsert extends Neo4jTestCase {
 	private SpatialDatabaseService spatialService = null;
 	private OSMLayer layer = null;
 	private boolean debug = true;
-
+	private String wellKnownText = "LINESTRING (30 10, 10 30, 40 40)";
+	private WKTReader wktReader = new WKTReader();
+	
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
 		super.setUp(false, true, false);
@@ -58,9 +64,7 @@ public class ST_TestInsert extends Neo4jTestCase {
 	}
 	
 	public void testInsertWithGeometryAndRelation() throws Exception {
-		// Example data
-		String wellKnownText = "LINESTRING (30 10, 10 30, 40 40)";
-		WKTReader wktReader = new WKTReader();
+		// Example data.
 		Geometry geometry = wktReader.read(wellKnownText);
 		String propertyKey = "networklevel";
 		int propertyValue = 15;
@@ -69,15 +73,31 @@ public class ST_TestInsert extends Neo4jTestCase {
 		Insert insert = new ST_Insert(geometry);
 		insert.addProperty(propertyKey, propertyValue);
 		insert.addRelationship(relnode, SpatialRelationshipTypes.NEXT_GEOM);
-		int count = layer.execute(insert);
+		List<SpatialDatabaseRecord> records = layer.execute(insert);
 		
 		Node nNode = layer.getIndex().get(73l).getGeomNode();
-		assertNotNull(nNode);
 		assertEquals(nNode.hasRelationship(Direction.OUTGOING, SpatialRelationshipTypes.NEXT_GEOM), true);
 		assertEquals(nNode.getProperty(propertyKey), propertyValue);
-		assertEquals(1, count);
+		assertEquals(1, records.size());
 	}
 
+	public void testBatchInsert() throws ParseException{
+		// Add 5000 geometries at one transaction.
+		int size = 5000;
+		String propertyKey = "roadtype";
+		String propertyValue = "highway";
+		List<Geometry> geometries = new ArrayList<Geometry>();
+		
+		Geometry sampleGeomerty = this.wktReader.read(this.wellKnownText);
+		for (int i = 0; i < size; i++) {
+			geometries.add(sampleGeomerty);
+		}
+		
+		Insert insert = new ST_Insert(geometries);
+		insert.addProperty(propertyKey, propertyValue);
+		List<SpatialDatabaseRecord> records = this.layer.execute(insert);
+		assertEquals(size, records.size());
+	}
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {

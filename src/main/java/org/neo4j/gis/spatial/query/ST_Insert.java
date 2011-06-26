@@ -19,6 +19,9 @@
  */
 package org.neo4j.gis.spatial.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -36,25 +39,39 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Andreas Wilhelm
  * 
  */
-public class ST_Insert extends AbstractFullOperation  {
+public class ST_Insert extends AbstractFullOperation {
 	
-	private Geometry geometry = null;
-	
+	private int index = 0;
+
 	/**
 	 * Add a new Node with the provided geometry.
 	 * 
-	 * @param geometry The geometry of the new Node.
+	 * @param geometry
+	 *            The geometry of the new Node.
 	 */
 	public ST_Insert(Geometry geometry) {
-		this.geometry = geometry;
+		List<Geometry> geometies = new ArrayList<Geometry>();
+		geometies.add(geometry);
+		this.setGeometries(geometies);
 	}
-	
+
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 * Add a list with new geometries.
+	 * 
+	 * @param geometries
 	 */
-	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
-			Layer layer) {
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node, this.geometry);
+	public ST_Insert(List<Geometry> geometries) {
+		this.setGeometries(geometries);
+	}
+
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
+	 *      Node, Layer)
+	 */
+	public SpatialDatabaseRecord onIndexReference(OperationType type,
+			Node node, Layer layer) {
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node, this.getGeometries().get(this.index++));
 		return record;
 	}
 

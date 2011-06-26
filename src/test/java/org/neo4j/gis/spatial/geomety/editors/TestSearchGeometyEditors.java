@@ -35,8 +35,9 @@ import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
- * This unit test testing all available geometry editors queries: - ST_Transform
- * SEARCH | UPDATE -
+ * This unit test testing all available geometry output queries: 
+ * 	- ST_Transform
+ *  - ST_Reverse
  * 
  * @author Andreas Wilhelm
  * 

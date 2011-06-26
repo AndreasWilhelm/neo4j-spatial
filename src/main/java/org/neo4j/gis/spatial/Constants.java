@@ -36,6 +36,7 @@ public interface Constants {
     String PROP_LAYER_CLASS = "layer_class";
 	
 	String PROP_TYPE = "gtype";
+	String PROP_SRID = "srid";
 	String PROP_QUERY = "query";
 	String PROP_BBOX = "bbox";
 	String PROP_WKB = "wkb";
@@ -45,6 +46,7 @@ public interface Constants {
 			PROP_LAYER, 
 			PROP_LAYERNODEEXTRAPROPS, 
 			PROP_CRS, 
+			PROP_SRID,
 			PROP_CREATIONTIME, 
 			PROP_TYPE, 
 			PROP_BBOX, 

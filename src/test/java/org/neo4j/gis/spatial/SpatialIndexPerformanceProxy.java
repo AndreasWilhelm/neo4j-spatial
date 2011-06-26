@@ -100,7 +100,6 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
 
     private SpatialIndexReader spatialIndex;
 
-	@Override
 	public List<SpatialDatabaseRecord> execute(Select select) {
 		// TODO Auto-generated method stub
 		return null;

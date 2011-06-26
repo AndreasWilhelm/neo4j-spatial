@@ -171,7 +171,6 @@ public abstract class Neo4jTestCase extends TestCase {
         else
         {
             new Thread(new Runnable() {
-                @Override
                 public void run() {
                     FileUtils.deleteFile(getNeoPath());
                 }

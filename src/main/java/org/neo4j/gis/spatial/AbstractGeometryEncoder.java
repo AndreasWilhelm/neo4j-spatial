@@ -43,7 +43,7 @@ public abstract class AbstractGeometryEncoder implements GeometryEncoder, Consta
 
 	public void encodeGeometry(Geometry geometry, PropertyContainer container) {
 		container.setProperty(PROP_TYPE, encodeGeometryType(geometry.getGeometryType()));
-
+		container.setProperty(PROP_SRID, geometry.getSRID());
 		encodeEnvelope(geometry.getEnvelopeInternal(), container);
 
 		encodeGeometryShape(geometry, container);

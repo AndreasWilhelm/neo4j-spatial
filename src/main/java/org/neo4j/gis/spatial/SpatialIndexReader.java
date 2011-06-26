@@ -49,6 +49,6 @@ public interface SpatialIndexReader {
     
 	@Deprecated
 	void execute(Search search);
-	@Deprecated
+
     Iterable<Node> getAllGeometryNodes();
 }

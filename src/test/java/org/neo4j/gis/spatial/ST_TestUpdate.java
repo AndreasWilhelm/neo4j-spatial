@@ -20,6 +20,7 @@
 package org.neo4j.gis.spatial;
 
 import java.io.File;
+import java.util.List;
 
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.geomety.editors.Dataset;
@@ -60,28 +61,32 @@ public class ST_TestUpdate extends Neo4jTestCase {
 		String wellKnownText = "LINESTRING (30 10, 10 30, 40 40)";
 		WKTReader wktReader = new WKTReader();
 		Geometry geometry = wktReader.read(wellKnownText);
+		geometry.setSRID(4326);
 		
 		Node node = layer.getIndex().get(55l).getGeomNode();
 		Update update = new ST_Update(node, geometry);
-		int count = layer.execute(update);
+		List<SpatialDatabaseRecord> records = layer.execute(update);
 		
 		Geometry updatedGeom = layer.getGeometryEncoder().decodeGeometry(node);
-		assertEquals(geometry, updatedGeom);
-		assertEquals(1, count);
+		assertEquals(geometry.toText(), updatedGeom.toText());
+		//TODO: Set SRID for decodedGeometry...
+		assertNotSame(geometry, updatedGeom);
+		assertEquals(1, records.size());
 	}
 
 	public void testSingleUpdateTwo() throws Exception {
 		String wellKnownText = "LINESTRING (30 10, 10 30, 40 40)";
 		WKTReader wktReader = new WKTReader();
 		Geometry geometry = wktReader.read(wellKnownText);
+		geometry.setSRID(4326);
 		
 		Update update = new ST_Update(55l, geometry);
-		int count = layer.execute(update);
+		List<SpatialDatabaseRecord> records = layer.execute(update);
 		
 		Node node = layer.getIndex().get(55l).getGeomNode();
 		Geometry updatedGeom = layer.getGeometryEncoder().decodeGeometry(node);
-		assertEquals(geometry, updatedGeom);
-		assertEquals(1, count);
+		assertEquals(geometry.toText(), updatedGeom.toText());
+		assertEquals(1, records.size());
 	}
 
 	private void loadTestOsmData(String layerName, int commitInterval)

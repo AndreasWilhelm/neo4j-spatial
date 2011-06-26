@@ -20,10 +20,12 @@
 package org.neo4j.gis.spatial.geomety.editors;
 
 import java.io.File;
+import java.util.List;
 
 import org.geotools.referencing.CRS;
 import org.junit.Test;
 import org.neo4j.gis.spatial.Neo4jTestCase;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.gis.spatial.osm.OSMImporter;
@@ -33,10 +35,10 @@ import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
- * This unit test testing all available geometry editors queries:
- * 	- ST_Transform SEARCH | UPDATE
- *  -
- *  
+ * This unit test testing all available geometry output queries: 
+ * 	- ST_Transform
+ *  - ST_Reverse
+ * 
  * @author Andreas Wilhelm
  * 
  */
@@ -61,22 +63,22 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 	public void testTransformUpdate() throws Exception {
 		CoordinateReferenceSystem crs = CRS.decode("EPSG:2002");
 		Update update = new ST_Transform(crs);
-		int results = layer.execute(update);
-		assertEquals(2, results);
+		List<SpatialDatabaseRecord> records = layer.execute(update);
+		assertEquals(2, records.size());
 	}
 	
 	@Test
 	public void testTransformUpdate2() throws Exception {
 		Update update = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
-		int results = layer.execute(update);
-		assertEquals(2, results);
+		List<SpatialDatabaseRecord> records = layer.execute(update);
+		assertEquals(2, records.size());
 	}
 	
 	@Test
 	public void testReverseUpdate() throws Exception {
 		Update update = new ST_Reverse();
-		int results = layer.execute(update);
-		assertEquals(2, results);
+		List<SpatialDatabaseRecord> records = layer.execute(update);
+		assertEquals(2, records.size());
 	}
 	
 	private void loadTestOsmData(String layerName, int commitInterval)

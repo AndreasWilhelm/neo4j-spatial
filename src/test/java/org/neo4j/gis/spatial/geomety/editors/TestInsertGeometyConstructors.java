@@ -20,8 +20,10 @@
 package org.neo4j.gis.spatial.geomety.editors;
 
 import java.io.File;
+import java.util.List;
 
 import org.neo4j.gis.spatial.Neo4jTestCase;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.geomety.editors.Dataset;
 import org.neo4j.gis.spatial.operation.Insert;
@@ -62,11 +64,13 @@ public class TestInsertGeometyConstructors extends Neo4jTestCase {
 		
 		Insert insert = new ST_GeomFromText(wellKnownText);
 		insert.addProperty(propertyKey, propertyValue);
-		int count = layer.execute(insert);
-		Node nNode = layer.getIndex().get(73l).getGeomNode();
+		List<SpatialDatabaseRecord> records = this.layer.execute(insert);
+		
+		Node nNode = this.layer.getIndex().get(73l).getGeomNode();
+		
 		assertNotNull(nNode);
 		assertEquals(nNode.getProperty(propertyKey), propertyValue);
-		assertEquals(1, count);
+		assertEquals(1, records.size());
 	}
 
 	private void loadTestOsmData(String layerName, int commitInterval)

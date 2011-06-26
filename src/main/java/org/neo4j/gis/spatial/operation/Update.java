@@ -19,7 +19,6 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.operation.restriction.Restriction;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
@@ -31,13 +30,6 @@ import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
  * @author Andreas Wilhelm
  */
 public interface Update extends SpatialTypeOperation {
-
-	/**
-	 * Update a single {@link SpatialDatabaseRecord}.
-	 * 
-	 * @param record The record to update.
-	 */
-	public abstract void update(SpatialDatabaseRecord record);
 
 	/**
 	 * Add a restriction to filter the update operation.

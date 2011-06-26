@@ -20,11 +20,12 @@
 package org.neo4j.gis.spatial.operation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * <p>
@@ -44,22 +45,24 @@ public abstract class AbstractFullOperation extends AbstractUpdateOperation
 		implements Insert {
 	
 	// The added properties for the insert operations.
-	private HashMap<String, Object> properties = new HashMap<String, Object>();
+	private List<NodeProperty> properties = new ArrayList<NodeProperty>();
 	// The added relationships for the insert operations.
-	private List<RelationshipItem> relationships = new ArrayList<RelationshipItem>();
+	private List<NodeRelation> relationships = new ArrayList<NodeRelation>();
+	//
+	private List<Geometry> getGeometries = new ArrayList<Geometry>();
 	
 	/**
 	 * @see Insert#addRelationship(Node, RelationshipType)
 	 */
 	public void addRelationship(Node node, RelationshipType relationshipType) {
 		// TODO Determine if it is a valid relation or throw a exception.
-		relationships.add(new RelationshipItem(node, relationshipType));
+		relationships.add(new NodeRelation(node, relationshipType));
 	}
 
 	/**
-	 * @see Insert#getRelationship()
+	 * @see Insert#getRelationships()
 	 */
-	public List<RelationshipItem> getRelationship() {
+	public List<NodeRelation> getRelationships() {
 		return relationships;
 	}
 
@@ -68,13 +71,31 @@ public abstract class AbstractFullOperation extends AbstractUpdateOperation
 	 */
 	public void addProperty(String key, Object value) {
 		// TODO Determine if it is a valid property or throw a exception.
-		properties.put(key, value);
+		NodeProperty property = new NodeProperty(key, value);
+		this.properties.add(property);
 	}
 
 	/**
 	 * @see Insert#getProperties()
 	 */
-	public HashMap<String, Object> getProperties() {
-		return properties;
+	public List<NodeProperty> getProperties() {
+		return this.properties;
 	}
+
+	/**
+	 * @return the geometies
+	 */
+	public List<Geometry> getGeometries() {
+		return this.getGeometries;
+	}
+
+	/**
+	 * @param geometies the geometies to set
+	 */
+	public void setGeometries(List<Geometry> geometies) {
+		this.getGeometries = geometies;
+	}
+	
+	
+	
 }

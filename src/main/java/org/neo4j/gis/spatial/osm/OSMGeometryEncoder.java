@@ -347,7 +347,7 @@ public class OSMGeometryEncoder extends AbstractGeometryEncoder {
 	 * done in OSMDataset.
 	 */
 	protected void encodeGeometryShape(Geometry geometry, PropertyContainer container) {
-/*
+
 		Node geomNode = testIsNode(container);
 		vertices = 0;
 		int gtype = SpatialDatabaseService.convertJtsClassToGeometryType(geometry.getClass());
@@ -375,7 +375,7 @@ public class OSMGeometryEncoder extends AbstractGeometryEncoder {
 			throw new SpatialDatabaseException("Unsupported geometry: " + geometry.getClass());
 		}
 		geomNode.setProperty("vertices", vertices);
-	*/
+	
 	}
 
 	private Node makeOSMNode(Geometry geometry, Node geomNode) {

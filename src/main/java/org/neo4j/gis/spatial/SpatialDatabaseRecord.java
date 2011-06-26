@@ -76,7 +76,7 @@ public interface SpatialDatabaseRecord extends Constants,
 
 	public Object getProperty(String name);
 
-	@Deprecated
+	//@Deprecated
 	//Why deprected well we should not do abny changes to the node but this should be useable for dynamic proeprties which
 	//only use for search querys..
 	public void setProperty(String name, Object value);

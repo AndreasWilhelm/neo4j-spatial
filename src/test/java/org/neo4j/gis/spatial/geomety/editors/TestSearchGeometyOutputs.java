@@ -33,8 +33,10 @@ import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGeoJSON;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsKML;
 
 /**
- * This unit test testing all available geometry editors queries: - ST_Transform
- * SEARCH | UPDATE -
+ * This unit test testing all available geometry output queries: 
+ * 	- ST_AsGML
+ *  - ST_AsGeoJSON
+ *  - ST_AsKML
  * 
  * @author Andreas Wilhelm
  * 

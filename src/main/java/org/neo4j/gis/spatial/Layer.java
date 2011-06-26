@@ -158,8 +158,8 @@ public interface Layer {
 	/**
 	 * Execute a spatial type select query on the layer.
 	 * 
-	 * @param select
-	 * @return
+	 * @param select the select query.
+	 * @return Returns a search result list with {@link SpatialDatabaseRecord}.
 	 */
 	List<SpatialDatabaseRecord> execute(Select select);
 	

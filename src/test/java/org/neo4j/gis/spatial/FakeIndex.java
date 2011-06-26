@@ -100,7 +100,7 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 		return layer.getIndex().getAllGeometryNodes();
 	}
 
-	@Override
+
 	public List<SpatialDatabaseRecord> execute(Select select) {
 		// TODO Auto-generated method stub
 		return null;

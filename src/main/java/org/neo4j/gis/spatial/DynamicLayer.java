@@ -117,7 +117,6 @@ public class DynamicLayer extends EditableLayerImpl {
 	        return index.getAllGeometryNodes();
         }
 
-		@Override
 		public List<SpatialDatabaseRecord> execute(Select select) {
 			// TODO Auto-generated method stub
 			return null;
@@ -494,7 +493,7 @@ public class DynamicLayer extends EditableLayerImpl {
 			return getName();
 		}
 
-		@Override
+	
 		public List<SpatialDatabaseRecord> execute(Select select) {
 			// TODO Auto-generated method stub
 			return null;

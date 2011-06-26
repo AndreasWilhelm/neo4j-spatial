@@ -20,16 +20,11 @@
 package org.neo4j.gis.spatial;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.neo4j.gis.spatial.operation.Delete;
-import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.RelationshipItem;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
@@ -53,7 +48,7 @@ import com.vividsolutions.jts.geom.Envelope;
  * wrapped with modifying search functions to that custom classes can be used to
  * perform filtering searches on the tree.
  * 
- * @author Davide Savazzi, Andreas Wilhelm
+ * @author Davide Savazzi
  */
 public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter,
 		Constants {
@@ -1068,181 +1063,4 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter,
 			}
 		}
 	}
-
-	/**
-	 * @see EditableLayer#execute(Update)
-	 */
-	public int execute(Update update) {
-		AtomicInteger count = new AtomicInteger();
-		update.setLayer(layer);
-		update(update, getIndexRoot().getId(), count);
-		return count.get();
-	}
-
-	/**
-	 * Go threw every node and relations to determine if it should be updated.
-	 * 
-	 * @param update
-	 *            The update query.
-	 * @param rootNodeId
-	 *            The root node id.
-	 * @param count
-	 *            The counter for the deleted nodes or relations.
-	 */
-	private void update(Update update, long rootNodeId, AtomicInteger count) {
-
-		RestrictionMap restrictionMap = update.getRestrictions();
-
-		Node indexNode = database.getNodeById(rootNodeId);
-
-		if (indexNode.hasRelationship(SpatialRelationshipTypes.RTREE_CHILD,
-				Direction.OUTGOING)) {
-			// Node is not a leaf
-
-			// collect children
-			List<Long> children = new ArrayList<Long>();
-			for (Relationship rel : indexNode.getRelationships(
-					SpatialRelationshipTypes.RTREE_CHILD, Direction.OUTGOING)) {
-				children.add(rel.getEndNode().getId());
-			}
-
-			// visit children
-			for (Long child : children) {
-				update(update, child, count);
-			}
-		} else if (indexNode.hasRelationship(
-				SpatialRelationshipTypes.RTREE_REFERENCE, Direction.OUTGOING)) {
-			// Node is a leaf
-			Transaction tx = database.beginTx();
-			try {
-				for (Relationship rel : indexNode.getRelationships(
-						SpatialRelationshipTypes.RTREE_REFERENCE,
-						Direction.OUTGOING)) {
-					Node node = rel.getEndNode();
-					SpatialDatabaseRecord record = update.onIndexReference(OperationType.UPDATE,
-							node, this.layer);
-					if (restrictionMap.determineNode(record.getGeomNode())) {
-						update.update(record);
-						count.incrementAndGet();
-					}
-				}
-				tx.success();
-			} finally {
-				tx.finish();
-			}
-		}
-
-	}
-
-	/**
-	 * @see EditableLayer#execute(Delete)
-	 */
-	public int execute(Delete delete) {
-		AtomicInteger count = new AtomicInteger();
-		delete.setLayer(this.layer);
-		delete(delete, getIndexRoot().getId(), count);
-		return count.get();
-	}
-
-	/**
-	 * Go threw every node and relations to determine if it should be deleted.
-	 * 
-	 * @param delete
-	 *            The delete query.
-	 * @param rootNodeId
-	 *            The root node id.
-	 * @param count
-	 *            The counter for the deleted nodes or relations.
-	 */
-	private void delete(Delete delete, long rootNodeId, AtomicInteger count) {
-
-		RestrictionMap restrictionMap = delete.getRestrictions();
-
-		Node indexNode = database.getNodeById(rootNodeId);
-
-		if (indexNode.hasRelationship(SpatialRelationshipTypes.RTREE_CHILD,
-				Direction.OUTGOING)) {
-			// Node is not a leaf
-
-			// collect children
-			List<Long> children = new ArrayList<Long>();
-			for (Relationship rel : indexNode.getRelationships(
-					SpatialRelationshipTypes.RTREE_CHILD, Direction.OUTGOING)) {
-				children.add(rel.getEndNode().getId());
-			}
-
-			// visit children
-			for (Long child : children) {
-				delete(delete, child, count);
-			}
-		} else if (indexNode.hasRelationship(
-				SpatialRelationshipTypes.RTREE_REFERENCE, Direction.OUTGOING)) {
-			// Node is a leaf
-			Transaction tx = database.beginTx();
-			try {
-				for (Relationship rel : indexNode.getRelationships(
-						SpatialRelationshipTypes.RTREE_REFERENCE,
-						Direction.OUTGOING)) {
-					Node node = rel.getEndNode();
-					SpatialDatabaseRecord record = delete.onIndexReference(OperationType.DELETE,
-							node, this.layer);
-					if (restrictionMap.determineNode(record.getGeomNode())) {
-						this.remove(record.getGeomNode().getId(), true);
-						count.incrementAndGet();
-					}
-				}
-				tx.success();
-			} finally {
-				tx.finish();
-			}
-		}
-
-	}
-
-	/**
-	 * @see SpatialIndexWriter#execute(Insert)
-	 */
-	public int execute(Insert insert) {
-		int count = 0;
-		Transaction tx = database.beginTx();
-		try {
-			// Create a new node.
-			Node spatialNode = this.database.createNode();
-			// DO default spatial type stuff??? what is needed???
-			// Maybe create SpatialNodeFactory to wrap this stuff.
-
-			// Get user specified properties and add it to the node.
-			HashMap<String, Object> properties = insert.getProperties();
-			Set<String> props = properties.keySet();
-			for (String key : props) {
-				spatialNode.setProperty(key, properties.get(key));
-			}
-
-			// Get user specified relationships and add it to the node.
-			List<RelationshipItem> relations = insert.getRelationship();
-			for (RelationshipItem item : relations) {
-				spatialNode.createRelationshipTo(item.getNode(), item
-						.getRelationshipType());
-			}
-
-			// Execute spatial type query.
-			SpatialDatabaseRecord record = insert.onIndexReference(OperationType.INSERT,
-					spatialNode, this.layer);
-
-			// Determine if the spatial type query has add additional
-			// properties.
-			// TODO
-
-			// Add Geometry and Node from the returned SpatialDatabaseRecord.
-			this.layer.getGeometryEncoder().encodeGeometry(
-					record.getGeometry(), record.getGeomNode());
-			this.add(record.getGeomNode());
-			tx.success();
-			count++;
-		} finally {
-			tx.finish();
-		}
-		return count;
-	}
-
 }

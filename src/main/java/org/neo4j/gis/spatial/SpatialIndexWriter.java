@@ -19,50 +19,38 @@
  */
 package org.neo4j.gis.spatial;
 
-import org.neo4j.gis.spatial.operation.Delete;
-import org.neo4j.gis.spatial.operation.Insert;
-import org.neo4j.gis.spatial.operation.Update;
-import org.neo4j.gis.spatial.query.ST_Delete;
-import org.neo4j.gis.spatial.query.geometry.constructors.ST_GeomFromText;
-import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
 import org.neo4j.graphdb.Node;
 
-
 /**
- * @author Davide Savazzi
- * @author Andreas Wilhelm
+ * The <code>SpatialIndexWriter</code> interface 
+ * 
+ * @author Davide Savazzi, Andreas Wilhelm
  */
 public interface SpatialIndexWriter extends SpatialIndexReader {
 
+	/**
+	 * Add a node to RTreeIndex.
+	 * @param geomNode the
+	 */
 	void add(Node geomNode);
 	
+	/**
+	 * 
+	 * @param geomNodeId
+	 * @param deleteGeomNode
+	 */
 	void remove(long geomNodeId, boolean deleteGeomNode);
 	
+	/**
+	 * 
+	 * @param deleteGeomNodes
+	 * @param monitor
+	 */
 	void removeAll(boolean deleteGeomNodes, Listener monitor);
 	
+	/**
+	 * 
+	 * @param monitor
+	 */
 	void clear(Listener monitor);
-	
-	/**
-	 * Execute a spatial type insert query on the layer.
-	 * 
-	 * @param insert A spatial type insert query, such as {@link ST_GeomFromText} 
-	 * @return Returns the number of records in a query.
-	 */
-	int execute(Insert insert);
-	
-	/**
-	 * Execute a spatial type delete query on the layer.
-	 * 
-	 * @param delete A spatial type delete query, such as {@link ST_Delete} 
-	 * @return Returns the number of records in a query.
-	 */
-	int execute(Delete delete);
-	
-	/**
-	 * Execute a spatial type update query on the layer.
-	 * 
-	 * @param update A spatial type query, such as {@link ST_Transform} 
-	 * @return Returns the number of records in a query.
-	 */
-	int execute(Update update);
 }
