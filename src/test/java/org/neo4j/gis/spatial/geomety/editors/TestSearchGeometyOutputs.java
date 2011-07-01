@@ -103,7 +103,7 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 		System.out.println("----------------------  " + mode
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println(spatialDatabaseRecord.getResultAsString());
+			System.out.println(spatialDatabaseRecord.getResult());
 		}
 		System.out.println("------------------------------------------------");
 	}

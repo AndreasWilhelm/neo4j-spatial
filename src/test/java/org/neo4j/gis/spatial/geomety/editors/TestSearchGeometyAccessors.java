@@ -66,7 +66,7 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("textAsText", results, ST_AsText.class.getName());
+			printTestResults("textAsText", results);
 		}
 	}
 	public void testAsBinary() throws Exception {
@@ -74,7 +74,7 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testAsBinary", results, ST_AsBinary.class.getName());
+			printTestResults("testAsBinary", results);
 		}
 	}
 	
@@ -109,25 +109,17 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 		importer.reIndex(graphDb(), commitInterval);
 	}
 
-	private void printTestResults(String mode,
-			List<SpatialDatabaseRecord> results, String property) {
-		System.out.println("----------------------  " + mode
-				+ "  -------------------");
-		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println(spatialDatabaseRecord.getProperty(property));
-		}
-		System.out.println("------------------------------------------------");
-	}
-	
-	
-	private void printTestResults(String mode,
+	private void printTestResults(String function,
 			List<SpatialDatabaseRecord> results) {
-		System.out.println("----------------------  " + mode
+		System.out.println("----------------------  " + function
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println(spatialDatabaseRecord.getGeometry());
+			System.out.println("" + spatialDatabaseRecord.getResult());
 		}
 		System.out.println("------------------------------------------------");
 	}
+	
+	
+
 
 }
