@@ -17,33 +17,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geomety.editors;
+package org.neo4j.gis.spatial.geometry.editors;
 
 import java.io.File;
 import java.util.List;
 
-import org.geotools.referencing.CRS;
-import org.junit.Test;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.query.geometry.editors.ST_Reverse;
-import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_AsBinary;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_AsText;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_EndPoint;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_StartPoint;
 
 /**
- * This unit test testing all available geometry output queries: 
- * 	- ST_Transform
- *  - ST_Reverse
- * 
+ * This unit test testing all available geometry accessor queries:
+ *   - ST_AsText
+ *   - ST_AsBinary
+ * 	 - ST_StartPoint
+ *   - ST_EndPoint
+ *   
  * @author Andreas Wilhelm
  * 
  */
-public class TestSearchGeometyEditors extends Neo4jTestCase {
+public class TestSearchGeometyAccessors extends Neo4jTestCase {
 
+	private SpatialDatabaseService spatialService = null;
 	private Layer layer = null;
 	private boolean debug = true;
 
@@ -52,43 +54,46 @@ public class TestSearchGeometyEditors extends Neo4jTestCase {
 		super.setUp(false, true, false);
 		try {
 			this.loadTestOsmData(Dataset.LAYER_NAME, Dataset.COMMIT_INTERVAL);
-			SpatialDatabaseService spatialService = new SpatialDatabaseService(graphDb());
+			this.spatialService = new SpatialDatabaseService(graphDb());
 			this.layer = spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	@Test
-	public void testTransformSearch() throws Exception {
-		
-		CoordinateReferenceSystem crs = CRS.decode("EPSG:2002");
-		Select select = new ST_Transform(crs);
+	public void testAsText() throws Exception {
+		Select select = new ST_AsText();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testTransformSearch", results);
+			printTestResults("textAsText", results);
 		}
 	}
-
-	@Test
-	public void testTransformSearch2() throws Exception {
-		Select select = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
+	public void testAsBinary() throws Exception {
+		Select select = new ST_AsBinary();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testTransformSearch2", results);
+			printTestResults("testAsBinary", results);
 		}
+	}
 	
-	}
-
-	@Test
-	public void testReverseSearch() throws Exception {
-		Select select = new ST_Reverse();
+	
+	public void testGetStartPoint() throws Exception {
+		Select select = new ST_StartPoint();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testReverseSearch", results);
+			printTestResults("testGetStartPoint", results);
+		}
+	}
+	
+	public void testGetEndPoint() throws Exception {
+		Select select = new ST_EndPoint();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testGetEndPoint", results);
 		}
 	}
 
@@ -104,14 +109,17 @@ public class TestSearchGeometyEditors extends Neo4jTestCase {
 		importer.reIndex(graphDb(), commitInterval);
 	}
 
-	private void printTestResults(String mode,
+	private void printTestResults(String function,
 			List<SpatialDatabaseRecord> results) {
-		System.out.println("----------------------  " + mode
+		System.out.println("----------------------  " + function
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println("Id: " + spatialDatabaseRecord.getId() + "; "
-					+ "Geometry:" + spatialDatabaseRecord.getGeometry());
+			System.out.println("" + spatialDatabaseRecord.getResult());
 		}
 		System.out.println("------------------------------------------------");
 	}
+	
+	
+
+
 }

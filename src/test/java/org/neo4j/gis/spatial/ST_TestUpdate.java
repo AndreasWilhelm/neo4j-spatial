@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.List;
 
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.geomety.editors.Dataset;
+import org.neo4j.gis.spatial.geometry.editors.Dataset;
 import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.osm.OSMLayer;

@@ -25,7 +25,7 @@ import java.util.List;
 import org.junit.Test;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.geomety.editors.Dataset;
+import org.neo4j.gis.spatial.geometry.editors.Dataset;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.osm.OSMLayer;

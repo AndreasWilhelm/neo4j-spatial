@@ -17,33 +17,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geomety.editors;
+package org.neo4j.gis.spatial.geometry.editors;
 
 import java.io.File;
 import java.util.List;
 
+import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.geomety.editors.Dataset;
-import org.neo4j.gis.spatial.operation.Insert;
+import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.osm.OSMLayer;
-import org.neo4j.gis.spatial.query.geometry.constructors.ST_GeomFromText;
-import org.neo4j.graphdb.Node;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGML;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGeoJSON;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsKML;
 
 /**
- * Testcase to test following spatial type functions:
- *  - ST_GeomFromText
- *  - ..
+ * This unit test testing all available geometry output queries: 
+ * 	- ST_AsGML
+ *  - ST_AsGeoJSON
+ *  - ST_AsKML
  * 
  * @author Andreas Wilhelm
  * 
  */
-public class TestInsertGeometyConstructors extends Neo4jTestCase {
+public class TestSearchGeometyOutputs extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService = null;
-	private OSMLayer layer = null;
+	private Layer layer = null;
+	private boolean debug = true;
 
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
@@ -51,28 +53,39 @@ public class TestInsertGeometyConstructors extends Neo4jTestCase {
 		try {
 			this.loadTestOsmData(Dataset.LAYER_NAME, Dataset.COMMIT_INTERVAL);
 			this.spatialService = new SpatialDatabaseService(graphDb());
-			this.layer = (OSMLayer) spatialService.getLayer(Dataset.LAYER_NAME);
+			this.layer = spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	public void testInsertWithGeomFromText() throws Exception {
-		String wellKnownText = "LINESTRING (30 10, 10 30, 40 40)";
-		String propertyKey = "networklevel";
-		int propertyValue = 15;
-		
-		Insert insert = new ST_GeomFromText(wellKnownText);
-		insert.addProperty(propertyKey, propertyValue);
-		List<SpatialDatabaseRecord> records = this.layer.execute(insert);
-		
-		Node nNode = this.layer.getIndex().get(73l).getGeomNode();
-		
-		assertNotNull(nNode);
-		assertEquals(nNode.getProperty(propertyKey), propertyValue);
-		assertEquals(1, records.size());
+	
+	public void testAsGML() throws Exception {
+		Select select = new ST_AsGML();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testAsGML", results);
+		}
 	}
-
+	
+	public void testAsKML() throws Exception {
+		Select select = new ST_AsKML();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testAsKML", results);
+		}
+	}
+	
+	public void testAsGeoJSON() throws Exception {
+		Select select = new ST_AsGeoJSON();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testAsGeoJSON", results);
+		}
+	}
+	
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;
@@ -83,6 +96,16 @@ public class TestInsertGeometyConstructors extends Neo4jTestCase {
 		importer.importFile(getBatchInserter(), osmPath);
 		reActivateDatabase(false, false, false);
 		importer.reIndex(graphDb(), commitInterval);
+	}
+
+	private void printTestResults(String mode,
+			List<SpatialDatabaseRecord> results) {
+		System.out.println("----------------------  " + mode
+				+ "  -------------------");
+		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
+			System.out.println(spatialDatabaseRecord.getResult());
+		}
+		System.out.println("------------------------------------------------");
 	}
 
 }

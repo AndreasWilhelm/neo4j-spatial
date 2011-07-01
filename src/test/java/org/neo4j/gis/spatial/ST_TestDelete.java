@@ -22,7 +22,7 @@ package org.neo4j.gis.spatial;
 import java.io.File;
 
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.geomety.editors.Dataset;
+import org.neo4j.gis.spatial.geometry.editors.Dataset;
 import org.neo4j.gis.spatial.operation.Delete;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.gis.spatial.osm.OSMImporter;

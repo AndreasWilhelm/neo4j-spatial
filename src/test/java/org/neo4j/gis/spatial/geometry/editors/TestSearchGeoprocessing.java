@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geomety.editors;
+package org.neo4j.gis.spatial.geometry.editors;
 
 import java.io.File;
 import java.util.List;
@@ -28,26 +28,23 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.query.geometry.accessors.ST_AsBinary;
-import org.neo4j.gis.spatial.query.geometry.accessors.ST_AsText;
-import org.neo4j.gis.spatial.query.geometry.accessors.ST_EndPoint;
-import org.neo4j.gis.spatial.query.geometry.accessors.ST_StartPoint;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Closest;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Simplify;
+
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.io.WKTReader;
 
 /**
- * This unit test testing all available geometry accessor queries:
- *   - ST_AsText
- *   - ST_AsBinary
- * 	 - ST_StartPoint
- *   - ST_EndPoint
- *   
  * @author Andreas Wilhelm
  * 
  */
-public class TestSearchGeometyAccessors extends Neo4jTestCase {
+public class TestSearchGeoprocessing extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService = null;
 	private Layer layer = null;
 	private boolean debug = true;
+	private 	String wkt = "LINESTRING (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885)";
+	
 
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
@@ -60,42 +57,28 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 			e.printStackTrace();
 		}
 	}
+
+	public void testSimplify() throws Exception {
 	
-	public void testAsText() throws Exception {
-		Select select = new ST_AsText();
+		Select select = new ST_Simplify();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
+		assertEquals(wkt, results.get(1).getGeometry().toText());
 		if (debug) {
-			printTestResults("textAsText", results);
-		}
-	}
-	public void testAsBinary() throws Exception {
-		Select select = new ST_AsBinary();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		if (debug) {
-			printTestResults("testAsBinary", results);
+			printTestResults("testSimplify", results);
 		}
 	}
 	
-	
-	public void testGetStartPoint() throws Exception {
-		Select select = new ST_StartPoint();
+	public void testClosest() throws Exception {
+		WKTReader wktReader = new WKTReader();
+		
+		Select select = new ST_Closest(wktReader.read(wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testGetStartPoint", results);
+			printTestResults("testClosest", results);
 		}
 	}
-	
-	public void testGetEndPoint() throws Exception {
-		Select select = new ST_EndPoint();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		if (debug) {
-			printTestResults("testGetEndPoint", results);
-		}
-	}
+
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
@@ -109,17 +92,14 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 		importer.reIndex(graphDb(), commitInterval);
 	}
 
-	private void printTestResults(String function,
+	private void printTestResults(String mode,
 			List<SpatialDatabaseRecord> results) {
-		System.out.println("----------------------  " + function
+		System.out.println("----------------------  " + mode
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println("" + spatialDatabaseRecord.getResult());
+			System.out.println(spatialDatabaseRecord.getGeometry().toText());
 		}
 		System.out.println("------------------------------------------------");
 	}
-	
-	
-
 
 }

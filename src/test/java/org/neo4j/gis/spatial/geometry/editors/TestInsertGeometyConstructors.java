@@ -17,32 +17,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geomety.editors;
+package org.neo4j.gis.spatial.geometry.editors;
 
 import java.io.File;
 import java.util.List;
 
-import org.geotools.referencing.CRS;
-import org.junit.Test;
 import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.operation.Update;
+import org.neo4j.gis.spatial.geometry.editors.Dataset;
+import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.osm.OSMLayer;
-import org.neo4j.gis.spatial.query.geometry.editors.ST_Reverse;
-import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.neo4j.gis.spatial.query.geometry.constructors.ST_GeomFromText;
+import org.neo4j.graphdb.Node;
 
 /**
- * This unit test testing all available geometry output queries: 
- * 	- ST_Transform
- *  - ST_Reverse
+ * Testcase to test following spatial type functions:
+ *  - ST_GeomFromText
+ *  - ..
  * 
  * @author Andreas Wilhelm
  * 
  */
-public class TestUpdateGeometyEditors extends Neo4jTestCase {
+public class TestInsertGeometyConstructors extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService = null;
 	private OSMLayer layer = null;
@@ -59,28 +57,22 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 		}
 	}
 
-	@Test
-	public void testTransformUpdate() throws Exception {
-		CoordinateReferenceSystem crs = CRS.decode("EPSG:2002");
-		Update update = new ST_Transform(crs);
-		List<SpatialDatabaseRecord> records = layer.execute(update);
-		assertEquals(2, records.size());
+	public void testInsertWithGeomFromText() throws Exception {
+		String wellKnownText = "LINESTRING (30 10, 10 30, 40 40)";
+		String propertyKey = "networklevel";
+		int propertyValue = 15;
+		
+		Insert insert = new ST_GeomFromText(wellKnownText);
+		insert.addProperty(propertyKey, propertyValue);
+		List<SpatialDatabaseRecord> records = this.layer.execute(insert);
+		
+		Node nNode = this.layer.getIndex().get(73l).getGeomNode();
+		
+		assertNotNull(nNode);
+		assertEquals(nNode.getProperty(propertyKey), propertyValue);
+		assertEquals(1, records.size());
 	}
-	
-	@Test
-	public void testTransformUpdate2() throws Exception {
-		Update update = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
-		List<SpatialDatabaseRecord> records = layer.execute(update);
-		assertEquals(2, records.size());
-	}
-	
-	@Test
-	public void testReverseUpdate() throws Exception {
-		Update update = new ST_Reverse();
-		List<SpatialDatabaseRecord> records = layer.execute(update);
-		assertEquals(2, records.size());
-	}
-	
+
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;
@@ -92,6 +84,5 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 		reActivateDatabase(false, false, false);
 		importer.reIndex(graphDb(), commitInterval);
 	}
-
 
 }

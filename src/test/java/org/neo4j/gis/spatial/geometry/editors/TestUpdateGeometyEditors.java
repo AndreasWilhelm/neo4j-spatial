@@ -17,26 +17,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geomety.editors;
+package org.neo4j.gis.spatial.geometry.editors;
 
 import java.io.File;
+import java.util.List;
 
+import org.geotools.referencing.CRS;
+import org.junit.Test;
 import org.neo4j.gis.spatial.Neo4jTestCase;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
+import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.osm.OSMRelation;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.ReturnableEvaluator;
-import org.neo4j.graphdb.StopEvaluator;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.Traverser;
-import org.neo4j.graphdb.Traverser.Order;
+import org.neo4j.gis.spatial.osm.OSMLayer;
+import org.neo4j.gis.spatial.query.geometry.editors.ST_Reverse;
+import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
-public class Test extends Neo4jTestCase {
+/**
+ * This unit test testing all available geometry output queries: 
+ * 	- ST_Transform
+ *  - ST_Reverse
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
+public class TestUpdateGeometyEditors extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService = null;
+	private OSMLayer layer = null;
 
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
@@ -44,11 +53,34 @@ public class Test extends Neo4jTestCase {
 		try {
 			this.loadTestOsmData(Dataset.LAYER_NAME, Dataset.COMMIT_INTERVAL);
 			this.spatialService = new SpatialDatabaseService(graphDb());
+			this.layer = (OSMLayer) spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Test
+	public void testTransformUpdate() throws Exception {
+		CoordinateReferenceSystem crs = CRS.decode("EPSG:2002");
+		Update update = new ST_Transform(crs);
+		List<SpatialDatabaseRecord> records = layer.execute(update);
+		assertEquals(2, records.size());
+	}
+	
+	@Test
+	public void testTransformUpdate2() throws Exception {
+		Update update = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
+		List<SpatialDatabaseRecord> records = layer.execute(update);
+		assertEquals(2, records.size());
+	}
+	
+	@Test
+	public void testReverseUpdate() throws Exception {
+		Update update = new ST_Reverse();
+		List<SpatialDatabaseRecord> records = layer.execute(update);
+		assertEquals(2, records.size());
+	}
+	
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;
@@ -61,42 +93,5 @@ public class Test extends Neo4jTestCase {
 		importer.reIndex(graphDb(), commitInterval);
 	}
 
-	public void testDelete() {
 
-		Transaction tx = spatialService.getDatabase().beginTx();
-		try {
-
-			Node startNode = spatialService.getDatabase().getNodeById(39l);
-
-			// Get all coordinate nodes and proxy nodes for them.
-			Traverser traverser = startNode.traverse(Order.BREADTH_FIRST,
-					StopEvaluator.END_OF_GRAPH,
-					ReturnableEvaluator.ALL_BUT_START_NODE, OSMRelation.NODE,
-					Direction.OUTGOING, OSMRelation.NEXT, Direction.OUTGOING);
-
-			for (Node node : traverser.getAllNodes()) {
-				System.out.println("------------------------------");
-				// Delete relationship of the subnode.
-				for (Relationship rel : node.getRelationships()) {
-					rel.delete();
-					System.out.println("Deleted rel: " + rel.getId());
-				}
-
-				// Delete subnode.
-				if (!node.hasRelationship()) {
-					System.out.println("Node has no relations!");
-					node.delete();
-					System.out.println("Deleted Node: " + node);
-				} else {
-					System.out.println("node hasRelationship");
-				}
-
-			}
-
-			tx.success();
-		} finally {
-			tx.finish();
-		}
-
-	}
 }

@@ -17,33 +17,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geomety.editors;
+package org.neo4j.gis.spatial.geometry.editors;
 
 import java.io.File;
 import java.util.List;
 
+import org.geotools.referencing.CRS;
+import org.junit.Test;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGML;
-import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGeoJSON;
-import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsKML;
+import org.neo4j.gis.spatial.query.geometry.editors.ST_Reverse;
+import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 /**
  * This unit test testing all available geometry output queries: 
- * 	- ST_AsGML
- *  - ST_AsGeoJSON
- *  - ST_AsKML
+ * 	- ST_Transform
+ *  - ST_Reverse
  * 
  * @author Andreas Wilhelm
  * 
  */
-public class TestSearchGeometyOutputs extends Neo4jTestCase {
+public class TestSearchGeometyEditors extends Neo4jTestCase {
 
-	private SpatialDatabaseService spatialService = null;
 	private Layer layer = null;
 	private boolean debug = true;
 
@@ -52,40 +52,46 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 		super.setUp(false, true, false);
 		try {
 			this.loadTestOsmData(Dataset.LAYER_NAME, Dataset.COMMIT_INTERVAL);
-			this.spatialService = new SpatialDatabaseService(graphDb());
+			SpatialDatabaseService spatialService = new SpatialDatabaseService(graphDb());
 			this.layer = spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void testAsGML() throws Exception {
-		Select select = new ST_AsGML();
+	@Test
+	public void testTransformSearch() throws Exception {
+		
+		CoordinateReferenceSystem crs = CRS.decode("EPSG:2002");
+		Select select = new ST_Transform(crs);
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testAsGML", results);
+			printTestResults("testTransformSearch", results);
 		}
 	}
-	
-	public void testAsKML() throws Exception {
-		Select select = new ST_AsKML();
+
+	@Test
+	public void testTransformSearch2() throws Exception {
+		Select select = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testAsKML", results);
+			printTestResults("testTransformSearch2", results);
 		}
-	}
 	
-	public void testAsGeoJSON() throws Exception {
-		Select select = new ST_AsGeoJSON();
+	}
+
+	@Test
+	public void testReverseSearch() throws Exception {
+		Select select = new ST_Reverse();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
 		if (debug) {
-			printTestResults("testAsGeoJSON", results);
+			printTestResults("testReverseSearch", results);
 		}
 	}
-	
+
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;
@@ -103,9 +109,9 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 		System.out.println("----------------------  " + mode
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println(spatialDatabaseRecord.getResult());
+			System.out.println("Id: " + spatialDatabaseRecord.getId() + "; "
+					+ "Geometry:" + spatialDatabaseRecord.getGeometry());
 		}
 		System.out.println("------------------------------------------------");
 	}
-
 }
