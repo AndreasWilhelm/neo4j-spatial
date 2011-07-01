@@ -178,7 +178,7 @@
       <scope>provided</scope>
     </dependency>
      <dependency>
-      <groupId>org.geotools</groupId>
+      <groupId>org.geotools.xsd</groupId>
       <artifactId>gt-xsd-kml</artifactId>
       <version>${geotools.version}</version>
       <scope>provided</scope>
