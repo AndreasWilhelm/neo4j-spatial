@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.List;
 
 import org.neo4j.gis.spatial.Layer;
-import org.neo4j.gis.spatial.ShapefileImporter;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
@@ -60,7 +59,7 @@ public class ST_Insert extends AbstractFullOperation {
 	 *             - currently not implemented.
 	 */
 	public ST_Insert(File file) throws UnsupportedOperationException {
-		ShapefileImporter shpImporter = new ShapefileImporter(null);
+		//ShapefileImporter shpImporter = new ShapefileImporter(null);
 		// TODO: Refactoring ShapefileImporter to make it more cohesive.
 		throw new UnsupportedOperationException();
 	}
