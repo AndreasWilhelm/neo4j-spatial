@@ -97,9 +97,10 @@ public interface EditableLayer extends Layer {
 	 * @param insert
 	 *            A spatial type insert query, such as {@link ST_GeomFromText}
 	 * @return Returns a list with inserted {@link SpatialDatabaseRecord}.
+	 * @throws SpatialExecuteException 
 	 */
 	List<SpatialDatabaseRecord> execute(Insert insert)
-			throws SpatialDatabaseException;
+			throws SpatialExecuteException;
 
 	/**
 	 * Execute a spatial type update query on the layer.
@@ -107,9 +108,10 @@ public interface EditableLayer extends Layer {
 	 * @param update
 	 *            A spatial type query, such as {@link ST_Transform}
 	 * @return Returns a list with updated {@link SpatialDatabaseRecord}.
+	 * @throws SpatialExecuteException 
 	 */
 	List<SpatialDatabaseRecord> execute(Update update)
-			throws SpatialDatabaseException;
+			throws SpatialExecuteException;
 
 	/**
 	 * Execute a spatial type delete query on the layer. Delete the geometry
@@ -120,7 +122,8 @@ public interface EditableLayer extends Layer {
 	 * @param delete
 	 *            A spatial type delete query, such as {@link ST_Delete}
 	 * @return Returns the number of deleted records.
+	 * @throws SpatialExecuteException 
 	 */
-	int execute(Delete delete) throws SpatialDatabaseException;
+	int execute(Delete delete) throws SpatialExecuteException;
 
 }

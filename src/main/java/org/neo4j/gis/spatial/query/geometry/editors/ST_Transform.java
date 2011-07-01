@@ -48,7 +48,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Andreas Wilhelm
  * 
  */
-public class ST_Transform extends AbstractFullOperation {
+public class ST_Transform  extends AbstractFullOperation {
 
 	private static Logger logger = Logger.getLogger(ST_Transform.class);
 

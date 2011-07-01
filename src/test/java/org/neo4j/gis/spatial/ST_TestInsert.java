@@ -95,8 +95,14 @@ public class ST_TestInsert extends Neo4jTestCase {
 		
 		Insert insert = new ST_Insert(geometries);
 		insert.addProperty(propertyKey, propertyValue);
-		List<SpatialDatabaseRecord> records = this.layer.execute(insert);
-		assertEquals(size, records.size());
+		List<SpatialDatabaseRecord> records;
+		try {
+			records = this.layer.execute(insert);
+			assertEquals(size, records.size());
+		} catch (SpatialExecuteException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void loadTestOsmData(String layerName, int commitInterval)

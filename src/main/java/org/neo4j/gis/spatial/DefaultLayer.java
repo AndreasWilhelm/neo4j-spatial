@@ -19,6 +19,7 @@
  */
 package org.neo4j.gis.spatial;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,13 +29,16 @@ import java.util.Set;
 import org.geotools.factory.FactoryRegistryException;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.neo4j.gis.spatial.encoders.Configurable;
+import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ReturnableEvaluator;
 import org.neo4j.graphdb.StopEvaluator;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.Traverser;
 import org.neo4j.graphdb.Traverser.Order;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -406,10 +410,31 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
 	/**
 	 * @see Layer#execute(Select)
 	 */
-	public List<SpatialDatabaseRecord> execute(Select select) {
-		return getIndex().execute(select);
+	public List<SpatialDatabaseRecord> execute(Select select) throws SpatialExecuteException {
+		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
+		select.setLayer(this);
+		
+		Node indexNode = this.getLayerNode().getSingleRelationship(
+				SpatialRelationshipTypes.RTREE_ROOT, Direction.OUTGOING)
+				.getEndNode();
+
+		RestrictionMap restrictionMap = select.getRestrictions();
+
+		Traverser traverser = indexNode.traverse(Order.BREADTH_FIRST,
+				StopEvaluator.END_OF_GRAPH,
+				ReturnableEvaluator.ALL_BUT_START_NODE, SpatialRelationshipTypes.RTREE_REFERENCE,
+				Direction.OUTGOING);
+		
+		for (Node node : traverser) {
+			if (restrictionMap.determineNode(node)) {
+				SpatialDatabaseRecord record = select.onIndexReference(
+						OperationType.SELECT, node, this);
+				if(record != null) {
+					results.add(record);
+				}
+			}
+		}
+		return results;
 	}
-
-
 
 }

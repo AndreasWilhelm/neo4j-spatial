@@ -1,6 +1,5 @@
 package org.neo4j.gis.spatial.query.geometry.constructors;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.neo4j.gis.spatial.Layer;
@@ -16,15 +15,16 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 /**
- * Creates a geometry node from a Well-known Text(WKT).
+ * The <code>ST_GeomFromText</code> creates a geometry node from a Well-known
+ * Text(WKT).
  * 
  * @author Andreas Wilhelm
  * 
  */
 public class ST_GeomFromText extends AbstractFullOperation {
 
+	private WKTReader wktReader = new WKTReader();
 	private int index = 0;
-
 	/**
 	 * Creates a geometry node from a Well-known Text(WKT).
 	 * 
@@ -33,29 +33,20 @@ public class ST_GeomFromText extends AbstractFullOperation {
 	 * @throws ParseException
 	 */
 	public ST_GeomFromText(String wellKnownText) throws ParseException {
-		WKTReader wktReader = new WKTReader();
-		Geometry geom = wktReader.read(wellKnownText);
-		List<Geometry> geometies = new ArrayList<Geometry>();
-		geometies.add(geom);
-		this.setGeometries(geometies);
+		this.add(wktReader.read(wellKnownText));
 	}
-	
+
 	/**
 	 * 
 	 * @param wktList
 	 * @throws ParseException
 	 */
 	public ST_GeomFromText(List<String> wktList) throws ParseException {
-		List<Geometry> geometries = new ArrayList<Geometry>();
-		WKTReader wktReader = new WKTReader();
-		
 		for (String wkt : wktList) {
 			Geometry geom = wktReader.read(wkt);
-			geometries.add(geom);
+			this.add(geom);
 		}
-		this.setGeometries(geometries);
 	}
-
 
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
@@ -67,5 +58,4 @@ public class ST_GeomFromText extends AbstractFullOperation {
 				node, this.getGeometries().get(this.index++));
 		return record;
 	}
-
 }

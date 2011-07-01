@@ -19,6 +19,7 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.neo4j.graphdb.Node;
@@ -36,8 +37,22 @@ import com.vividsolutions.jts.geom.Geometry;
 public interface Insert extends SpatialTypeOperation {
 
 	/**
-	 * Add a property to the new node.
+	 * Add a property to a single node.
 	 * 
+	 * @param index
+	 *            The index number of the concrete geometry.
+	 * @param key
+	 *            The property key.
+	 * @param value
+	 *            The property value.
+	 */
+	public abstract void addProperty(int index, String key, Object value);
+
+	/**
+	 * Add a property to all nodes in the insert list.
+	 * 
+	 * @param index
+	 *            The index number of the concrete geometry.
 	 * @param key
 	 *            The property key.
 	 * @param value
@@ -53,7 +68,7 @@ public interface Insert extends SpatialTypeOperation {
 	public abstract List<NodeProperty> getProperties();
 
 	/**
-	 * Add a relationship to the new node.
+	 * Add a relationship to all insert node.
 	 * 
 	 * @param node
 	 *            - The node to which the {@link Relationship} should done.
@@ -61,6 +76,17 @@ public interface Insert extends SpatialTypeOperation {
 	 *            - The {@link RelationshipType} of the new {@link Relationship}
 	 */
 	public abstract void addRelationship(Node node,
+			RelationshipType relationshipType);
+
+	/**
+	 * Add a relationship to a single node.
+	 * 
+	 * @param node
+	 *            - The node to which the {@link Relationship} should done.
+	 * @param relationshipType
+	 *            - The {@link RelationshipType} of the new {@link Relationship}
+	 */
+	public abstract void addRelationship(int index, Node node,
 			RelationshipType relationshipType);
 
 	/**
@@ -75,5 +101,32 @@ public interface Insert extends SpatialTypeOperation {
 	 * @return
 	 */
 	public abstract List<Geometry> getGeometries();
+
+	/**
+	 * Add a single geometry to the insert list and returns the current index of
+	 * the added geometry or -1 when it was not successful added.
+	 * 
+	 * @param geometry the geometry to add.
+	 * @return Returns the index number of the added geometry or -1 when it was
+	 *         not successful added.
+	 */
+	public abstract int add(Geometry geometry);
+	
+	/**
+	 * 
+	 * @param geometry
+	 * @param properties
+	 * @return
+	 */
+	public abstract int add(Geometry geometry, HashMap<String, Object> properties);
+	
+	/**
+	 * 
+	 * @param geometry
+	 * @param properties
+	 * @param relations
+	 * @return
+	 */
+	public abstract int add(Geometry geometry, HashMap<String, Object> properties, HashMap<String, Object> relations);
 
 }

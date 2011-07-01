@@ -20,7 +20,11 @@
 package org.neo4j.gis.spatial.osm;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.json.simple.JSONObject;
@@ -33,6 +37,10 @@ import org.neo4j.gis.spatial.SpatialDataset;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.ReturnableEvaluator;
+import org.neo4j.graphdb.StopEvaluator;
+import org.neo4j.graphdb.Traverser;
+import org.neo4j.graphdb.Traverser.Order;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -252,21 +260,73 @@ public class OSMLayer extends DynamicLayer {
 		return new File(
 				"dev/neo4j/neo4j-spatial/src/main/resources/sld/osm/osm.sld");
 	}
+
+	/**
+	 * @see {@link EditableLayer#delete(long, Geometry)}
+	 */
+	public void delete(long geomNodeId) {
+		System.out.println(geomNodeId);
+		// The index node of the geometry with bbox property.
+		Node geomIndexNode = this.getDatabase().getNodeById(geomNodeId);
+		
+		// The geom node with propertie infos about the geometry node.
+		Node geom = geomIndexNode.getSingleRelationship(OSMRelation.GEOM,
+				Direction.INCOMING).getStartNode();
+		
+		// Get start node of the OSM GEOM subgraph.
+		Node startNode = geom.getSingleRelationship(OSMRelation.FIRST_NODE,
+				Direction.OUTGOING).getEndNode();
+		
+		// Get all coordinate nodes and proxy nodes for them.
+		Traverser traverser = startNode.traverse(Order.BREADTH_FIRST,
+				StopEvaluator.END_OF_GRAPH,
+				ReturnableEvaluator.ALL_BUT_START_NODE, OSMRelation.NODE,
+				Direction.OUTGOING, OSMRelation.NEXT, Direction.OUTGOING);
+
+		
+
+
+		for (Node node : traverser.getAllNodes()) {
+			System.out.println("------------------------------");
+			// Delete relationship of the subnode.
+			for (Relationship rel : node.getRelationships()) {
+				rel.delete();
+				System.out.println("Deleted rel: " + rel.getId());
+			}
+			      
+			// Delete subnode.
+			if(!node.hasRelationship()) {
+				System.out.println("Node has no relations!");
+				node.delete();
+				System.out.println("Deleted Node: " + node);
+			}
+
+		}
+		
+		
+		// Remove index connection.
+		//for (Relationship rel : startNode.getRelationships()) {
+		//	System.out.println("relstart: " + rel);
+		//	rel.delete();
+		//}
+		//startNode.delete();
 	
+	}
+
 	/**
 	 * @see {@link EditableLayer#update(long, Geometry)}
 	 */
 	public void update(long geomNodeId, Geometry geometry) {
 
-		Node geomNode = this.getDatabase().getNodeById(geomNodeId);
-		
+		Node geomIndexNode = this.getDatabase().getNodeById(geomNodeId);
+
 		// Delete old relation to the coordinate subgraph.
-		Relationship rel = geomNode.getSingleRelationship(OSMRelation.GEOM,
-				Direction.INCOMING);
+		Relationship rel = geomIndexNode.getSingleRelationship(
+				OSMRelation.GEOM, Direction.INCOMING);
 		rel.delete();
 
 		// Create a new coordinate subgraph.
-		this.getGeometryEncoder().encodeGeometry(geometry, geomNode);
+		this.getGeometryEncoder().encodeGeometry(geometry, geomIndexNode);
 
 	}
 

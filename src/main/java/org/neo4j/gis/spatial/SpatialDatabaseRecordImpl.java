@@ -39,7 +39,7 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 	@SuppressWarnings("rawtypes")
 	private Comparable userData;
 	// Temporary properties of a spatial type operation.
-	private HashMap<String, String> dynamicProperties = new HashMap<String, String>();
+	private HashMap<String, Object> dynamicProperties = new HashMap<String, Object>();
 	// Temporary propertie key of a spatial type operation. Maybe list when we have more than one? or have we always only one?
 	private String key = null;
 	
@@ -144,7 +144,7 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 		//checkIsNotReservedProperty(key);
 		//geomNode.setProperty(key, value);
 		this.key = key;
-		dynamicProperties.put(key, (String) value);
+		dynamicProperties.put(key, value);
 		
 	}
 	
@@ -202,7 +202,7 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 	/**
 	 * @see SpatialDatabaseRecord#getResultAsString()
 	 */
-	public String getResultAsString() {
+	public Object getResult() {
 	    return dynamicProperties.get(this.key);
 	}
 

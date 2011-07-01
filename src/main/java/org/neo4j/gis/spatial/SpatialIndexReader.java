@@ -22,7 +22,6 @@ package org.neo4j.gis.spatial;
 import java.util.List;
 import java.util.Set;
 
-import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -41,12 +40,7 @@ public interface SpatialIndexReader {
 	SpatialDatabaseRecord get(Long geomNodeId);
 	
 	List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds);
-    
-    /**
-     * @see Layer#execute(Select)
-     */
-    List<SpatialDatabaseRecord> execute(Select select);
-    
+        
 	@Deprecated
 	void execute(Search search);
 

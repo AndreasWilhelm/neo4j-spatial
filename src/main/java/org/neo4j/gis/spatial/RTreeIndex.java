@@ -1013,16 +1013,6 @@ public class RTreeIndex implements SpatialTreeIndex, SpatialIndexWriter,
 	}
 
 	/**
-	 * @see Layer#execute(Select)
-	 */
-	public List<SpatialDatabaseRecord> execute(Select select) {
-		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
-		select.setLayer(this.layer);
-		search(select, getIndexRoot(), results);
-		return results;
-	}
-
-	/**
 	 * Go threw every node and relations to determine if it should be added to
 	 * search response.
 	 * 

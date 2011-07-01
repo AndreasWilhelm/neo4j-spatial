@@ -140,7 +140,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 	 * @see EditableLayer#execute(Insert)
 	 */
 	public List<SpatialDatabaseRecord> execute(Insert insert)
-			throws SpatialDatabaseException {
+			throws SpatialExecuteException {
 
 		// Container for the inserted records.
 		List<SpatialDatabaseRecord> records = new ArrayList<SpatialDatabaseRecord>();
@@ -190,7 +190,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 			}
 			tx.success();
 		} catch (Exception e) {
-			throw new SpatialDatabaseException("" + e.getMessage());
+			throw new SpatialExecuteException("" + e.getMessage());
 		} finally {
 			tx.finish();
 		}
@@ -219,7 +219,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 	/**
 	 * @see EditableLayer#execute(Delete)
 	 */
-	public int execute(Delete delete) throws SpatialDatabaseException {
+	public int execute(Delete delete) throws SpatialExecuteException {
 		int count = 0;
 		
 		//
@@ -234,7 +234,8 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 					SpatialDatabaseRecord record = delete.onIndexReference(
 							OperationType.DELETE, node, this);
 					if (record != null) {
-						index.remove(record.getId(), true);
+						//index.remove(record.getId(), true);
+						delete(record.getId());
 						count++;
 					}
 				}
@@ -250,7 +251,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 	 * @see EditableLayer#execute(Update)
 	 */
 	public List<SpatialDatabaseRecord> execute(Update update)
-			throws SpatialDatabaseException {
+			throws SpatialExecuteException {
 		RestrictionMap restrictions = update.getRestrictions();
 		List<SpatialDatabaseRecord> records = new ArrayList<SpatialDatabaseRecord>();
 		Iterable<Node> nodes = getGeomNodes();

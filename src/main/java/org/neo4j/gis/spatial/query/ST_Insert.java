@@ -19,10 +19,11 @@
  */
 package org.neo4j.gis.spatial.query;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.ShapefileImporter;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
@@ -33,15 +34,49 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * The simplest spatial type operation to add a new spatial {@link Node} to the
- * layer.
+ * The <code>ST_Insert</code> is the base class for spatial type insert
+ * operations, to add a new spatial {@link Node} to the layer. It has has a bunch
+ * of overloaded constructors which over several ways to insert new geometry
+ * nodes.
  * 
  * @author Andreas Wilhelm
  * 
  */
 public class ST_Insert extends AbstractFullOperation {
-	
+
 	private int index = 0;
+
+	/**
+	 * Empty constructor.
+	 */
+	public ST_Insert() {
+	}
+
+	/**
+	 * Insert nodes from a Shapefile.
+	 * 
+	 * @param file
+	 * @throws UnsupportedOperationException
+	 *             - currently not implemented.
+	 */
+	public ST_Insert(File file) throws UnsupportedOperationException {
+		ShapefileImporter shpImporter = new ShapefileImporter(null);
+		// TODO: Refactoring ShapefileImporter to make it more cohesive.
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Insert nodes from a CSV file.
+	 * 
+	 * @param file
+	 * @param delimiter
+	 * @throws UnsupportedOperationException
+	 */
+	public ST_Insert(File file, String delimiter)
+			throws UnsupportedOperationException {
+		// TODO: CSV and Shapefile.
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Add a new Node with the provided geometry.
@@ -50,9 +85,7 @@ public class ST_Insert extends AbstractFullOperation {
 	 *            The geometry of the new Node.
 	 */
 	public ST_Insert(Geometry geometry) {
-		List<Geometry> geometies = new ArrayList<Geometry>();
-		geometies.add(geometry);
-		this.setGeometries(geometies);
+		this.add(geometry);
 	}
 
 	/**

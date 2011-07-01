@@ -59,7 +59,7 @@ public interface SpatialDatabaseRecord extends Constants,
 	 * 
 	 * @return Returns the result as a String.
 	 */
-	public String getResultAsString();
+	public Object getResult();
 
 	/**
 	 * Not all geometry records have the same attribute set, so we should test

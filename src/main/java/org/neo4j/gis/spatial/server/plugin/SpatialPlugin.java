@@ -28,7 +28,6 @@ import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.query.SearchWithin;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
@@ -149,10 +148,11 @@ public class SpatialPlugin extends ServerPlugin {
 		if(layer == null ) {
 		    layer = spatialService.getLayer(layerName);
 		}
-		SearchWithin withinQuery = new SearchWithin(layer.getGeometryFactory().toGeometry(new Envelope(minx, maxx, miny, maxy)));
-		layer.getIndex().execute(withinQuery);
-		List<SpatialDatabaseRecord> results = withinQuery.getResults();
-		return toIterable(results);
+		//SearchWithin withinQuery = new SearchWithin(layer.getGeometryFactory().toGeometry(new Envelope(minx, maxx, miny, maxy)));
+		//layer.getIndex().execute(withinQuery);
+		//List<SpatialDatabaseRecord> results = withinQuery.getResults();
+		//return toIterable(results);
+		return null;
 	}
 
 	private Iterable<Node> toArray(Node node) {
