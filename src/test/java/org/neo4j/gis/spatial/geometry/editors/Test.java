@@ -66,7 +66,8 @@ public class Test extends Neo4jTestCase {
 		Transaction tx = spatialService.getDatabase().beginTx();
 		try {
 
-			Node startNode = spatialService.getDatabase().getNodeById(39l);
+//			Node startNode = spatialService.getDatabase().getNodeById(39l);
+            Node startNode = spatialService.getDatabase().getNodeById(18l);
 
 			// Get all coordinate nodes and proxy nodes for them.
 			Traverser traverser = startNode.traverse(Order.BREADTH_FIRST,
@@ -84,7 +85,7 @@ public class Test extends Neo4jTestCase {
 
 				// Delete subnode.
 				if (!node.hasRelationship()) {
-					System.out.println("Node has no relations!");
+					System.out.println(node + " has no relations!");
 					node.delete();
 					System.out.println("Deleted Node: " + node);
 				} else {
