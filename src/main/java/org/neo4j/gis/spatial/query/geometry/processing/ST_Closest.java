@@ -88,7 +88,6 @@ public class ST_Closest extends AbstractReadOperation {
 				minDistance = distance;
 				// Remove old entries.
 				records.clear();
-				System.out.println("Found");
 				records.add(record);
 			} else if(distance == minDistance) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
