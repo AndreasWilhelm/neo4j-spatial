@@ -31,6 +31,9 @@ import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGML;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsGeoJSON;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsKML;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_Distance;
+
+import com.vividsolutions.jts.io.WKTReader;
 
 /**
  * This unit test testing all available geometry output queries: 
@@ -46,6 +49,9 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 	private SpatialDatabaseService spatialService = null;
 	private Layer layer = null;
 	private boolean debug = true;
+	private String wkt = "LINESTRING (22.9639158 86.070904, 22.9639658 86.0710206, 22.9654342 86.0711966)";
+	private WKTReader wktReader = new WKTReader();
+
 
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
@@ -83,6 +89,17 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 		assertEquals(2, results.size());
 		if (debug) {
 			printTestResults("testAsGeoJSON", results);
+		}
+	}
+	
+	public void testDistance() throws Exception {
+		Select select = new ST_Distance(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals(31.63080161030075, results.get(0).getResult());
+		assertEquals(31.62171418752397, results.get(1).getResult());
+		if (debug) {
+			printTestResults("testDistance", results);
 		}
 	}
 	

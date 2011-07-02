@@ -23,11 +23,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.neo4j.gis.spatial.query.SearchPointsWithinOrthodromicDistance;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_PointsWithinOrthodromicDistance;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
+/**
+ * TODO: Doc
+ * @author ???
+ *
+ */
 public class SimplePointLayer extends EditableLayerImpl {
 	public static final int LIMIT_RESULTS = 100;
 
@@ -40,22 +46,27 @@ public class SimplePointLayer extends EditableLayerImpl {
 		Envelope extent = new Envelope(point);
 		extent.expandToInclude(point.x - width / 2.0, point.y - height / 2.0);
 		extent.expandToInclude(point.x + width / 2.0, point.y + height / 2.0);
-		SearchPointsWithinOrthodromicDistance distanceQuery = new SearchPointsWithinOrthodromicDistance(point, extent, true);
+		Select distanceQuery = new ST_PointsWithinOrthodromicDistance(point,
+				extent);
 		return findClosestPoints(distanceQuery);
 	}
 
-	public List<SpatialDatabaseRecord> findClosestPointsTo(Coordinate point, double distanceInKm) {
-		SearchPointsWithinOrthodromicDistance distanceQuery = new SearchPointsWithinOrthodromicDistance(point, distanceInKm, true);
+	public List<SpatialDatabaseRecord> findClosestPointsTo(Coordinate point,
+			double distanceInKm) {
+		Select distanceQuery = new ST_PointsWithinOrthodromicDistance(point,
+				distanceInKm);
 		return findClosestPoints(distanceQuery);
 	}
 
-	private List<SpatialDatabaseRecord> findClosestPoints(SearchPointsWithinOrthodromicDistance distanceQuery) {
-		getIndex().execute(distanceQuery);
+	private List<SpatialDatabaseRecord> findClosestPoints(Select distanceQuery) {
+		this.execute(distanceQuery);
 		List<SpatialDatabaseRecord> results = distanceQuery.getResults();
-		Collections.sort(results, new Comparator<SpatialDatabaseRecord>(){
+		Collections.sort(results, new Comparator<SpatialDatabaseRecord>() {
 
-			public int compare(SpatialDatabaseRecord arg0, SpatialDatabaseRecord arg1) {
-				return ((Double) arg0.getUserData()).compareTo((Double) arg1.getUserData());
+			public int compare(SpatialDatabaseRecord arg0,
+					SpatialDatabaseRecord arg1) {
+				return ((Double) arg0.getUserData()).compareTo((Double) arg1
+						.getUserData());
 			}
 		});
 		return results;

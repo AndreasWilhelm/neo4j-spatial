@@ -29,9 +29,28 @@ import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Closest;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Contain;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Cover;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_CoveredBy;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Cross;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Disjoint;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Empty;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Equal;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_InRelation;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Intersect;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_IntersectWindow;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Invalid;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Overlap;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_PointsWithinOrthodromicDistance;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Simplify;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Touch;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Within;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_WithinDistance;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 
 /**
@@ -43,8 +62,8 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	private SpatialDatabaseService spatialService = null;
 	private Layer layer = null;
 	private boolean debug = true;
-	private 	String wkt = "LINESTRING (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885)";
-	
+	private String wkt = "LINESTRING (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885)";
+	private WKTReader wktReader = new WKTReader();
 
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
@@ -59,7 +78,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	}
 
 	public void testSimplify() throws Exception {
-	
+
 		Select select = new ST_Simplify();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
@@ -68,17 +87,172 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 			printTestResults("testSimplify", results);
 		}
 	}
-	
+
+	public void testContain() throws Exception {
+		Select select = new ST_Contain(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(1, results.size());
+		if (debug) {
+			printTestResults("ST_Contain", results);
+		}
+	}
+
+	public void testCover() throws Exception {
+
+		Select select = new ST_Cover(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(results.size(), 32423);
+		if (debug) {
+			printTestResults("ST_Contain", results);
+		}
+	}
+
+	public void testCoverBy() throws Exception {
+
+		Select select = new ST_CoveredBy(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(1, results.size());
+		if (debug) {
+			printTestResults("ST_CoveredBy", results);
+		}
+	}
+
+	public void testDisjoint() throws Exception {
+
+		Select select = new ST_Disjoint(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(1, results.size());
+		if (debug) {
+			printTestResults("ST_Disjoint", results);
+		}
+	}
+
+	public void testEmpty() throws Exception {
+
+		Select select = new ST_Empty();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(0, results.size());
+		if (debug) {
+			printTestResults("ST_Empty", results);
+		}
+	}
+
+	public void testEqual() throws Exception {
+
+		Select select = new ST_Equal(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(1, results.size());
+		if (debug) {
+			printTestResults("ST_Equal", results);
+		}
+	}
+
 	public void testClosest() throws Exception {
-		WKTReader wktReader = new WKTReader();
-		
 		Select select = new ST_Closest(wktReader.read(wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		if (debug) {
 			printTestResults("testClosest", results);
 		}
 	}
+	
 
+	public void testIntersect() throws Exception {
+		Select select = new ST_Intersect(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		if (debug) {
+			printTestResults("testIntersect", results);
+		}
+	}
+	
+	
+	public void testInvalid() throws Exception {
+		Select select = new ST_Invalid();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(0, results.size());
+		if (debug) {
+			printTestResults("testInvalid", results);
+		}
+	}
+	
+	public void testOverlap() throws Exception {
+		Select select = new ST_Overlap(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(0, results.size());
+		if (debug) {
+			printTestResults("testOverlap", results);
+		}
+	}
+	
+	public void testTouch() throws Exception {
+		Select select = new ST_Touch(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(0, results.size());
+		if (debug) {
+			printTestResults("testTouch", results);
+		}
+	}
+
+	public void testWithin() throws Exception {
+		Select select = new ST_Within(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(1, results.size());
+		if (debug) {
+			printTestResults("testWithin", results);
+		}
+	}
+	
+	public void testWithinDistance() throws Exception {
+
+		Coordinate coordinate = new Coordinate(12.9639158, 56.070904);
+		Point point = new GeometryFactory().createPoint(coordinate);
+		Select select = new ST_WithinDistance(point, 20d);
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testWithinDistance", results);
+		}
+	}
+	
+	public void testCross() throws Exception {
+
+		Select select = new ST_Cross(wktReader.read(wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(0, results.size());
+		if (debug) {
+			printTestResults("testCross", results);
+		}
+	}
+	
+	public void testPointsWithinOrthodromicDistance() throws Exception {
+		Coordinate coord = new Coordinate(12, 56);
+		Select select = new ST_PointsWithinOrthodromicDistance(coord, 32);
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(0, results.size());
+		if (debug) {
+			printTestResults("testPointsWithinOrthodromicDistance", results);
+		}
+	}
+	
+	public void testIntersectWindow() throws Exception {
+		Envelope envelope = new Envelope(20, 23, 70, 72);
+		Select select = new ST_IntersectWindow(envelope);
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(0, results.size());
+		if (debug) {
+			printTestResults("testIntersectWindow", results);
+		}
+	}
+	
+	public void testInRelation() throws Exception {
+		Select select = new ST_InRelation(wktReader.read(wkt), "");
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(0, results.size());
+		if (debug) {
+			printTestResults("testInRelation", results);
+		}
+	}
+	
+	
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
