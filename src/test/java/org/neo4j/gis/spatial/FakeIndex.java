@@ -85,7 +85,7 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 		return results;
 	}
 
-	public void execute(Search search) {
+	public void executeSearch(SearchQuery search) {
 		search.setLayer(layer);
 		for (Node node : layer.getDataset().getAllGeometryNodes()) {
 			search.onIndexReference(node);

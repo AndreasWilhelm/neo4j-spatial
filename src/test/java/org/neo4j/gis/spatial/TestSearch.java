@@ -21,7 +21,8 @@ package org.neo4j.gis.spatial;
 
 import java.util.List;
 
-import org.neo4j.gis.spatial.query.SearchIntersectWindow;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_IntersectWindow;
 import org.neo4j.graphdb.Transaction;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -74,10 +75,10 @@ public class TestSearch extends Neo4jTestCase {
 				for (double y = miny; y < maxy; y = y + interval) {
 					tx = graphDb().beginTx();
 					try {
-						Search searchQuery = new SearchIntersectWindow(new Envelope(x, x + interval, y, y + interval));
+						Select searchQuery = new ST_IntersectWindow(new Envelope(x, x + interval, y, y + interval));
 
 						long qStart = System.currentTimeMillis();
-						rtreeIndex.execute(searchQuery);
+						layer.execute(searchQuery);
 						List<SpatialDatabaseRecord> rtreeResults = searchQuery.getResults();
 						long qStop = System.currentTimeMillis();
 						long qElapsedTime = qStop - qStart;
@@ -128,10 +129,9 @@ public class TestSearch extends Neo4jTestCase {
 			try {
 				SpatialDatabaseService spatialService = new SpatialDatabaseService(graphDb());
 				Layer layer = spatialService.getLayer("roads");
-				SpatialIndexReader spatialIndex = layer.getIndex();
-
-				Search searchQuery = new SearchIntersectWindow(new Envelope(xmin, xmax, ymin, ymax));
-				spatialIndex.execute(searchQuery);
+				
+				Select searchQuery = new ST_IntersectWindow(new Envelope(xmin, xmax, ymin, ymax));
+				layer.execute(searchQuery);
 				List<SpatialDatabaseRecord> results = searchQuery.getResults();
 				System.out.println("Search returned: " + results);
 				tx.success();

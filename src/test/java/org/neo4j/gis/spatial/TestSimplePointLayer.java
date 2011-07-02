@@ -28,9 +28,10 @@ import junit.framework.AssertionFailedError;
 
 import org.junit.Test;
 import org.neo4j.gis.spatial.geotools.data.StyledImageExporter;
-import org.neo4j.gis.spatial.query.SearchContain;
-import org.neo4j.gis.spatial.query.SearchPointsWithinOrthodromicDistance;
-import org.neo4j.gis.spatial.query.SearchWithin;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Contain;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_PointsWithinOrthodromicDistance;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Within;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
@@ -47,13 +48,13 @@ public class TestSimplePointLayer extends Neo4jTestCase {
 		SpatialDatabaseRecordImpl record = layer.add(layer.getGeometryFactory().createPoint(new Coordinate(15.3, 56.2)));
 		assertNotNull(record);
 		// finds geometries that contain the given geometry
-		SearchContain searchQuery = new SearchContain(layer.getGeometryFactory().toGeometry(new Envelope(15.0, 16.0, 56.0, 57.0)));
-		layer.getIndex().execute(searchQuery);
+		Select searchQuery = new ST_Contain(layer.getGeometryFactory().toGeometry(new Envelope(15.0, 16.0, 56.0, 57.0)));
+		layer.execute(searchQuery);
 		List<SpatialDatabaseRecord> results = searchQuery.getResults();
 		// should not be contained
 		assertEquals(0, results.size());
-		SearchWithin withinQuery = new SearchWithin(layer.getGeometryFactory().toGeometry(new Envelope(15.0, 16.0, 56.0, 57.0)));
-		layer.getIndex().execute(withinQuery);
+		Select withinQuery = new ST_Within(layer.getGeometryFactory().toGeometry(new Envelope(15.0, 16.0, 56.0, 57.0)));
+		layer.execute(searchQuery);
 		results = withinQuery.getResults();
 		assertEquals(1, results.size());
 	}
@@ -108,8 +109,8 @@ public class TestSimplePointLayer extends Neo4jTestCase {
 		saveLayerAsImage(layer, 300, 300);
 
 		Envelope bbox = layer.getIndex().getLayerBoundingBox();
-		SearchPointsWithinOrthodromicDistance distanceQuery = new SearchPointsWithinOrthodromicDistance(bbox.centre(), 10.0, false);
-		layer.getIndex().execute(distanceQuery);
+		Select distanceQuery = new ST_PointsWithinOrthodromicDistance(bbox.centre(), 10.0);
+		layer.execute(distanceQuery);
 		List<SpatialDatabaseRecord> results = distanceQuery.getResults();
 
 		saveResultsAsImage(results, "temporary-results-layer-" + layer.getName(), 150, 150);

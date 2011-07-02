@@ -19,7 +19,6 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
-
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -28,7 +27,6 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
-
 
 /**
  * Find geometries covered by the given geometry

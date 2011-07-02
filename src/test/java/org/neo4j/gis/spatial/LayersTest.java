@@ -26,11 +26,12 @@ import org.junit.Test;
 import org.neo4j.gis.spatial.encoders.SimpleGraphEncoder;
 import org.neo4j.gis.spatial.encoders.SimplePointEncoder;
 import org.neo4j.gis.spatial.encoders.SimplePropertyEncoder;
+import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMGeometryEncoder;
 import org.neo4j.gis.spatial.osm.OSMLayer;
-import org.neo4j.gis.spatial.query.SearchContain;
-import org.neo4j.gis.spatial.query.SearchIntersect;
-import org.neo4j.gis.spatial.query.SearchWithin;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Contain;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Intersect;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Within;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateList;
@@ -59,21 +60,21 @@ public class LayersTest extends Neo4jTestCase
         SpatialDatabaseService db = new SpatialDatabaseService( graphDb() );
         EditableLayer layer = (EditableLayer) db.createLayer("test", SimplePointEncoder.class, EditableLayerImpl.class, "lon:lat");
         assertNotNull( layer );
-        SpatialDatabaseRecordImpl record = layer.add( layer.getGeometryFactory().createPoint(
+        SpatialDatabaseRecord record = layer.add( layer.getGeometryFactory().createPoint(
                 new Coordinate( 15.3, 56.2 ) ) );
         assertNotNull( record );
         // finds geometries that contain the given geometry
-        SearchContain searchQuery = new SearchContain(
+        Select searchQuery = new ST_Contain(
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
-        layer.getIndex().execute( searchQuery );
+        layer.execute( searchQuery );
         List<SpatialDatabaseRecord> results = searchQuery.getResults();
         // should not be contained
         assertEquals( 0, results.size() );
-        SearchWithin withinQuery = new SearchWithin(
+        Select withinQuery = new ST_Within(
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
-        layer.getIndex().execute( withinQuery );
+        layer.execute( withinQuery );
         results = withinQuery.getResults();
         assertEquals( 1, results.size() );
     }
@@ -84,7 +85,7 @@ public class LayersTest extends Neo4jTestCase
         SpatialDatabaseService db = new SpatialDatabaseService( graphDb() );
         EditableLayer layer = (EditableLayer) db.createLayer("test", SimplePointEncoder.class, EditableLayerImpl.class, "lon:lat");
         assertNotNull( layer );
-        SpatialDatabaseRecordImpl record = layer.add( layer.getGeometryFactory().createPoint(
+        SpatialDatabaseRecord record = layer.add( layer.getGeometryFactory().createPoint(
                 new Coordinate( 15.3, 56.2 ) ) );
         assertNotNull( record );
         // try to remove the geometry
@@ -98,21 +99,21 @@ public class LayersTest extends Neo4jTestCase
         SpatialDatabaseService db = new SpatialDatabaseService( graphDb() );
         EditableLayer layer = (EditableLayer) db.getOrCreateEditableLayer( "test" );
         assertNotNull( layer );
-        SpatialDatabaseRecordImpl record = layer.add( layer.getGeometryFactory().createPoint(
+        SpatialDatabaseRecord record = layer.add( layer.getGeometryFactory().createPoint(
                 new Coordinate( 15.3, 56.2 ) ) );
         assertNotNull( record );
         // finds geometries that contain the given geometry
-        SearchContain searchQuery = new SearchContain(
+        Select searchQuery = new ST_Contain(
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
-        layer.getIndex().execute( searchQuery );
+        layer.execute( searchQuery );
         List<SpatialDatabaseRecord> results = searchQuery.getResults();
         // should not be contained
         assertEquals( 0, results.size() );
-        SearchWithin withinQuery = new SearchWithin(
+        Select withinQuery = new ST_Within(
                 layer.getGeometryFactory().toGeometry(
                         new Envelope( 15.0, 16.0, 56.0, 57.0 ) ) );
-        layer.getIndex().execute( withinQuery );
+        layer.execute( withinQuery );
         results = withinQuery.getResults();
         assertEquals( 1, results.size() );
     }
@@ -203,11 +204,11 @@ public class LayersTest extends Neo4jTestCase
 
         doSearch(
                 layer,
-                new SearchIntersect( layer.getGeometryFactory().toGeometry(
+                new ST_Intersect( layer.getGeometryFactory().toGeometry(
                         new Envelope( 13.2, 14.1, 56.1, 56.2 ) ) ) );
         doSearch(
                 layer,
-                new SearchContain( layer.getGeometryFactory().toGeometry(
+                new ST_Contain( layer.getGeometryFactory().toGeometry(
                         new Envelope( 12.0, 15.0, 55.0, 57.0 ) ) ) );
 
         // spatialService.deleteLayer(layer.getName(), new NullListener());
@@ -216,10 +217,10 @@ public class LayersTest extends Neo4jTestCase
         return layer;
     }
 
-    private void doSearch( Layer layer, Search searchQuery )
+    private void doSearch( Layer layer, Select searchQuery )
     {
         System.out.println( "Testing search intersection:" );
-        layer.getIndex().execute( searchQuery );
+        layer.execute( searchQuery );
         List<SpatialDatabaseRecord> results = searchQuery.getResults();
         System.out.println( "\tTesting layer '" + layer.getName() + "' (class "
                             + layer.getClass() + "), found results: "

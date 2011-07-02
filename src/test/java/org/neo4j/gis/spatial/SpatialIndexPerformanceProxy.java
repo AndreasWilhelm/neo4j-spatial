@@ -83,9 +83,9 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
         return result;
     }
     
-    public void execute(Search search) {
+    public void executeSearch(SearchQuery search) {
         long start = System.currentTimeMillis();
-        spatialIndex.execute(search);
+        spatialIndex.executeSearch(search);
         long stop = System.currentTimeMillis();
         System.out.println("# exec time(executeSearch(" + search + ")): " + (stop - start) + "ms");
     }

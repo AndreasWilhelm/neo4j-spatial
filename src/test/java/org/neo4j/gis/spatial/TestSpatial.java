@@ -30,8 +30,9 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.geotools.data.shapefile.shp.ShapefileException;
+import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.query.SearchIntersect;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Intersect;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -336,10 +337,10 @@ public class TestSpatial extends Neo4jTestCase {
                     + " inside search region");
         }
 
-        Search searchQuery = new SearchIntersect(layer.getGeometryFactory().toGeometry(bbox));
+        Select searchQuery = new ST_Intersect(layer.getGeometryFactory().toGeometry(bbox));
         for (SpatialIndexReader index : new SpatialIndexReader[] {fakeIndex, rtreeIndex}) {
             ArrayList<TestGeometry> foundData = new ArrayList<TestGeometry>();
-            index.execute(searchQuery);
+            layer.execute(searchQuery);
             List<SpatialDatabaseRecord> results = searchQuery.getResults();
             System.out.println("\tIndex[" + index.getClass() + "] found results: " + results.size());
             int ri = 0;

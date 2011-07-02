@@ -27,12 +27,13 @@ import org.geotools.data.DataStore;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.neo4j.gis.spatial.DynamicLayer.LayerConfig;
 import org.neo4j.gis.spatial.geotools.data.Neo4jSpatialDataStore;
+import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMDataset;
 import org.neo4j.gis.spatial.osm.OSMDataset.Way;
 import org.neo4j.gis.spatial.osm.OSMDataset.WayPoint;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.osm.OSMLayer;
-import org.neo4j.gis.spatial.query.SearchIntersectWindow;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_IntersectWindow;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
@@ -138,8 +139,8 @@ public class TestsForDocs extends Neo4jTestCase {
 			System.out.println("Have " + spatialIndex.count() + " geometries in " + spatialIndex.getLayerBoundingBox());
 
 			Envelope bbox = new Envelope(12.94, 12.96, 56.04, 56.06);
-			Search searchQuery = new SearchIntersectWindow(bbox);
-			spatialIndex.execute(searchQuery);
+			Select searchQuery = new ST_IntersectWindow(bbox);
+			layer.execute(searchQuery);
 			List<SpatialDatabaseRecord> results = searchQuery.getResults();
 			doGeometryTestsOnResults(bbox, results);
 		} finally {
@@ -206,8 +207,8 @@ public class TestsForDocs extends Neo4jTestCase {
 			System.out.println("Have " + spatialIndex.count() + " geometries in " + spatialIndex.getLayerBoundingBox());
 
 			Envelope bbox = new Envelope(12.94, 12.96, 56.04, 56.06);
-			Search searchQuery = new SearchIntersectWindow(bbox);
-			spatialIndex.execute(searchQuery);
+			Select searchQuery = new ST_IntersectWindow(bbox);
+			layer.execute(searchQuery);
 			List<SpatialDatabaseRecord> results = searchQuery.getResults();
 
 			spatialService.createResultsLayer("results", results);
