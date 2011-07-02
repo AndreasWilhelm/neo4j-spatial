@@ -61,7 +61,7 @@ import org.geotools.styling.StyleFactoryImpl;
 import org.neo4j.gis.spatial.Constants;
 import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
-import org.neo4j.gis.spatial.Search;
+import org.neo4j.gis.spatial.SearchQuery;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
@@ -456,9 +456,9 @@ public class Neo4jSpatialDataStore extends AbstractDataStore implements Constant
 		return getFeatureReader(typeName, new SearchAll());
 	}
 	
-    protected FeatureReader<SimpleFeatureType, SimpleFeature> getFeatureReader(String typeName, Search search) throws IOException {
+    protected FeatureReader<SimpleFeatureType, SimpleFeature> getFeatureReader(String typeName, SearchQuery search) throws IOException {
     	Layer layer = spatialDatabase.getLayer(typeName);		
-    	layer.getIndex().execute(search);
+    	layer.getIndex().executeSearch(search);
     	Iterator<SpatialDatabaseRecord> results = search.getResults().iterator();
     	return new Neo4jSpatialFeatureReader(layer, getSchema(typeName), results);
     }

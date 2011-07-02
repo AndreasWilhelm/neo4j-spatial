@@ -32,7 +32,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * @author Davide Savazzi
  */
-public abstract class AbstractSearch implements Search {
+public abstract class AbstractSearch implements SearchQuery {
 	
 	// Constructor
 	

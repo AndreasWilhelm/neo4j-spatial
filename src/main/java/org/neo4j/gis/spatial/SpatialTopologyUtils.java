@@ -24,7 +24,8 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.geotools.geometry.jts.ReferencedEnvelope;
-import org.neo4j.gis.spatial.query.SearchIntersect;
+import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Intersect;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -114,8 +115,8 @@ public class SpatialTopologyUtils {
 	public static ArrayList<PointResult> findClosestEdges(Point point,
 			Layer layer, Geometry filter) {
 		ArrayList<PointResult> results = new ArrayList<PointResult>();
-		Search searchQuery = new SearchIntersect(filter);
-		layer.getIndex().execute(searchQuery);
+		Select searchQuery = new ST_Intersect(filter);
+		layer.execute(searchQuery);
 		for (SpatialDatabaseRecord record : searchQuery.getResults()) {
 			Geometry geom = record.getGeometry();
 			if (geom instanceof LineString) {

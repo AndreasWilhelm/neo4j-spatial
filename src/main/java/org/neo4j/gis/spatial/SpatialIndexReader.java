@@ -42,7 +42,7 @@ public interface SpatialIndexReader {
 	List<SpatialDatabaseRecord> get(Set<Long> geomNodeIds);
         
 	@Deprecated
-	void execute(Search search);
+	void executeSearch(SearchQuery search);
 
     Iterable<Node> getAllGeometryNodes();
 }

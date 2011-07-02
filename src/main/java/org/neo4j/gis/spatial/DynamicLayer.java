@@ -92,10 +92,6 @@ public class DynamicLayer extends EditableLayerImpl {
 		public int count() {
 			return index.count();
 		}
-
-		public void execute(Search search) {
-			index.execute(search);
-		}
 		
 		public SpatialDatabaseRecord get(Long geomNodeId) {
 			return index.get(geomNodeId);
@@ -117,10 +113,10 @@ public class DynamicLayer extends EditableLayerImpl {
 	        return index.getAllGeometryNodes();
         }
 
-		public List<SpatialDatabaseRecord> execute(Select select) {
-			// TODO Auto-generated method stub
-			return null;
+		public void executeSearch(SearchQuery search) {
+			index.executeSearch(search);
 		}
+
 	}
 
 	/**
@@ -163,9 +159,9 @@ public class DynamicLayer extends EditableLayerImpl {
             }
         }
 
-        private class FilteredSearch implements Search {
-            private Search delegate;
-            public FilteredSearch(Search delegate) {
+        private class FilteredSearch implements SearchQuery {
+            private SearchQuery delegate;
+            public FilteredSearch(SearchQuery delegate) {
                 this.delegate = delegate;
             }
 
@@ -205,8 +201,8 @@ public class DynamicLayer extends EditableLayerImpl {
 			return counter.getResult();
 		}
 
-		public void executeSearch(final Search search) {
-			index.execute(new FilteredSearch(search));
+		public void executeSearch(final SearchQuery search) {
+			index.executeSearch(new FilteredSearch(search));
 		}
     }
 
@@ -323,8 +319,8 @@ public class DynamicLayer extends EditableLayerImpl {
 			return counter.getResult();
 		}
 
-		public void executeSearch(final Search search) {
-			index.execute(new Search() {
+		public void executeSearch(final SearchQuery search) {
+			index.executeSearch(new SearchQuery() {
 
 				public List<SpatialDatabaseRecord> getResults() {
 					return search.getResults();

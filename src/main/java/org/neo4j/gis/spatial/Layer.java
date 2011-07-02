@@ -160,9 +160,9 @@ public interface Layer {
 	 * 
 	 * @param select the select query.
 	 * @return Returns a search result list with {@link SpatialDatabaseRecord}.
-	 * @throws SpatialExecuteException 
+	 * @throws SpatialDatabaseException 
 	 */
-	List<SpatialDatabaseRecord> execute(Select select) throws SpatialExecuteException;
+	List<SpatialDatabaseRecord> execute(Select select) throws SpatialDatabaseException;
 	
 
 }

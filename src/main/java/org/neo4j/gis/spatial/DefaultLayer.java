@@ -123,7 +123,7 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
             return (Integer) layerNode.getProperty(PROP_TYPE);
         } else {
             GuessGeometryTypeSearch geomTypeSearch = new GuessGeometryTypeSearch();
-            index.execute(geomTypeSearch);
+            index.executeSearch(geomTypeSearch);
             if (geomTypeSearch.firstFoundType != null) {
                 return geomTypeSearch.firstFoundType;
             } else {
@@ -410,7 +410,7 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
 	/**
 	 * @see Layer#execute(Select)
 	 */
-	public List<SpatialDatabaseRecord> execute(Select select) throws SpatialExecuteException {
+	public List<SpatialDatabaseRecord> execute(Select select) throws SpatialDatabaseException {
 		List<SpatialDatabaseRecord> results = new ArrayList<SpatialDatabaseRecord>();
 		select.setLayer(this);
 		

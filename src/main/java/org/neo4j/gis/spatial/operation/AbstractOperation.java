@@ -19,6 +19,7 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import org.geotools.data.Query;
 import org.neo4j.gis.spatial.GeometryEncoder;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;

@@ -77,8 +77,6 @@ public class ST_PointsWithinOrthodromicDistance extends AbstractReadOperation {
 		return distanceInKm;
 	}
 
-
-
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer) {
 		Geometry geometry = decodeGeometry(node);
