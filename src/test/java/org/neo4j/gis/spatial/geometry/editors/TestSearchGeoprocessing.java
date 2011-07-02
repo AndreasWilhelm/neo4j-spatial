@@ -153,6 +153,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	public void testClosest() throws Exception {
 		Select select = new ST_Closest(wktReader.read(wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(1, results.size());
 		if (debug) {
 			printTestResults("testClosest", results);
 		}

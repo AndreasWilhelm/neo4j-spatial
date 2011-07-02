@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.editors;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -38,15 +40,16 @@ import com.vividsolutions.jts.geom.Geometry;
 public class ST_Reverse extends AbstractFullOperation {
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
-	 *      Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = decodeGeometry(node);
 		Geometry targetGeometry = geom.reverse();
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
 				layer, node, targetGeometry);
+		records.add(databaseRecord);
 		return databaseRecord;
 	}
 

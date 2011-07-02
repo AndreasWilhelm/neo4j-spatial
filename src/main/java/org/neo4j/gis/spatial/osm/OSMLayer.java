@@ -20,11 +20,7 @@
 package org.neo4j.gis.spatial.osm;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.json.simple.JSONObject;
@@ -50,7 +46,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * extends the DynamicLayer class becauase the OSM dataset can have many layers.
  * Only one is primary, the layer containing all ways. Other layers are dynamic.
  * 
- * @author craig
+ * @author craig, andreas
  * @since 1.0.0
  */
 public class OSMLayer extends DynamicLayer {

@@ -428,10 +428,7 @@ public class DefaultLayer implements Constants, Layer, SpatialDataset {
 		for (Node node : traverser) {
 			if (restrictionMap.determineNode(node)) {
 				SpatialDatabaseRecord record = select.onIndexReference(
-						OperationType.SELECT, node, this);
-				if(record != null) {
-					results.add(record);
-				}
+						OperationType.SELECT, node, this, results);
 			}
 		}
 		return results;

@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
+import java.util.List;
+
 import org.geotools.geometry.jts.Geometries;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
@@ -39,14 +41,15 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 public class ST_Simplify extends AbstractFullOperation {
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
-	 *      Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = this.decodeGeometry(node);
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
 				layer, node, simplify(geom));
+		records.add(databaseRecord);
 		return databaseRecord;
 	}
 

@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -46,18 +48,20 @@ public class ST_Union extends AbstractFullOperation {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
-	 *      Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		SpatialDatabaseRecord record = null;
 		Geometry geom = this.decodeGeometry(node);
 		Geometry unionGeom = geom.union(other);
 		
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
+		record = new SpatialDatabaseRecordImpl(
 				layer, node, unionGeom);
-		databaseRecord.setProperty(ST_Union.class.getName(), unionGeom);
-		return databaseRecord;
+		record.setProperty(ST_Union.class.getName(), unionGeom);
+		records.add(record);
+		return record;
 	}
 
 }

@@ -161,7 +161,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 
 				// Execute spatial type query.
 				SpatialDatabaseRecord record = insert.onIndexReference(
-						OperationType.INSERT, spatialNode, this);
+						OperationType.INSERT, spatialNode, this, records);
 
 				// TODO spatialtype props and realtions..
 				// TODO mehrere geoms ST_Network(List<Geometry>);
@@ -232,7 +232,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 			for (Node node : getGeomNodes()) {
 				if (restrictions.determineNode(node)) {
 					SpatialDatabaseRecord record = delete.onIndexReference(
-							OperationType.DELETE, node, this);
+							OperationType.DELETE, node, this, null);
 					if (record != null) {
 						//index.remove(record.getId(), true);
 						delete(record.getId());
@@ -263,13 +263,13 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 
 				if (!restrictions.determineNode(node)) {
 					SpatialDatabaseRecord record = update.onIndexReference(
-							OperationType.UPDATE, node, this);
+							OperationType.UPDATE, node, this, records);
 					if (record != null) {
 
 						// Update node and subgraph.
 						this.update(record.getGeomNode().getId(), record.getGeometry());
 						// Add updated node to record list.
-						records.add(record);
+						//records.add(record);
 					}
 				}
 			}

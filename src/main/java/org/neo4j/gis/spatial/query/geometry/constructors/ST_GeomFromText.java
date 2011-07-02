@@ -68,13 +68,14 @@ public class ST_GeomFromText extends AbstractFullOperation {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
-	 *      Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node, this.getGeometries().get(this.index++));
+		records.add(record);
 		return record;
 	}
 }

@@ -19,11 +19,14 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -41,12 +44,19 @@ public class ST_Cross extends AbstractReadOperation {
 		this.other = other;
 	}
 
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		SpatialDatabaseRecord record = null;
 		Geometry geometry = decodeGeometry(node);
-		if (geometry.crosses(other))
-			return new SpatialDatabaseRecordImpl(layer, node);
-		return null;
+		if (geometry.crosses(other)) {
+			record = new SpatialDatabaseRecordImpl(layer, node);
+			records.add(record);
+		}
+		return record;
 	}
 
 }

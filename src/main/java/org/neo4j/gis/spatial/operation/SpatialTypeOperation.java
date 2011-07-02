@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.RTreeIndex;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
@@ -64,6 +66,6 @@ public interface SpatialTypeOperation {
 	 *         operation.
 	 */
 	public abstract SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
-			Layer layer);
+			Layer layer, List<SpatialDatabaseRecord> records);
 
 }

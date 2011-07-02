@@ -19,16 +19,18 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-
 
 /**
  * Find geometries that covers the given geometry
@@ -36,22 +38,30 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Davide Savazzi, Andreas Wilhelm
  */
 public class ST_Cover extends AbstractReadOperation {
-	
+
 	private Geometry other = null;
 
 	public ST_Cover(Geometry other) {
 		this.other = other;
 	}
 
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
-		
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		SpatialDatabaseRecord record = null;
 		Envelope geomEnvelope = getEnvelope(node);
-		// check if every point of the other geometry is a point of this geometry
-	    if (geomEnvelope.covers(other.getEnvelopeInternal())) {
-	    	Geometry geometry = decodeGeometry(node);
-	    	if (geometry.covers(other)) return new SpatialDatabaseRecordImpl(layer,node);
-	    }
-		return null;
+		// check if every point of the other geometry is a point of this
+		// geometry
+		if (geomEnvelope.covers(other.getEnvelopeInternal())) {
+			Geometry geometry = decodeGeometry(node);
+			if (geometry.covers(other)) {
+				record = new SpatialDatabaseRecordImpl(layer, node);
+				records.add(record);
+			}
+		}
+		return record;
 	}
 }

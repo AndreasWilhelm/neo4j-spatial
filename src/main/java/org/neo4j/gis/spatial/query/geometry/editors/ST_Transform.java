@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.editors;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
@@ -82,11 +84,11 @@ public class ST_Transform  extends AbstractFullOperation {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
-	 *      Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		SpatialDatabaseRecord spatialDatabaseRecord = null;
 
 		Geometry geom = this.decodeGeometry(node);
@@ -96,6 +98,7 @@ public class ST_Transform  extends AbstractFullOperation {
 			Geometry targetGeometry = JTS.transform(geom, transform);
 			spatialDatabaseRecord = new SpatialDatabaseRecordImpl(layer, node,
 					targetGeometry);
+			records.add(spatialDatabaseRecord);
 		} catch (FactoryException e) {
 			logger.error(e.getMessage());
 		} catch (MismatchedDimensionException e) {

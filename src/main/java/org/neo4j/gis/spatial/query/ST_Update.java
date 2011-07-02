@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -67,11 +69,15 @@ public class ST_Update extends AbstractUpdateOperation {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
-	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
-			Layer layer) {
-		return new SpatialDatabaseRecordImpl(layer, node, this.geometry);
+	public SpatialDatabaseRecord onIndexReference(OperationType type,
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node, this.geometry);
+		records.add(record);
+		return record;
 	}
 
 }

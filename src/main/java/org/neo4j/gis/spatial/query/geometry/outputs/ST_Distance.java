@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.outputs;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -46,11 +48,11 @@ public class ST_Distance extends AbstractReadOperation {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
-	 *      Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = decodeGeometry(node);
 		double distance = geom.distance(other);
 
@@ -58,7 +60,7 @@ public class ST_Distance extends AbstractReadOperation {
 				layer, node);
 
 		databaseRecord.setProperty(ST_Distance.class.getName(), distance);
-
+		records.add(databaseRecord);
 		return databaseRecord;
 	}
 

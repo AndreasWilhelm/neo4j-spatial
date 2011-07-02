@@ -19,11 +19,15 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
@@ -43,6 +47,7 @@ public class ST_Closest extends AbstractReadOperation {
 	private Envelope envelope;
 	//
 	private double minDistance = Double.MAX_VALUE;
+	
 
 	/**
 	 * 
@@ -68,19 +73,29 @@ public class ST_Closest extends AbstractReadOperation {
 	}
 	
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Envelope geomEnvelope = getEnvelope(node);
+		SpatialDatabaseRecord record = null;
 		if (geomEnvelope.intersects(this.envelope)) {
 			Geometry geometry = decodeGeometry(node);
 			double distance = geometry.distance(other);
-			if (distance <= minDistance) {
-				return new SpatialDatabaseRecordImpl(layer, node);
+			if (distance < minDistance) {
+				record = new SpatialDatabaseRecordImpl(layer, node);
+				minDistance = distance;
+				// Remove old entries.
+				records.clear();
+				System.out.println("Found");
+				records.add(record);
+			} else if(distance == minDistance) {
+				record = new SpatialDatabaseRecordImpl(layer, node);
+				records.add(record);
 			}
 		}
-		return null;
+		return record;
 	}
 
 }

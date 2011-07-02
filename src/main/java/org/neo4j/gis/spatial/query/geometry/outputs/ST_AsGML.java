@@ -20,6 +20,8 @@
 package org.neo4j.gis.spatial.query.geometry.outputs;
 
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -40,15 +42,17 @@ import com.vividsolutions.jts.io.gml2.GMLWriter;
 public class ST_AsGML extends AbstractReadOperation {
 	
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
-	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
-			Layer layer) {
+	public SpatialDatabaseRecord onIndexReference(OperationType type,
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = this.decodeGeometry(node);
 		GMLWriter gmlWriter = new GMLWriter();
 		String gml = gmlWriter.write(geometry);
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
 		databaseRecord.setProperty(ST_AsGML.class.getName(), gml);
+		records.add(databaseRecord);
 		return databaseRecord;
 	}
 

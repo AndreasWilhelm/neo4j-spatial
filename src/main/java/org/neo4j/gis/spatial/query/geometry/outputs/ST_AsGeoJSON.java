@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.outputs;
 
+import java.util.List;
+
 import org.geotools.geojson.geom.GeometryJSON;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
@@ -39,10 +41,11 @@ import com.vividsolutions.jts.geom.Geometry;
 public class ST_AsGeoJSON extends AbstractReadOperation {
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
-	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
-			Layer layer) {
+	public SpatialDatabaseRecord onIndexReference(OperationType type,
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		GeometryJSON gjson = new GeometryJSON();
 		
 		Geometry geom = decodeGeometry(node);
@@ -51,6 +54,7 @@ public class ST_AsGeoJSON extends AbstractReadOperation {
 
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
 		databaseRecord.setProperty(ST_AsGeoJSON.class.getName(), geojson);
+		records.add(databaseRecord);
 		return databaseRecord;
 	}
 

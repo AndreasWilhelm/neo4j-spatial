@@ -19,11 +19,14 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -43,21 +46,28 @@ public class ST_IntersectWindow extends AbstractReadOperation {
 		this.envelope = envelope;
 	}
 
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		SpatialDatabaseRecord record = null;
 		//TODO: create the geom just one time...
 		this.windowGeom = layer.getGeometryFactory().toGeometry(envelope);
 		Envelope geomEnvelope = getEnvelope(node);
 		
 		if (envelope.covers(geomEnvelope)) {
-			return new SpatialDatabaseRecordImpl(layer, node);
+			record = new SpatialDatabaseRecordImpl(layer, node);
+			records.add(record);
 		} else if (envelope.intersects(geomEnvelope)) {
 			Geometry geometry = decodeGeometry(node);
 			if (geometry.intersects(windowGeom)) {
-				return new SpatialDatabaseRecordImpl(layer, node);
+				record = new SpatialDatabaseRecordImpl(layer, node);
+				records.add(record);
 			}
 		}
-		return null;
+		return record;
 	}	
 
 }

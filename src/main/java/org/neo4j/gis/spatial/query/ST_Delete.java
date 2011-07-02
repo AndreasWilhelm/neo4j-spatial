@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -36,7 +38,7 @@ import org.neo4j.graphdb.Node;
  * 
  */
 public class ST_Delete extends AbstractDeleteOperation {
-	
+
 	/**
 	 * Delete all nodes which have no restriction.
 	 */
@@ -52,13 +54,17 @@ public class ST_Delete extends AbstractDeleteOperation {
 	public ST_Delete(long nodeid) {
 		this.addRestriction(RestrictionType.EQUAL_TO, "id=" + nodeid);
 	}
-	
+
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
-	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
-			Layer layer) {
-		return new SpatialDatabaseRecordImpl(layer, node);
+	public SpatialDatabaseRecord onIndexReference(OperationType type,
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
+		records.add(record);
+		return record;
 	}
 
 }

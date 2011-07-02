@@ -19,11 +19,14 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -77,8 +80,13 @@ public class ST_PointsWithinOrthodromicDistance extends AbstractReadOperation {
 		return distanceInKm;
 	}
 
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		SpatialDatabaseRecord record = null;
 		Geometry geometry = decodeGeometry(node);
 		Coordinate point = geometry.getCoordinate();
 
@@ -87,10 +95,10 @@ public class ST_PointsWithinOrthodromicDistance extends AbstractReadOperation {
 		double distanceInKm = calculateDistance(reference, point);
 
 		if (distanceInKm < maxDistanceInKm) {
-			SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
-			databaseRecord.setProperty(ST_PointsWithinOrthodromicDistance.class.getName(), distanceInKm);
-			return databaseRecord;
+			record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setProperty(ST_PointsWithinOrthodromicDistance.class.getName(), distanceInKm);
+			records.add(record);
 		}
-		return null;
+		return record;
 	}
 }

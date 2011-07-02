@@ -19,16 +19,17 @@
  */
 package org.neo4j.gis.spatial.query.geometry.processing;
 
+import java.util.List;
 
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
-
 
 /**
  * The spatial type function <code>ST_Invalid</code>
@@ -36,16 +37,22 @@ import com.vividsolutions.jts.geom.Geometry;
  * @author Davide Savazzi, Andreas Wilhelm
  */
 public class ST_Invalid extends AbstractReadOperation {
-	
+
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
-		
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		SpatialDatabaseRecord record = null;
+
 		Geometry geom = this.decodeGeometry(node);
-		if(!geom.isValid()) {
-			return new SpatialDatabaseRecordImpl(layer, node);
-		} else {
-			return null;
+		if (!geom.isValid()) {
+			record = new SpatialDatabaseRecordImpl(layer, node);
+			records.add(record);
 		}
+		return record;
+
 	}
 
 }

@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.accessors;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -34,24 +36,25 @@ import com.vividsolutions.jts.io.WKBWriter;
 /**
  * Represent the geometry as Well-Known Binary (WKB).
  * 
- * <h2>For example:</h2>
- * <code>
+ * <h2>For example:</h2> <code>
  * 01020000000800000003322A5F86ED2940EA93DC6113094C40CAECE2E
  * C8CED2940D02BF93317094C403EE136644DEE29400F4B5EF81C094C40
  * A06F0B96EAEE29403B66EABF18094C407E26B15A4FEF29402684B3001
  * 2094C40ED0104BD81EF29407D3ECA880B094C401CDFCD0990EF294031
  * DB04CE08094C40A8ECAAF69FEF29403F1F65C405094C40
  * <code>
+ * 
  * @author Andreas Wilhelm
  * 
  */
 public class ST_AsBinary extends AbstractReadOperation {
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType, Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
-	public SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
-			Layer layer) {
+	public SpatialDatabaseRecord onIndexReference(OperationType type,
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = decodeGeometry(node);
 		WKBWriter wkbWriter = new WKBWriter(2, ByteOrderValues.LITTLE_ENDIAN);
 		byte[] wkb = wkbWriter.write(geometry);
@@ -60,6 +63,7 @@ public class ST_AsBinary extends AbstractReadOperation {
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
 				layer, node);
 		databaseRecord.setProperty(ST_AsBinary.class.getName(), hex);
+		records.add(databaseRecord);
 		return databaseRecord;
 	}
 
