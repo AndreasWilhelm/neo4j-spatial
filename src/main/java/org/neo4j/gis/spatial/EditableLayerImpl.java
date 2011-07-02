@@ -184,9 +184,6 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 
 				// Add node to the index.
 				index.add(record.getGeomNode());
-
-				// Add record to the return list.
-				records.add(record);
 			}
 			tx.success();
 		} catch (Exception e) {
@@ -265,11 +262,8 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 					SpatialDatabaseRecord record = update.onIndexReference(
 							OperationType.UPDATE, node, this, records);
 					if (record != null) {
-
 						// Update node and subgraph.
 						this.update(record.getGeomNode().getId(), record.getGeometry());
-						// Add updated node to record list.
-						//records.add(record);
 					}
 				}
 			}
