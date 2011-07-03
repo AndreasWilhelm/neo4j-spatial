@@ -42,9 +42,7 @@ import org.neo4j.gis.spatial.query.geometry.processing.ST_IntersectWindow;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Invalid;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Overlap;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_PointsWithinOrthodromicDistance;
-import org.neo4j.gis.spatial.query.geometry.processing.ST_Simplify;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Touch;
-import org.neo4j.gis.spatial.query.geometry.processing.ST_Union;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Within;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_WithinDistance;
 
@@ -55,6 +53,9 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
 
 /**
+ * This unit test testing all available geoprocessing queries: 
+ * 
+ * 
  * @author Andreas Wilhelm
  * 
  */
@@ -63,8 +64,6 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	private SpatialDatabaseService spatialService = null;
 	private Layer layer = null;
 	private boolean debug = true;
-	private String wkt = "LINESTRING (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885)";
-	private String wkt2 = "LINESTRING (13.9639158 56.070904, 13.9639658 56.0710206, 13.9654342 56.0711966)";
 
 	private WKTReader wktReader = new WKTReader();
 
@@ -80,19 +79,8 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		}
 	}
 
-	public void testSimplify() throws Exception {
-
-		Select select = new ST_Simplify();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		assertEquals(wkt, results.get(1).getGeometry().toText());
-		if (debug) {
-			printTestResults("testSimplify", results);
-		}
-	}
-
 	public void testContain() throws Exception {
-		Select select = new ST_Contain(wktReader.read(wkt));
+		Select select = new ST_Contain(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(1, results.size());
 		if (debug) {
@@ -102,7 +90,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 
 	public void testCover() throws Exception {
 
-		Select select = new ST_Cover(wktReader.read(wkt));
+		Select select = new ST_Cover(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(results.size(), 1);
 		if (debug) {
@@ -112,7 +100,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 
 	public void testCoverBy() throws Exception {
 
-		Select select = new ST_CoveredBy(wktReader.read(wkt));
+		Select select = new ST_CoveredBy(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(1, results.size());
 		if (debug) {
@@ -122,7 +110,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 
 	public void testDisjoint() throws Exception {
 
-		Select select = new ST_Disjoint(wktReader.read(wkt));
+		Select select = new ST_Disjoint(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(1, results.size());
 		if (debug) {
@@ -142,7 +130,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 
 	public void testEqual() throws Exception {
 
-		Select select = new ST_Equal(wktReader.read(wkt));
+		Select select = new ST_Equal(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(1, results.size());
 		if (debug) {
@@ -151,7 +139,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	}
 
 	public void testClosest() throws Exception {
-		Select select = new ST_Closest(wktReader.read(wkt));
+		Select select = new ST_Closest(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(1, results.size());
 		if (debug) {
@@ -160,7 +148,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	}
 
 	public void testIntersect() throws Exception {
-		Select select = new ST_Intersect(wktReader.read(wkt));
+		Select select = new ST_Intersect(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		if (debug) {
 			printTestResults("testIntersect", results);
@@ -177,7 +165,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	}
 
 	public void testOverlap() throws Exception {
-		Select select = new ST_Overlap(wktReader.read(wkt));
+		Select select = new ST_Overlap(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(0, results.size());
 		if (debug) {
@@ -186,7 +174,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	}
 
 	public void testTouch() throws Exception {
-		Select select = new ST_Touch(wktReader.read(wkt));
+		Select select = new ST_Touch(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(0, results.size());
 		if (debug) {
@@ -195,7 +183,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	}
 
 	public void testWithin() throws Exception {
-		Select select = new ST_Within(wktReader.read(wkt));
+		Select select = new ST_Within(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(1, results.size());
 		if (debug) {
@@ -217,7 +205,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 
 	public void testCross() throws Exception {
 
-		Select select = new ST_Cross(wktReader.read(wkt));
+		Select select = new ST_Cross(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(0, results.size());
 		if (debug) {
@@ -246,24 +234,13 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 	}
 
 	public void testInRelation() throws Exception {
-		//T*F**FFF* -> Equals
-		Select select = new ST_InRelation(wktReader.read(wkt), "T*F**FFF*");
+		// T*F**FFF* -> Equals
+		Select select = new ST_InRelation(wktReader.read(Dataset.wkt),
+				"T*F**FFF*");
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(1, results.size());
 		if (debug) {
 			printTestResults("testInRelation", results);
-		}
-	}
-
-	public void testUnion() throws Exception {
-		Select select = new ST_Union(wktReader.read(wkt2));
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-
-		String expected = "MULTILINESTRING ((12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317, 12.9735859 56.0552154, 12.9738426 56.0553521, 12.9747403 56.0559176, 12.9757125 56.056313, 12.9759293 56.0564416, 12.9760919 56.0567821, 12.9761463 56.0568715, 12.9763358 56.057183, 12.9763358 56.0575008, 12.9763764 56.0577353, 12.9762985 56.0581325, 12.9762427 56.058262, 12.9762034 56.0583531), (13.9639158 56.070904, 13.9639658 56.0710206, 13.9654342 56.0711966))";
-		assertEquals(expected, results.get(0).getResult().toString());
-		if (debug) {
-			printTestResults("testUnion", results);
 		}
 	}
 
