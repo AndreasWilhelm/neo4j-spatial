@@ -201,8 +201,6 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 	 * @return
 	 */
 	private Traverser getGeomNodes() {
-		List<Node> node = new ArrayList<Node>();
-
 		Node indexNode = getLayerNode().getSingleRelationship(
 				SpatialRelationshipTypes.RTREE_ROOT, Direction.OUTGOING)
 				.getEndNode();
@@ -218,7 +216,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 	 */
 	public int execute(Delete delete) throws SpatialDatabaseException {
 		int count = 0;
-		
+		delete.setLayer(this);
 		//
 		RestrictionMap restrictions = delete.getRestrictions();
 
@@ -252,18 +250,19 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 		RestrictionMap restrictions = update.getRestrictions();
 		List<SpatialDatabaseRecord> records = new ArrayList<SpatialDatabaseRecord>();
 		Iterable<Node> nodes = getGeomNodes();
-
+		update.setLayer(this);
+		
 		Transaction tx = this.getDatabase().beginTx();
 		try {
 
 			for (Node node : nodes) {
 
-				if (!restrictions.determineNode(node)) {
+				if (restrictions.determineNode(node)) {
 					SpatialDatabaseRecord record = update.onIndexReference(
 							OperationType.UPDATE, node, this, records);
 					if (record != null) {
 						// Update node and subgraph.
-						this.update(record.getGeomNode().getId(), record.getGeometry());
+						update(record.getGeomNode().getId(), record.getGeometry());
 					}
 				}
 			}

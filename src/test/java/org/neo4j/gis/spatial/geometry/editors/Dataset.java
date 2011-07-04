@@ -25,4 +25,6 @@ public class Dataset {
 	public final static String LAYER_NAME = "one-street.osm";
 	public final static int WORLD_MERCATOR_SRID = 3395;
 	public final static int COMMIT_INTERVAL = 100;
+	public final static String wkt = "LINESTRING (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885)";
+	public final static String wkt2 = "LINESTRING (13.9639158 56.070904, 13.9639658 56.0710206, 13.9654342 56.0711966)";
 }

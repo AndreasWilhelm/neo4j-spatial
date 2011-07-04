@@ -21,10 +21,10 @@ package org.neo4j.gis.spatial.query.geometry.editors;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.SpatialDatabaseException;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
@@ -43,17 +43,15 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * <p>
  * This class offers coordinate transformation from the layer coordinate
- * reference system(CRS) to spatial reference system identifier(SRID) referenced
+ * reference system(CRS) to a spatial reference system identifier(SRID) referenced
  * by a integer parameter or CRS. The target SRID must exist in GeoTools.
  * </p>
  * 
  * @author Andreas Wilhelm
  * 
  */
-public class ST_Transform  extends AbstractFullOperation {
-
-	private static Logger logger = Logger.getLogger(ST_Transform.class);
-
+public class ST_Transform extends AbstractFullOperation {
+	
 	private static String EPSG = "EPSG:";
 	private CoordinateReferenceSystem targetCRS;
 
@@ -89,24 +87,25 @@ public class ST_Transform  extends AbstractFullOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		
 		SpatialDatabaseRecord spatialDatabaseRecord = null;
 
-		Geometry geom = this.decodeGeometry(node);
+		Geometry geom = decodeGeometry(node);
 		try {
-			MathTransform transform = CRS.findMathTransform(this
-					.getCoordinateReferenceSystem(), this.targetCRS);
+			MathTransform transform = CRS.findMathTransform(
+					this.getCoordinateReferenceSystem(), this.targetCRS);
 			Geometry targetGeometry = JTS.transform(geom, transform);
 			spatialDatabaseRecord = new SpatialDatabaseRecordImpl(layer, node,
 					targetGeometry);
 			records.add(spatialDatabaseRecord);
 		} catch (FactoryException e) {
-			logger.error(e.getMessage());
+			throw new SpatialDatabaseException(e.getMessage());
 		} catch (MismatchedDimensionException e) {
-			logger.error("Mismatched dimension at Node " + node.getId() + " :"
-					+ e.getMessage());
+			throw new SpatialDatabaseException("Mismatched dimension at Node "
+					+ node.getId() + ". " + e.getMessage());
 		} catch (TransformException e) {
-			logger.error("Could not transform Node " + node.getId() + " :"
-					+ e.getMessage());
+			throw new SpatialDatabaseException("Could not transform Node "
+					+ node.getId() + "." + e.getMessage());
 		}
 
 		return spatialDatabaseRecord;
