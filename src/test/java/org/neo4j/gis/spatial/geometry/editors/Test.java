@@ -54,9 +54,9 @@ public class Test extends Neo4jTestCase {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;
 		System.out.println("\n=== Loading layer " + layerName + " from "
 				+ osmPath + " ===");
-		reActivateDatabase(false, true, false);
+		reActivateDatabase(false, false, false);
 		OSMImporter importer = new OSMImporter(layerName);
-		importer.importFile(getBatchInserter(), osmPath);
+		importer.importFile(graphDb(), osmPath);
 		reActivateDatabase(false, false, false);
 		importer.reIndex(graphDb(), commitInterval);
 	}
