@@ -63,7 +63,6 @@ public class ST_Delete extends AbstractDeleteOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node);
-		records.add(record);
 		return record;
 	}
 

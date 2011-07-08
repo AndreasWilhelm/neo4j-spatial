@@ -217,6 +217,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 	public int execute(Delete delete) throws SpatialDatabaseException {
 		int count = 0;
 		delete.setLayer(this);
+		
 		//
 		RestrictionMap restrictions = delete.getRestrictions();
 

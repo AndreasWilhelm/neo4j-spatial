@@ -20,9 +20,13 @@
 package org.neo4j.gis.spatial.query;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
+import org.geotools.data.shapefile.shp.ShapefileException;
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.ShapefileImporter;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
@@ -55,13 +59,13 @@ public class ST_Insert extends AbstractFullOperation {
 	 * Insert nodes from a Shapefile.
 	 * 
 	 * @param file
-	 * @throws UnsupportedOperationException
-	 *             - currently not implemented.
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 * @throws ShapefileException 
 	 */
-	public ST_Insert(File file) throws UnsupportedOperationException {
-		//ShapefileImporter shpImporter = new ShapefileImporter(null);
-		// TODO: Refactoring ShapefileImporter to make it more cohesive.
-		throw new UnsupportedOperationException();
+	public ST_Insert(String dataset, String layerName) throws ShapefileException, FileNotFoundException, IOException {
+	    ShapefileImporter importer = new ShapefileImporter(null);
+	   // List<Geometry> geoms = importer.getGeomtries();
 	}
 
 	/**
@@ -73,7 +77,7 @@ public class ST_Insert extends AbstractFullOperation {
 	 */
 	public ST_Insert(File file, String delimiter)
 			throws UnsupportedOperationException {
-		// TODO: CSV and Shapefile.
+		// TODO: CSV
 		throw new UnsupportedOperationException();
 	}
 
