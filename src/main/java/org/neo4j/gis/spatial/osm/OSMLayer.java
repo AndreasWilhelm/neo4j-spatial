@@ -261,7 +261,7 @@ public class OSMLayer extends DynamicLayer {
 	 * @see {@link EditableLayer#delete(long, Geometry)}
 	 */
 	public void delete(long geomNodeId) {
-		System.out.println(geomNodeId);
+		
 		// The index node of the geometry with bbox property.
 		Node geomIndexNode = this.getDatabase().getNodeById(geomNodeId);
 		
@@ -279,33 +279,29 @@ public class OSMLayer extends DynamicLayer {
 				ReturnableEvaluator.ALL_BUT_START_NODE, OSMRelation.NODE,
 				Direction.OUTGOING, OSMRelation.NEXT, Direction.OUTGOING);
 
-		
-
-
 		for (Node node : traverser.getAllNodes()) {
-			System.out.println("------------------------------");
 			// Delete relationship of the subnode.
 			for (Relationship rel : node.getRelationships()) {
 				rel.delete();
-				System.out.println("Deleted rel: " + rel.getId());
 			}
 			      
 			// Delete subnode.
 			if(!node.hasRelationship()) {
-				System.out.println("Node has no relations!");
 				node.delete();
-				System.out.println("Deleted Node: " + node);
 			}
 
 		}
-		
-		
+	
 		// Remove index connection.
-		//for (Relationship rel : startNode.getRelationships()) {
-		//	System.out.println("relstart: " + rel);
-		//	rel.delete();
-		//}
-		//startNode.delete();
+		for (Relationship rel : startNode.getRelationships()) {
+			rel.delete();
+		}
+		startNode.delete();
+		
+		for (Relationship rel : geom.getRelationships()) {
+			rel.delete();
+		}
+		geom.delete();
 	
 	}
 
