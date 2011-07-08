@@ -302,7 +302,7 @@ public class OSMLayer extends DynamicLayer {
 			rel.delete();
 		}
 		geom.delete();
-	
+
 	}
 
 	/**
