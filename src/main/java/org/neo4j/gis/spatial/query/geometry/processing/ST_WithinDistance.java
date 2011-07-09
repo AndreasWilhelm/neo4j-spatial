@@ -63,6 +63,7 @@ public class ST_WithinDistance extends AbstractReadOperation {
 			Geometry geometry = decodeGeometry(node);
 			if (DistanceOp.isWithinDistance(geometry, point, distance)) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
+				record.setProperty(ST_WithinDistance.class.getName(), geometry);
 				records.add(record);
 			}
 		}

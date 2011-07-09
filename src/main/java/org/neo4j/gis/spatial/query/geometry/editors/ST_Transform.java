@@ -97,6 +97,7 @@ public class ST_Transform extends AbstractFullOperation {
 			Geometry targetGeometry = JTS.transform(geom, transform);
 			spatialDatabaseRecord = new SpatialDatabaseRecordImpl(layer, node,
 					targetGeometry);
+			spatialDatabaseRecord.setProperty(ST_Transform.class.getName(), targetGeometry);
 			records.add(spatialDatabaseRecord);
 		} catch (FactoryException e) {
 			throw new SpatialDatabaseException(e.getMessage());

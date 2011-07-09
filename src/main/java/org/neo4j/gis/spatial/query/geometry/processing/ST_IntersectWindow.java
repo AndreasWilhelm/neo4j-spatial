@@ -59,11 +59,13 @@ public class ST_IntersectWindow extends AbstractReadOperation {
 		
 		if (envelope.covers(geomEnvelope)) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setProperty(ST_IntersectWindow.class.getName(), geomEnvelope);
 			records.add(record);
 		} else if (envelope.intersects(geomEnvelope)) {
 			Geometry geometry = decodeGeometry(node);
 			if (geometry.intersects(windowGeom)) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
+				record.setProperty(ST_IntersectWindow.class.getName(), geomEnvelope);
 				records.add(record);
 			}
 		}

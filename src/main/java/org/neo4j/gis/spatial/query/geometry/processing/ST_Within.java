@@ -59,6 +59,7 @@ public class ST_Within extends AbstractReadOperation {
 			Geometry geometry = decodeGeometry(node);
 			if (geometry.within(other)) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
+				record.setProperty(ST_Within.class.getName(), geometry);
 				records.add(record);
 			}
 		}

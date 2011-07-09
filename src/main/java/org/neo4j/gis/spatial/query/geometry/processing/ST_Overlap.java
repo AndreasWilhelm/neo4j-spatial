@@ -58,6 +58,7 @@ public class ST_Overlap extends AbstractReadOperation {
 		Geometry geom = this.decodeGeometry(node);
 		if (geom.overlaps(other)) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setProperty(ST_Overlap.class.getName(), geom);
 			records.add(record);
 		}
 		return record;

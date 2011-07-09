@@ -58,6 +58,7 @@ public class ST_Contain extends AbstractReadOperation {
 		Geometry geom = this.decodeGeometry(node);
 		if (geom.contains(this.other)) {
 			SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setProperty(ST_Contain.class.getName(), geom);
 			records.add(record);
 			return record;
 		} else {

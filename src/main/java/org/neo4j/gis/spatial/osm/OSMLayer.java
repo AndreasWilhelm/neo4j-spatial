@@ -261,18 +261,40 @@ public class OSMLayer extends DynamicLayer {
 	 * @see {@link EditableLayer#delete(long, Geometry)}
 	 */
 	public void delete(long geomNodeId) {
-		
+
 		// The index node of the geometry with bbox property.
 		Node geomIndexNode = this.getDatabase().getNodeById(geomNodeId);
-		
+
 		// The geom node with propertie infos about the geometry node.
-		Node geom = geomIndexNode.getSingleRelationship(OSMRelation.GEOM,
+		Node geomNode = geomIndexNode.getSingleRelationship(OSMRelation.GEOM,
 				Direction.INCOMING).getStartNode();
+
+	
+		// Delete the subgraph of the geom node.
+		deleteSubgraph(geomNode);
 		
+		// Delete geom node a reconnect the relationships between the other geom
+		// nodes.
+		rebuildGeomNodes(geomNode);
+		
+		// Delete the geom node and the relations.
+		for (Relationship rel : geomNode.getRelationships()) {
+			rel.delete();
+		}
+		geomNode.delete();
+	}
+	
+	
+	/**
+	 * Delete the subgraph of the geom node.
+	 * 
+	 * @param geomNode the geom node to delete.
+	 */
+	private void deleteSubgraph(Node geomNode) {
 		// Get start node of the OSM GEOM subgraph.
-		Node startNode = geom.getSingleRelationship(OSMRelation.FIRST_NODE,
+		Node startNode = geomNode.getSingleRelationship(OSMRelation.FIRST_NODE,
 				Direction.OUTGOING).getEndNode();
-		
+
 		// Get all coordinate nodes and proxy nodes for them.
 		Traverser traverser = startNode.traverse(Order.BREADTH_FIRST,
 				StopEvaluator.END_OF_GRAPH,
@@ -284,26 +306,69 @@ public class OSMLayer extends DynamicLayer {
 			for (Relationship rel : node.getRelationships()) {
 				rel.delete();
 			}
-			      
+
 			// Delete subnode.
-			if(!node.hasRelationship()) {
+			if (!node.hasRelationship()) {
 				node.delete();
 			}
 
 		}
-	
+
 		// Remove index connection.
 		for (Relationship rel : startNode.getRelationships()) {
 			rel.delete();
 		}
 		startNode.delete();
 		
-		for (Relationship rel : geom.getRelationships()) {
-			rel.delete();
+	}
+	
+
+	/**
+	 * Reconnect the relationships between the other geom nodes.
+	 * @param geomNode the geom node to delete.
+	 */
+	private void rebuildGeomNodes(Node geomNode) {
+
+		// When deleting the first geom node of the layer graph.
+		if (geomNode.hasRelationship(OSMRelation.WAYS)) {
+			// Get the WAYS relation which could only in the incoming direction
+			// for a geom node.
+			Relationship wayRelation = geomNode.getSingleRelationship(
+					OSMRelation.WAYS, Direction.INCOMING);
+			// Get start node of the WAY relation.
+			Node startWayNode = wayRelation.getStartNode();
+
+			// Get the node after the node to delete.
+			Relationship nextStartRelation = geomNode.getSingleRelationship(
+					OSMRelation.NEXT, Direction.OUTGOING);
+			
+			// Determine if we have a next geom node.
+			if (nextStartRelation != null) {
+				// Connect the start node with the new first WAYS node.
+				startWayNode.createRelationshipTo(
+						nextStartRelation.getEndNode(), OSMRelation.WAYS);
+			}
+
+		} else if (geomNode.hasRelationship(OSMRelation.NEXT)) {
+			// When the geom node is between other geom nodes.
+
+			Relationship nextEndRelation = geomNode.getSingleRelationship(
+					OSMRelation.NEXT, Direction.INCOMING);
+
+			Relationship nextStartRelation = geomNode.getSingleRelationship(
+					OSMRelation.NEXT, Direction.OUTGOING);
+
+			// The node before the deleted node
+			Node b = nextEndRelation.getStartNode();
+			// Determine if we have a next geom node.
+			if (nextStartRelation != null) {
+				b.createRelationshipTo(nextStartRelation.getEndNode(),
+						OSMRelation.NEXT);
+			}
 		}
-		geom.delete();
 
 	}
+	
 
 	/**
 	 * @see {@link EditableLayer#update(long, Geometry)}
@@ -312,12 +377,6 @@ public class OSMLayer extends DynamicLayer {
 
 		Node geomIndexNode = this.getDatabase().getNodeById(geomNodeId);
 
-		// Delete old relation to the coordinate subgraph.
-		Relationship rel = geomIndexNode.getSingleRelationship(
-				OSMRelation.GEOM, Direction.INCOMING);
-		rel.delete();
-
-		// Create a new coordinate subgraph.
 		this.getGeometryEncoder().encodeGeometry(geometry, geomIndexNode);
 
 	}

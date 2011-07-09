@@ -28,6 +28,8 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Box2D;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Centroid;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Closest;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Contain;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Cover;
@@ -45,6 +47,10 @@ import org.neo4j.gis.spatial.query.geometry.processing.ST_PointsWithinOrthodromi
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Touch;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Within;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_WithinDistance;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_MaxX;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_MinX;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_MaxY;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_MinY;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -243,6 +249,61 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 			printTestResults("testInRelation", results);
 		}
 	}
+	
+	public void testCentroid() throws Exception {
+		Select select = new ST_Centroid();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testCentroid", results);
+		}
+	}
+	
+	public void testMinX() throws Exception {
+		Select select = new ST_MinX();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testMinX", results);
+		}
+	}
+	
+	
+	public void testMinY() throws Exception {
+		Select select = new ST_MinY();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testMinY", results);
+		}
+	}
+	
+	public void testMaxX() throws Exception {
+		Select select = new ST_MaxX();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testMaxX", results);
+		}
+	}
+	
+	public void testMaxY() throws Exception {
+		Select select = new ST_MaxY();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testMaxY", results);
+		}
+	}
+	
+	public void testBox2D() throws Exception {
+		Select select = new ST_Box2D();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		if (debug) {
+			printTestResults("testBox2D", results);
+		}
+	}
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
@@ -261,7 +322,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		System.out.println("----------------------  " + mode
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println(spatialDatabaseRecord.getGeometry().toText());
+			System.out.println(spatialDatabaseRecord.getResult());
 		}
 		System.out.println("------------------------------------------------");
 	}

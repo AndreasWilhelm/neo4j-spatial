@@ -54,6 +54,7 @@ public class ST_Cross extends AbstractReadOperation {
 		Geometry geometry = decodeGeometry(node);
 		if (geometry.crosses(other)) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setProperty(ST_Cross.class.getName(), geometry);
 			records.add(record);
 		}
 		return record;

@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.geometry.editors.Dataset;
 import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.osm.OSMImporter;
@@ -103,7 +102,7 @@ public class ST_TestInsert extends Neo4jTestCase {
 		assertEquals(size, records.size());
 
 	}
-
+	
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;

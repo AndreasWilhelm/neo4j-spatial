@@ -54,12 +54,15 @@ public class ST_Disjoint extends AbstractReadOperation {
 		SpatialDatabaseRecord record = null;
 		Envelope geomEnvelope = getEnvelope(node);
 		if (!geomEnvelope.intersects(other.getEnvelopeInternal())) {
+			Geometry geometry = decodeGeometry(node);
 			record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setProperty(ST_Disjoint.class.getName(), geometry);
 			records.add(record);
 		} else {
 			Geometry geometry = decodeGeometry(node);
 			if (geometry.disjoint(other)) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
+				record.setProperty(ST_Disjoint.class.getName(), geometry);
 				records.add(record);
 			}
 		}

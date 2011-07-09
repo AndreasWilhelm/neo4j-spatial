@@ -55,6 +55,7 @@ public class ST_Touch extends AbstractReadOperation {
 		Geometry geom = this.decodeGeometry(node);
 		if (geom.touches(other)) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setProperty(ST_Touch.class.getName(), geom);
 			records.add(record);
 		} 
 		return record;

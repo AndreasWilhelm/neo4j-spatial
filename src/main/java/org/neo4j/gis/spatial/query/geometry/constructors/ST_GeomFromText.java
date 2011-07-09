@@ -73,8 +73,12 @@ public class ST_GeomFromText extends AbstractFullOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		
+		Geometry geometry = this.getGeometries().get(this.index++);
+		
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
-				node, this.getGeometries().get(this.index++));
+				node, geometry);
+		record.setProperty(ST_GeomFromText.class.getName(), geometry);
 		records.add(record);
 		return record;
 	}

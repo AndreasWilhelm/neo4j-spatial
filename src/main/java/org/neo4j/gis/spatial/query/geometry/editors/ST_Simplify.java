@@ -49,6 +49,7 @@ public class ST_Simplify extends AbstractFullOperation {
 		Geometry geom = this.decodeGeometry(node);
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
 				layer, node, simplify(geom));
+		databaseRecord.setProperty(ST_Simplify.class.getName(), simplify(geom));
 		records.add(databaseRecord);
 		return databaseRecord;
 	}

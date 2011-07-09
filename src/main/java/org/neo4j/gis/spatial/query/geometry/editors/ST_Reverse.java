@@ -47,8 +47,10 @@ public class ST_Reverse extends AbstractFullOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = decodeGeometry(node);
 		Geometry targetGeometry = geom.reverse();
+		//TODO: use getResult to change geometry.
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
 				layer, node, targetGeometry);
+		databaseRecord.setProperty(ST_Reverse.class.getName(), targetGeometry);
 		records.add(databaseRecord);
 		return databaseRecord;
 	}
