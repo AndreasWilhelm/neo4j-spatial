@@ -35,6 +35,7 @@ import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistanceInMeter;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistanceInMiles;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Centroid;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Closest;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Collect;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Contain;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_ConvexHull;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Cover;
@@ -396,6 +397,16 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		assertEquals("LINESTRING (12.9639158 56.070904, 12.9680173 56.0704885)", results.get(1).getResult().toString());
 		if (debug) {
 			printTestResults("testLongestLine", results);
+		}
+	}
+	
+	public void testCollect() throws Exception {
+		Select select = new ST_Collect();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(1, results.size());
+		assertEquals("GEOMETRYCOLLECTION (LINESTRING (12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317, 12.9735859 56.0552154, 12.9738426 56.0553521, 12.9747403 56.0559176, 12.9757125 56.056313, 12.9759293 56.0564416, 12.9760919 56.0567821, 12.9761463 56.0568715, 12.9763358 56.057183, 12.9763358 56.0575008, 12.9763764 56.0577353, 12.9762985 56.0581325, 12.9762427 56.058262, 12.9762034 56.0583531), LINESTRING (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885))", results.get(0).getResult().toString());
+		if (debug) {
+			printTestResults("testCollect", results);
 		}
 	}
 

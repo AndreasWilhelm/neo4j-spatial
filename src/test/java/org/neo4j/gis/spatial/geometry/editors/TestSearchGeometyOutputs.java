@@ -35,6 +35,7 @@ import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsKML;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_Buffer;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_Distance;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_Length;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Collect;
 
 import com.vividsolutions.jts.io.WKTReader;
 
