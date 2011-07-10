@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.accessors;
 
+import java.util.List;
+
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
@@ -40,19 +42,20 @@ import com.vividsolutions.jts.geom.Point;
 public class ST_EndPoint extends ST_Insert {
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(org.neo4j.gis.spatial.operation.OperationType,
-	 *      Node, Layer)
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
-			Node node, Layer layer) {
+			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = this.decodeGeometry(node);
 
 		Point point = getEndPoint(geometry);
 
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
 				layer, node, point);
-		databaseRecord.setProperty(ST_AsBinary.class.getName(), point);
-		return databaseRecord;
+		record.setResult(point);
+		records.add(record);
+		return record;
 	}
 
 	private Point getEndPoint(Geometry geometry) {

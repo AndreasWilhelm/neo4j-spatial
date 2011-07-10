@@ -42,6 +42,7 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 	private HashMap<String, Object> dynamicProperties = new HashMap<String, Object>();
 	// Temporary propertie key of a spatial type operation. Maybe list when we have more than one? or have we always only one?
 	private String key = null;
+	private Object resultObj;
 	
 	/**
 	 * 
@@ -141,12 +142,21 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 	 * 
 	 */
 	public void setProperty(String key, Object value) {
-		//checkIsNotReservedProperty(key);
-		//geomNode.setProperty(key, value);
-		this.key = key;
-		dynamicProperties.put(key, value);
-		
+		checkIsNotReservedProperty(key);
+		geomNode.setProperty(key, value);
 	}
+	
+	
+
+	public void setResult(Object obj) {
+	    this.resultObj = obj;
+	}
+
+	public Object getResult() {
+	    return this.resultObj;
+	}
+	
+	
 	
 	public int hashcode() {
 		return ((Long) geomNode.getId()).hashCode();
@@ -199,11 +209,6 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 		return 0;
 	}
 
-	/**
-	 * @see SpatialDatabaseRecord#getResultAsString()
-	 */
-	public Object getResult() {
-	    return dynamicProperties.get(this.key);
-	}
+
 
 }

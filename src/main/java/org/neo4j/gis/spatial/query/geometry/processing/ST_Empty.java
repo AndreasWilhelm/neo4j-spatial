@@ -50,7 +50,7 @@ public class ST_Empty extends AbstractReadOperation {
 		Geometry geom = this.decodeGeometry(node);
 		if (geom.isEmpty()) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setProperty(ST_Empty.class.getName(), geom);
+			record.setResult(geom);
 			records.add(record);
 		} 
 		return record;

@@ -96,7 +96,7 @@ public class ST_PointsWithinOrthodromicDistance extends AbstractReadOperation {
 
 		if (distanceInKm < maxDistanceInKm) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setProperty(ST_PointsWithinOrthodromicDistance.class.getName(), distanceInKm);
+			record.setResult(distanceInKm);
 			records.add(record);
 		}
 		return record;

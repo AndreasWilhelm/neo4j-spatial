@@ -28,13 +28,20 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
 import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
-import org.neo4j.gis.spatial.query.geometry.processing.ST_Box2D;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_DistanceInMeters;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_DistanceInMiles;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistance;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistanceInMeter;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistanceInMiles;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Centroid;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Closest;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Contain;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_ConvexHull;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Cover;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_CoveredBy;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Cross;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_DelaunayTriangle;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_Difference;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Disjoint;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Empty;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Equal;
@@ -42,18 +49,18 @@ import org.neo4j.gis.spatial.query.geometry.processing.ST_InRelation;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Intersect;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_IntersectWindow;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Invalid;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_LongestLine;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Overlap;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_PointsWithinOrthodromicDistance;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_ShortestLine;
+import org.neo4j.gis.spatial.query.geometry.processing.ST_SymDifference;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Touch;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Within;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_WithinDistance;
-import org.neo4j.gis.spatial.query.geometry.processing.ST_MaxX;
-import org.neo4j.gis.spatial.query.geometry.processing.ST_MinX;
-import org.neo4j.gis.spatial.query.geometry.processing.ST_MaxY;
-import org.neo4j.gis.spatial.query.geometry.processing.ST_MinY;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.io.WKTReader;
@@ -245,6 +252,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 				"T*F**FFF*");
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(1, results.size());
+		assertEquals("LINESTRING (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885)", results.get(0).getResult().toString());
 		if (debug) {
 			printTestResults("testInRelation", results);
 		}
@@ -254,56 +262,145 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		Select select = new ST_Centroid();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
+		assertEquals("POINT (12.974217017261186 56.055761171718636)", results.get(0).getResult().toString());
+		assertEquals("POINT (12.965978732527317 56.07101434783782)", results.get(1).getResult().toString());
 		if (debug) {
 			printTestResults("testCentroid", results);
 		}
 	}
 	
-	public void testMinX() throws Exception {
-		Select select = new ST_MinX();
+	public void testDifference() throws Exception {
+		Select select = new ST_Difference(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
+		//assertEquals("POINT (12.974217017261186 56.055761171718636)", results.get(0).getResult().toString());
+		//assertEquals("POINT (12.965978732527317 56.07101434783782)", results.get(1).getResult().toString());
 		if (debug) {
-			printTestResults("testMinX", results);
+			printTestResults("testDifference", results);
 		}
 	}
 	
 	
-	public void testMinY() throws Exception {
-		Select select = new ST_MinY();
+	public void testSymDifference() throws Exception {
+		Select select = new ST_SymDifference(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
+		//assertEquals("POINT (12.974217017261186 56.055761171718636)", results.get(0).getResult().toString());
+		//assertEquals("POINT (12.965978732527317 56.07101434783782)", results.get(1).getResult().toString());
 		if (debug) {
-			printTestResults("testMinY", results);
+			printTestResults("testSymDifference", results);
 		}
 	}
 	
-	public void testMaxX() throws Exception {
-		Select select = new ST_MaxX();
+	
+	public void testDelaunayTriangle() throws Exception {
+		Select select = new ST_DelaunayTriangle(0.5);
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
+		//assertEquals("LINESTRING (12.9762034 56.0583531, 12.9680173 56.0704885)", results.get(0).getResult().toString());
+		//assertEquals("LINESTRING (12.9639158 56.070904, 12.9639158 56.070904)", results.get(1).getResult().toString());
 		if (debug) {
-			printTestResults("testMaxX", results);
+			printTestResults("testDelaunayTriangle", results);
 		}
 	}
 	
-	public void testMaxY() throws Exception {
-		Select select = new ST_MaxY();
+	public void testConvexHull() throws Exception {
+		Select select = new ST_ConvexHull();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
+		//assertEquals("POINT (12.974217017261186 56.055761171718636)", results.get(0).getResult().toString());
+		//assertEquals("POINT (12.965978732527317 56.07101434783782)", results.get(1).getResult().toString());
 		if (debug) {
-			printTestResults("testMaxY", results);
+			printTestResults("testConvexHull", results);
+		}
+	}
+
+	public void testShortestLine() throws Exception {
+		Select select = new ST_ShortestLine(wktReader.read(Dataset.wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("LINESTRING (12.9762034 56.0583531, 12.9680173 56.0704885)", results.get(0).getResult().toString());
+		assertEquals("LINESTRING (12.9639158 56.070904, 12.9639158 56.070904)", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testShortestLine", results);
 		}
 	}
 	
-	public void testBox2D() throws Exception {
-		Select select = new ST_Box2D();
+	public void testDistanceInMeter() throws Exception {
+		Geometry geom = wktReader.read(Dataset.wkt);
+		geom.setSRID(4326);
+		Select select = new ST_DistanceInMeters(geom);
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
+		assertEquals("1598.0427692270064", results.get(0).getResult().toString());
 		if (debug) {
-			printTestResults("testBox2D", results);
+			printTestResults("testDistanceInMeter", results);
 		}
 	}
+	
+	public void testDistanceInMiles() throws Exception {
+		Geometry geom = wktReader.read(Dataset.wkt);
+		geom.setSRID(4326);
+		Select select = new ST_DistanceInMiles(geom);
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("0.9929774335573542", results.get(0).getResult().toString());
+		if (debug) {
+			printTestResults("testDistanceInMiles", results);
+		}
+	}
+	
+	public void testMaxDistance() throws Exception {
+		Select select = new ST_MaxDistance(wktReader.read(Dataset.wkt));
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("0.018859283476578264", results.get(0).getResult().toString());
+		assertEquals("0.004122492268032626", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testMaxDistance", results);
+		}
+	}
+	
+	public void testMaxDistanceInMeters() throws Exception {
+		Geometry geom = wktReader.read(Dataset.wkt);
+		geom.setSRID(4326);
+		Select select = new ST_MaxDistanceInMeter(geom);
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("2062.4682606010447", results.get(0).getResult().toString());
+		assertEquals("455.98375501011816", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testMaxDistanceInMeters", results);
+		}
+	}
+	
+	
+	public void testMaxDistanceInMiles() throws Exception {
+		Geometry geom = wktReader.read(Dataset.wkt);
+		geom.setSRID(4326);
+		Select select = new ST_MaxDistanceInMiles(geom);
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("1.2815579655579317", results.get(0).getResult().toString());
+		assertEquals("0.28333508183439216", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testMaxDistanceInMiles", results);
+		}
+	}
+	
+	public void testLongestLine() throws Exception {
+		Geometry geom = wktReader.read(Dataset.wkt);
+		geom.setSRID(4326);
+		Select select = new ST_LongestLine(geom);
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("LINESTRING (12.9759293 56.0564416, 12.9639658 56.0710206)", results.get(0).getResult().toString());
+		assertEquals("LINESTRING (12.9639158 56.070904, 12.9680173 56.0704885)", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testShortestLine", results);
+		}
+	}
+
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
@@ -316,6 +413,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		reActivateDatabase(false, false, false);
 		importer.reIndex(graphDb(), commitInterval);
 	}
+	
 
 	private void printTestResults(String mode,
 			List<SpatialDatabaseRecord> results) {

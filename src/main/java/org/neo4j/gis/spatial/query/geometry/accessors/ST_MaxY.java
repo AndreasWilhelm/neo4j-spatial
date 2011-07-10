@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.query.geometry.processing;
+package org.neo4j.gis.spatial.query.geometry.accessors;
 
 import java.util.List;
 
@@ -26,50 +26,25 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
+public class ST_MaxY extends AbstractReadOperation {
 
-/**
- * 
- * @author Davide Savazzi, Andreas Wilhelm
- */
-public class ST_IntersectWindow extends AbstractReadOperation {
-
-	private Envelope envelope;
-	private Geometry windowGeom;
-
-	public ST_IntersectWindow(Envelope envelope) {
-		this.envelope = envelope;
-	}
-
-	/**
-	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
-	 *      List)
-	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		SpatialDatabaseRecord record = null;
-		//TODO: create the geom just one time...
-		this.windowGeom = layer.getGeometryFactory().toGeometry(envelope);
-		Envelope geomEnvelope = getEnvelope(node);
-		
-		if (envelope.covers(geomEnvelope)) {
-			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setResult(geomEnvelope);
-			records.add(record);
-		} else if (envelope.intersects(geomEnvelope)) {
-			Geometry geometry = decodeGeometry(node);
-			if (geometry.intersects(windowGeom)) {
-				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setResult(geomEnvelope);
-				records.add(record);
-			}
-		}
-		return record;
-	}	
+		Geometry geom = decodeGeometry(node);
 
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
+				layer, node);
+		
+		Envelope envelope = geom.getEnvelopeInternal();
+		
+		record.setResult(envelope.getMaxY());
+		records.add(record);
+		return record;
+	}
+	
 }

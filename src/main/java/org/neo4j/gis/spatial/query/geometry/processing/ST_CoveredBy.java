@@ -55,7 +55,7 @@ public class ST_CoveredBy extends AbstractReadOperation {
 		Geometry geom = this.decodeGeometry(node);
 		if (geom.coveredBy(this.other)) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setProperty(ST_CoveredBy.class.getName(), geom);
+			record.setResult(geom);
 			records.add(record);
 		}
 		return record;

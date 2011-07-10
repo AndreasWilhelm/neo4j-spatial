@@ -17,34 +17,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.query.geometry.processing;
+package org.neo4j.gis.spatial.query.geometry.outputs;
 
 import java.util.List;
 
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
-import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
-import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
-
 /**
+ * The <code>ST_MaxDistanceInMeter</code> function returns the maximal distance in
+ * miles. The Spatial Reference System Identifier(SRID) of the other geometry
+ * must be the same as the SRID of layer geometry, else a
+ * SpatialDatabaseException will be thrown.
  * 
- * @author Davide Savazzi, Andreas Wilhelm
+ * @author Andreas Wilhelm
+ * 
  */
-public class ST_IntersectWindow extends AbstractReadOperation {
+public class ST_MaxDistanceInMiles extends ST_MaxDistanceInMeter {
 
-	private Envelope envelope;
-	private Geometry windowGeom;
-
-	public ST_IntersectWindow(Envelope envelope) {
-		this.envelope = envelope;
+	/**
+	 * 
+	 * @param other
+	 * @throws FactoryException 
+	 * @throws NoSuchAuthorityCodeException 
+	 */
+	public ST_MaxDistanceInMiles(Geometry other) throws NoSuchAuthorityCodeException, FactoryException {
+		super(other);
 	}
+
 
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
@@ -52,24 +59,14 @@ public class ST_IntersectWindow extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		SpatialDatabaseRecord record = null;
-		//TODO: create the geom just one time...
-		this.windowGeom = layer.getGeometryFactory().toGeometry(envelope);
-		Envelope geomEnvelope = getEnvelope(node);
-		
-		if (envelope.covers(geomEnvelope)) {
-			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setResult(geomEnvelope);
-			records.add(record);
-		} else if (envelope.intersects(geomEnvelope)) {
-			Geometry geometry = decodeGeometry(node);
-			if (geometry.intersects(windowGeom)) {
-				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setResult(geomEnvelope);
-				records.add(record);
-			}
-		}
-		return record;
-	}	
 
+		SpatialDatabaseRecord record = super.onIndexReference(type, node,
+				layer, records);
+
+		double miles = (Double) record.getResult() * 0.000621371;
+		record.setResult(miles);
+		return record;
+
+	}
+	
 }

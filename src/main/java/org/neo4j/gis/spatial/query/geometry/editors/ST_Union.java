@@ -59,7 +59,7 @@ public class ST_Union extends AbstractFullOperation {
 		
 		record = new SpatialDatabaseRecordImpl(
 				layer, node, unionGeom);
-		record.setProperty(ST_Union.class.getName(), unionGeom);
+		record.setResult(unionGeom);
 		records.add(record);
 		return record;
 	}

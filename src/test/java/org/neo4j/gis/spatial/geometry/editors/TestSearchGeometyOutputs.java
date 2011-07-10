@@ -136,7 +136,7 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 			printTestResults("testBuffer", results);
 		}
 	}
-	
+
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;

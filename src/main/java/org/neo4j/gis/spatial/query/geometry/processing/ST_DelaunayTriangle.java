@@ -29,21 +29,27 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
-import com.vividsolutions.jts.geom.Envelope;
+
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 
+public class ST_DelaunayTriangle extends AbstractReadOperation {
+	
+	private double tolerance = 0.0d;
 
-/**
- * 
- * @author Davide Savazzi, Andreas Wilhelm
- */
-public class ST_IntersectWindow extends AbstractReadOperation {
-
-	private Envelope envelope;
-	private Geometry windowGeom;
-
-	public ST_IntersectWindow(Envelope envelope) {
-		this.envelope = envelope;
+	/**
+	 * DelaunayTriangle with no tolerance.
+	 */
+	public ST_DelaunayTriangle() {
+	}
+	
+	/**
+	 * 
+	 * @param tolerance
+	 */
+	public ST_DelaunayTriangle(double tolerance) {
+		this.tolerance = tolerance;
 	}
 
 	/**
@@ -52,24 +58,19 @@ public class ST_IntersectWindow extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		SpatialDatabaseRecord record = null;
-		//TODO: create the geom just one time...
-		this.windowGeom = layer.getGeometryFactory().toGeometry(envelope);
-		Envelope geomEnvelope = getEnvelope(node);
-		
-		if (envelope.covers(geomEnvelope)) {
-			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setResult(geomEnvelope);
-			records.add(record);
-		} else if (envelope.intersects(geomEnvelope)) {
-			Geometry geometry = decodeGeometry(node);
-			if (geometry.intersects(windowGeom)) {
-				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setResult(geomEnvelope);
-				records.add(record);
-			}
-		}
-		return record;
-	}	
 
+		Geometry geometry = decodeGeometry(node);
+		GeometryFactory geometryFactory = new GeometryFactory();
+		DelaunayTriangulationBuilder builder = new DelaunayTriangulationBuilder();
+		builder.setSites(geometry);
+		builder.setTolerance(this.tolerance);
+		Geometry trianglesGeometry = builder.getTriangles(geometryFactory);
+		
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
+				layer, node, trianglesGeometry);
+		record.setResult(trianglesGeometry);
+		records.add(record);
+		return record;
+	}
+	
 }

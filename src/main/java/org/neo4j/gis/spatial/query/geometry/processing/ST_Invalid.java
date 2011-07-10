@@ -49,7 +49,7 @@ public class ST_Invalid extends AbstractReadOperation {
 		Geometry geom = this.decodeGeometry(node);
 		if (!geom.isValid()) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setProperty(ST_Invalid.class.getName(), geom);
+			record.setResult(geom);
 			records.add(record);
 		}
 		return record;

@@ -59,7 +59,7 @@ public class ST_Cover extends AbstractReadOperation {
 			Geometry geometry = decodeGeometry(node);
 			if (geometry.covers(other)) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setProperty(ST_Cover.class.getName(), geometry);
+				record.setResult(geometry);
 				records.add(record);
 			}
 		}

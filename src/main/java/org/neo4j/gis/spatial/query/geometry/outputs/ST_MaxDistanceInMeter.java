@@ -17,54 +17,52 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.query.geometry.constructors;
+package org.neo4j.gis.spatial.query.geometry.outputs;
 
 import java.util.List;
 
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.SpatialDatabaseException;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
-import org.neo4j.gis.spatial.operation.AbstractFullOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.TransformException;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
 
 /**
- * The <code>ST_GeomFromText</code> creates a geometry node from a Well-known
- * Text(WKT).
+ * The <code>ST_MaxDistanceInMeter</code> function returns the maximal distance
+ * in meter. The Spatial Reference System Identifier(SRID) of the other geometry
+ * must be the same as the SRID of layer geometry, else a
+ * SpatialDatabaseException will be thrown.
  * 
  * @author Andreas Wilhelm
  * 
  */
-public class ST_GeomFromText extends AbstractFullOperation {
+public class ST_MaxDistanceInMeter extends ST_MaxDistance {
 
-	private WKTReader wktReader = new WKTReader();
-	private int index = 0;
-	/**
-	 * Creates a geometry node from a Well-known Text(WKT).
-	 * 
-	 * @param wellKnownText
-	 *            the well known text, such as POINT (48 7)
-	 * @throws ParseException
-	 */
-	public ST_GeomFromText(String wellKnownText) throws ParseException {
-		this.add(wktReader.read(wellKnownText));
-	}
+	private Geometry other = null;
+	private CoordinateReferenceSystem crs = null;
 
 	/**
 	 * 
-	 * @param wktList
-	 * @throws ParseException
+	 * @param other
+	 * @throws FactoryException
+	 * @throws NoSuchAuthorityCodeException
 	 */
-	public ST_GeomFromText(List<String> wktList) throws ParseException {
-		for (String wkt : wktList) {
-			Geometry geom = wktReader.read(wkt);
-			this.add(geom);
-		}
+	public ST_MaxDistanceInMeter(Geometry other)
+			throws NoSuchAuthorityCodeException, FactoryException {
+		super(other);
+		this.other = other;
+		this.crs = CRS.decode("EPSG:" + other.getSRID());
 	}
 
 	/**
@@ -73,13 +71,26 @@ public class ST_GeomFromText extends AbstractFullOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		super.clear();
 		
-		Geometry geometry = this.getGeometries().get(this.index++);
-		
+		Geometry geometry = decodeGeometry(node);
+		double distanceInMeter = 0;
+		Coordinate[] farthestPoints = super.getFarthestPoints(geometry, this.other);
+	
+		if (farthestPoints != null) {
+			try {
+				distanceInMeter = JTS.orthodromicDistance(farthestPoints[0],
+						farthestPoints[1], this.crs);
+			} catch (TransformException e) {
+				throw new SpatialDatabaseException(e.getMessage());
+			}
+		}
+
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node, geometry);
-		record.setResult( geometry);
+		record.setResult(distanceInMeter);
 		records.add(record);
 		return record;
+
 	}
 }

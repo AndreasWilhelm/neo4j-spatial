@@ -88,17 +88,17 @@ public class ST_Transform extends AbstractFullOperation {
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		
-		SpatialDatabaseRecord spatialDatabaseRecord = null;
+		SpatialDatabaseRecord record = null;
 
 		Geometry geom = decodeGeometry(node);
 		try {
 			MathTransform transform = CRS.findMathTransform(
 					this.getCoordinateReferenceSystem(), this.targetCRS);
 			Geometry targetGeometry = JTS.transform(geom, transform);
-			spatialDatabaseRecord = new SpatialDatabaseRecordImpl(layer, node,
+			record = new SpatialDatabaseRecordImpl(layer, node,
 					targetGeometry);
-			spatialDatabaseRecord.setProperty(ST_Transform.class.getName(), targetGeometry);
-			records.add(spatialDatabaseRecord);
+			record.setResult(targetGeometry);
+			records.add(record);
 		} catch (FactoryException e) {
 			throw new SpatialDatabaseException(e.getMessage());
 		} catch (MismatchedDimensionException e) {
@@ -109,7 +109,7 @@ public class ST_Transform extends AbstractFullOperation {
 					+ node.getId() + "." + e.getMessage());
 		}
 
-		return spatialDatabaseRecord;
+		return record;
 	}
 
 }

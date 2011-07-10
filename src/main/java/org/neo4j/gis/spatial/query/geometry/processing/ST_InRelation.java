@@ -64,7 +64,7 @@ public class ST_InRelation extends AbstractReadOperation {
 		Geometry geometry = decodeGeometry(node);
 		if (geometry.relate(other, intersectionPattern)) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setProperty(ST_InRelation.class.getName(), geometry);
+			record.setResult(geometry);
 			records.add(record);
 		}
 		return record;

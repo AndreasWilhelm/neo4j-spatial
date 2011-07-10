@@ -52,10 +52,10 @@ public class ST_AsText extends AbstractReadOperation {
 		WKTWriter wktWriter = new WKTWriter();
 		String wkt = wktWriter.write(geometry);
 	
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
-		databaseRecord.setProperty(ST_AsText.class.getName(), wkt);
-		records.add(databaseRecord);
-		return databaseRecord;
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node);
+		record.setResult(wkt);
+		records.add(record);
+		return record;
 	}
 
 

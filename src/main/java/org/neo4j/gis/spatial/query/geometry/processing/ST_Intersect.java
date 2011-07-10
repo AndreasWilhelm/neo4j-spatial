@@ -55,7 +55,7 @@ public class ST_Intersect extends AbstractReadOperation {
 		Geometry geometry = decodeGeometry(node);
 		if (geometry.intersects(this.other)) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setProperty(ST_Intersect.class.getName(), geometry);
+			record.setResult(geometry);
 			records.add(record);
 		}
 		return record;

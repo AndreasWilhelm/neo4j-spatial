@@ -29,21 +29,19 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-
 
 /**
  * 
- * @author Davide Savazzi, Andreas Wilhelm
+ * @author Andreas Wilhelm
+ * 
  */
-public class ST_IntersectWindow extends AbstractReadOperation {
+public class ST_SymDifference extends AbstractReadOperation {
 
-	private Envelope envelope;
-	private Geometry windowGeom;
+	private Geometry other = null;
 
-	public ST_IntersectWindow(Envelope envelope) {
-		this.envelope = envelope;
+	public ST_SymDifference(Geometry other) {
+		this.other = other;
 	}
 
 	/**
@@ -52,24 +50,14 @@ public class ST_IntersectWindow extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		SpatialDatabaseRecord record = null;
-		//TODO: create the geom just one time...
-		this.windowGeom = layer.getGeometryFactory().toGeometry(envelope);
-		Envelope geomEnvelope = getEnvelope(node);
 		
-		if (envelope.covers(geomEnvelope)) {
-			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setResult(geomEnvelope);
-			records.add(record);
-		} else if (envelope.intersects(geomEnvelope)) {
-			Geometry geometry = decodeGeometry(node);
-			if (geometry.intersects(windowGeom)) {
-				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setResult(geomEnvelope);
-				records.add(record);
-			}
-		}
+		Geometry geometry = decodeGeometry(node);
+		Geometry targetGeometry = geometry.symDifference(this.other);
+		
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node, targetGeometry);
+		record.setResult(targetGeometry);
+		records.add(record);
 		return record;
-	}	
+	}
 
 }

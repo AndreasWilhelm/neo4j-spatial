@@ -60,11 +60,11 @@ public class ST_AsBinary extends AbstractReadOperation {
 		byte[] wkb = wkbWriter.write(geometry);
 		String hex = WKBWriter.toHex(wkb);
 
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
 				layer, node);
-		databaseRecord.setProperty(ST_AsBinary.class.getName(), hex);
-		records.add(databaseRecord);
-		return databaseRecord;
+		record.setResult(hex);
+		records.add(record);
+		return record;
 	}
 
 }

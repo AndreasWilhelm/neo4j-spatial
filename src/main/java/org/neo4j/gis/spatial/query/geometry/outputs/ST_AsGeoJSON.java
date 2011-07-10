@@ -52,10 +52,10 @@ public class ST_AsGeoJSON extends AbstractReadOperation {
 		String geojson = gjson.toString(geom);
 	
 
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
-		databaseRecord.setProperty(ST_AsGeoJSON.class.getName(), geojson);
-		records.add(databaseRecord);
-		return databaseRecord;
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node);
+		record.setResult(geojson);
+		records.add(record);
+		return record;
 	}
 
 }

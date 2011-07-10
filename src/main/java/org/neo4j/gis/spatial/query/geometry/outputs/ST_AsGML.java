@@ -50,10 +50,10 @@ public class ST_AsGML extends AbstractReadOperation {
 		Geometry geometry = this.decodeGeometry(node);
 		GMLWriter gmlWriter = new GMLWriter();
 		String gml = gmlWriter.write(geometry);
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(layer, node);
-		databaseRecord.setProperty(ST_AsGML.class.getName(), gml);
-		records.add(databaseRecord);
-		return databaseRecord;
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node);
+		record.setResult(gml);
+		records.add(record);
+		return record;
 	}
 
 }

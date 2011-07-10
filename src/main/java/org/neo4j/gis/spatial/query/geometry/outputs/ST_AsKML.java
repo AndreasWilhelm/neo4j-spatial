@@ -26,6 +26,7 @@ import java.util.List;
 import org.geotools.kml.KML;
 import org.geotools.kml.KMLConfiguration;
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.SpatialDatabaseException;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
@@ -52,7 +53,7 @@ public class ST_AsKML extends AbstractReadOperation {
 		Geometry geom = decodeGeometry(node);
 	
 
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
 				layer, node);
 		try {
 			Encoder encoder = new Encoder(new KMLConfiguration());
@@ -60,13 +61,12 @@ public class ST_AsKML extends AbstractReadOperation {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			encoder.encode(geom, KML.Geometry, out);
 			String kml = new String(out.toByteArray());
-			databaseRecord.setProperty(ST_AsKML.class.getName(), kml);
-			records.add(databaseRecord);
+			record.setResult(kml);
+			records.add(record);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SpatialDatabaseException(e.getMessage());
 		}
-		return databaseRecord;
+		return record;
 	}
 
 }

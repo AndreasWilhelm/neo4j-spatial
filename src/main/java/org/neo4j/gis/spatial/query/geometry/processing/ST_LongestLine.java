@@ -24,26 +24,37 @@ import java.util.List;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
-import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistance;
 import org.neo4j.graphdb.Node;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 
-import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
-
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * 
- * @author Davide Savazzi, Andreas Wilhelm
+ * @author Andreas Wilhelm
+ *
  */
-public class ST_IntersectWindow extends AbstractReadOperation {
+public class ST_LongestLine extends ST_MaxDistance {
 
-	private Envelope envelope;
-	private Geometry windowGeom;
+	private Geometry other = null;
 
-	public ST_IntersectWindow(Envelope envelope) {
-		this.envelope = envelope;
+	/**
+	 * 
+	 * @param other
+	 * @throws FactoryException
+	 * @throws NoSuchAuthorityCodeException
+	 */
+	public ST_LongestLine(Geometry other)
+			throws NoSuchAuthorityCodeException, FactoryException {
+		super(other);
+		this.other = other;
 	}
 
 	/**
@@ -52,24 +63,20 @@ public class ST_IntersectWindow extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		SpatialDatabaseRecord record = null;
-		//TODO: create the geom just one time...
-		this.windowGeom = layer.getGeometryFactory().toGeometry(envelope);
-		Envelope geomEnvelope = getEnvelope(node);
-		
-		if (envelope.covers(geomEnvelope)) {
-			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setResult(geomEnvelope);
-			records.add(record);
-		} else if (envelope.intersects(geomEnvelope)) {
-			Geometry geometry = decodeGeometry(node);
-			if (geometry.intersects(windowGeom)) {
-				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setResult(geomEnvelope);
-				records.add(record);
-			}
-		}
-		return record;
-	}	
+		super.clear();
 
+		Geometry geometry = decodeGeometry(node);
+
+		GeometryFactory geometryFactory = new GeometryFactory();
+		Coordinate[] farthestPoints = super.getFarthestPoints(geometry, this.other);
+	    LineString lineString = geometryFactory.createLineString(farthestPoints);
+
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node, geometry);
+		record.setResult(lineString);
+		records.add(record);
+		return record;
+
+	}
+	
 }

@@ -30,7 +30,12 @@ import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.query.geometry.accessors.ST_AsBinary;
 import org.neo4j.gis.spatial.query.geometry.accessors.ST_AsText;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_Box2D;
 import org.neo4j.gis.spatial.query.geometry.accessors.ST_EndPoint;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_MaxX;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_MaxY;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_MinX;
+import org.neo4j.gis.spatial.query.geometry.accessors.ST_MinY;
 import org.neo4j.gis.spatial.query.geometry.accessors.ST_StartPoint;
 
 /**
@@ -96,6 +101,65 @@ public class TestSearchGeometyAccessors extends Neo4jTestCase {
 			printTestResults("testGetEndPoint", results);
 		}
 	}
+	
+	
+	public void testMinX() throws Exception {
+		Select select = new ST_MinX();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("12.9710302", results.get(0).getResult().toString());
+		assertEquals("12.9639158", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testMinX", results);
+		}
+	}
+	
+	
+	public void testMinY() throws Exception {
+		Select select = new ST_MinY();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("56.0538436", results.get(0).getResult().toString());
+		assertEquals("56.0704885", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testMinY", results);
+		}
+	}
+	
+	public void testMaxX() throws Exception {
+		Select select = new ST_MaxX();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("12.9763764", results.get(0).getResult().toString());
+		assertEquals("12.9680173", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testMaxX", results);
+		}
+	}
+	
+	public void testMaxY() throws Exception {
+		Select select = new ST_MaxY();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("56.0583531", results.get(0).getResult().toString());
+		assertEquals("56.0711966", results.get(1).getResult().toString());
+
+		if (debug) {
+			printTestResults("testMaxY", results);
+		}
+	}
+	
+	public void testBox2D() throws Exception {
+		Select select = new ST_Box2D();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(2, results.size());
+		assertEquals("BOX(12.9710302 12.9763764,56.0538436 56.0583531)", results.get(0).getResult().toString());
+		assertEquals("BOX(12.9639158 12.9680173,56.0704885 56.0711966)", results.get(1).getResult().toString());
+		if (debug) {
+			printTestResults("testBox2D", results);
+		}
+	}
+	
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {

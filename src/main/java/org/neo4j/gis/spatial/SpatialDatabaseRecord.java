@@ -55,9 +55,16 @@ public interface SpatialDatabaseRecord extends Constants,
 
 	public String getLayerName();
 	
+	
 	/**
-	 * 
-	 * @return Returns the result as a String.
+	 * Sets the spatial type function result for this record.
+	 * @param value the spatial type result, could be a String, Geometry, ...
+	 */
+	public void setResult(Object value);
+	
+	/**
+	 * Returns the spatial type function result for this record.
+	 * @return the spatial type function result.
 	 */
 	public Object getResult();
 
@@ -77,9 +84,9 @@ public interface SpatialDatabaseRecord extends Constants,
 	public Object getProperty(String name);
 
 	//@Deprecated
-	//Why deprected well we should not do abny changes to the node but this should be useable for dynamic proeprties which
-	//only use for search querys..
 	public void setProperty(String name, Object value);
+	
+
 
 	public int hashcode();
 

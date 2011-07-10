@@ -31,7 +31,7 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * 
+ * minimum distance 
  * @author Andreas Wilhelm
  * 
  */
@@ -56,12 +56,12 @@ public class ST_Distance extends AbstractReadOperation {
 		Geometry geom = decodeGeometry(node);
 		double distance = geom.distance(other);
 
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
 				layer, node);
 
-		databaseRecord.setProperty(ST_Distance.class.getName(), distance);
-		records.add(databaseRecord);
-		return databaseRecord;
+		record.setResult(distance);
+		records.add(record);
+		return record;
 	}
 
 }

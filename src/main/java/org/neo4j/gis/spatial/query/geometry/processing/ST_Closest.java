@@ -83,14 +83,14 @@ public class ST_Closest extends AbstractReadOperation {
 			double distance = geometry.distance(other);
 			if (distance < minDistance) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setProperty(ST_Closest.class.getName(), geometry);
+				record.setResult(geometry);
 				minDistance = distance;
 				// Remove old entries.
 				records.clear();
 				records.add(record);
 			} else if(distance == minDistance) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setProperty(ST_Closest.class.getName(), geometry);
+				record.setResult(geometry);
 				records.add(record);
 			}
 		}

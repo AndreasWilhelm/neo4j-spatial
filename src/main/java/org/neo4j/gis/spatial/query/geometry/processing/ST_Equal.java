@@ -54,7 +54,7 @@ public class ST_Equal extends AbstractReadOperation {
 		Geometry geom = this.decodeGeometry(node);
 		if (geom.equals(this.other)) {
 			record = new SpatialDatabaseRecordImpl(layer, node);
-			record.setProperty(ST_Equal.class.getName(), geom);
+			record.setResult(geom);
 			records.add(record);
 		} 
 		return record;

@@ -65,12 +65,12 @@ public class ST_Buffer extends AbstractReadOperation {
 			bufferGeom = decodeGeometry(node).buffer(bufferDistance);
 		}
 
-		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
 				layer, node);
 
-		databaseRecord.setProperty(ST_Buffer.class.getName(), bufferGeom);
-		records.add(databaseRecord);
-		return databaseRecord;
+		record.setResult(bufferGeom);
+		records.add(record);
+		return record;
 	}
 
 }
