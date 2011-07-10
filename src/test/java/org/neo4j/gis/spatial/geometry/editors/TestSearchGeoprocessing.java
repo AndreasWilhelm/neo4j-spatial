@@ -273,32 +273,30 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		Select select = new ST_Difference(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
-		//assertEquals("POINT (12.974217017261186 56.055761171718636)", results.get(0).getResult().toString());
-		//assertEquals("POINT (12.965978732527317 56.07101434783782)", results.get(1).getResult().toString());
+		assertEquals("LINESTRING (12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317, 12.9735859 56.0552154, 12.9738426 56.0553521, 12.9747403 56.0559176, 12.9757125 56.056313, 12.9759293 56.0564416, 12.9760919 56.0567821, 12.9761463 56.0568715, 12.9763358 56.057183, 12.9763358 56.0575008, 12.9763764 56.0577353, 12.9762985 56.0581325, 12.9762427 56.058262, 12.9762034 56.0583531)", results.get(0).getResult().toString());
+		assertEquals("GEOMETRYCOLLECTION EMPTY", results.get(1).getResult().toString());
 		if (debug) {
 			printTestResults("testDifference", results);
 		}
 	}
 	
-	
 	public void testSymDifference() throws Exception {
 		Select select = new ST_SymDifference(wktReader.read(Dataset.wkt));
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
-		//assertEquals("POINT (12.974217017261186 56.055761171718636)", results.get(0).getResult().toString());
-		//assertEquals("POINT (12.965978732527317 56.07101434783782)", results.get(1).getResult().toString());
+		assertEquals("MULTILINESTRING ((12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317, 12.9735859 56.0552154, 12.9738426 56.0553521, 12.9747403 56.0559176, 12.9757125 56.056313, 12.9759293 56.0564416, 12.9760919 56.0567821, 12.9761463 56.0568715, 12.9763358 56.057183, 12.9763358 56.0575008, 12.9763764 56.0577353, 12.9762985 56.0581325, 12.9762427 56.058262, 12.9762034 56.0583531), (12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9678958 56.0705812, 12.9680173 56.0704885))", results.get(0).getResult().toString());
+		assertEquals("GEOMETRYCOLLECTION EMPTY", results.get(1).getResult().toString());
 		if (debug) {
 			printTestResults("testSymDifference", results);
 		}
 	}
 	
-	
 	public void testDelaunayTriangle() throws Exception {
 		Select select = new ST_DelaunayTriangle(0.5);
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
-		//assertEquals("LINESTRING (12.9762034 56.0583531, 12.9680173 56.0704885)", results.get(0).getResult().toString());
-		//assertEquals("LINESTRING (12.9639158 56.070904, 12.9639158 56.070904)", results.get(1).getResult().toString());
+		assertEquals("GEOMETRYCOLLECTION EMPTY", results.get(0).getResult().toString());
+		assertEquals("GEOMETRYCOLLECTION EMPTY", results.get(1).getResult().toString());
 		if (debug) {
 			printTestResults("testDelaunayTriangle", results);
 		}
@@ -308,8 +306,8 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		Select select = new ST_ConvexHull();
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
-		//assertEquals("POINT (12.974217017261186 56.055761171718636)", results.get(0).getResult().toString());
-		//assertEquals("POINT (12.965978732527317 56.07101434783782)", results.get(1).getResult().toString());
+		assertEquals("POLYGON ((12.9710302 56.0538436, 12.9762034 56.0583531, 12.9762427 56.058262, 12.9762985 56.0581325, 12.9763764 56.0577353, 12.9763358 56.057183, 12.9759293 56.0564416, 12.9757125 56.056313, 12.9710302 56.0538436))", results.get(0).getResult().toString());
+		assertEquals("POLYGON ((12.9680173 56.0704885, 12.9639158 56.070904, 12.9639658 56.0710206, 12.9654342 56.0711966, 12.9666335 56.0710678, 12.9674023 56.0708619, 12.9677867 56.0706645, 12.9680173 56.0704885))", results.get(1).getResult().toString());
 		if (debug) {
 			printTestResults("testConvexHull", results);
 		}
@@ -397,7 +395,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		assertEquals("LINESTRING (12.9759293 56.0564416, 12.9639658 56.0710206)", results.get(0).getResult().toString());
 		assertEquals("LINESTRING (12.9639158 56.070904, 12.9680173 56.0704885)", results.get(1).getResult().toString());
 		if (debug) {
-			printTestResults("testShortestLine", results);
+			printTestResults("testLongestLine", results);
 		}
 	}
 
