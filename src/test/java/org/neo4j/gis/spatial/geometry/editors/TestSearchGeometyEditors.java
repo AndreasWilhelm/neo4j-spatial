@@ -139,8 +139,7 @@ public class TestSearchGeometyEditors extends Neo4jTestCase {
 		System.out.println("----------------------  " + mode
 				+ "  -------------------");
 		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println("Id: " + spatialDatabaseRecord.getId() + "; "
-					+ "Geometry:" + spatialDatabaseRecord.getGeometry());
+			System.out.println(spatialDatabaseRecord.getResult());
 		}
 		System.out.println("------------------------------------------------");
 	}

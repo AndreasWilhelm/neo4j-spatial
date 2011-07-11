@@ -19,6 +19,8 @@
  */
 package org.neo4j.gis.spatial.query.geometry.editors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.neo4j.gis.spatial.Layer;
@@ -29,6 +31,8 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * 
@@ -54,8 +58,18 @@ public class ST_Union extends AbstractFullOperation {
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		SpatialDatabaseRecord record = null;
+	    GeometryFactory geometryFactory = new GeometryFactory();
+	    Collection<Geometry> geometries = new ArrayList<Geometry>();
+	    			    		
 		Geometry geom = this.decodeGeometry(node);
-		Geometry unionGeom = geom.union(other);
+		geometries.add(geom);
+		geometries.add(other);
+		
+	    GeometryCollection geometryCollection =
+	            (GeometryCollection) geometryFactory.buildGeometry( geometries );
+
+		
+		Geometry unionGeom = geometryCollection.union();
 		
 		record = new SpatialDatabaseRecordImpl(
 				layer, node, unionGeom);

@@ -29,32 +29,38 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
-/**
- * 
- * @author Andreas Wilhelm
- *
- */
-public class ST_MaxY extends AbstractReadOperation {
+public class ST_PointN extends AbstractReadOperation {
+
+	int index = -1;
 	
+	public ST_PointN(int index) {
+		this.index = index;
+	}
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		Geometry geom = decodeGeometry(node);
+		Geometry geometry = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
-		
-		Envelope envelope = geom.getEnvelopeInternal();
-		
-		record.setResult(envelope.getMaxY());
+		Point point = null;
+		//TODO: circularstring
+		if (geometry instanceof LineString) {
+			LineString lineString = (LineString) geometry;
+			point = lineString.getPointN(index);
+			
+		}
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
+		record.setResult(point);
 		records.add(record);
 		return record;
 	}
-	
+
 }

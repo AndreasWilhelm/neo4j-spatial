@@ -29,15 +29,9 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
-/**
- * 
- * @author Andreas Wilhelm
- *
- */
-public class ST_MaxY extends AbstractReadOperation {
+public class ST_IsSimple extends AbstractReadOperation {
 	
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
@@ -45,15 +39,17 @@ public class ST_MaxY extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		Geometry geom = decodeGeometry(node);
+		Geometry geometry = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
-		
-		Envelope envelope = geom.getEnvelopeInternal();
-		
-		record.setResult(envelope.getMaxY());
-		records.add(record);
+		SpatialDatabaseRecord record = null;
+		boolean isSimple = geometry.isSimple();
+
+		if (isSimple) {
+			record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setResult(geometry.isSimple());
+			records.add(record);
+		}
+
 		return record;
 	}
 	
