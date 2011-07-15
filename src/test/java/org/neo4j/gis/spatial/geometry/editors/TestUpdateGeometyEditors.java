@@ -34,8 +34,10 @@ import org.neo4j.gis.spatial.query.geometry.editors.ST_Reverse;
 import org.neo4j.gis.spatial.query.geometry.editors.ST_Simplify;
 import org.neo4j.gis.spatial.query.geometry.editors.ST_Transform;
 import org.neo4j.gis.spatial.query.geometry.editors.ST_Union;
+import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 
 /**
@@ -53,7 +55,8 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 	private WKTReader wktReader = new WKTReader();
 	private SpatialDatabaseService spatialService = null;
 	private OSMLayer layer = null;
-
+	private boolean debug = true;
+	
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
 		super.setUp(false, true, false);
@@ -71,7 +74,16 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 		CoordinateReferenceSystem crs = CRS.decode("EPSG:2002");
 		Update update = new ST_Transform(crs);
 		List<SpatialDatabaseRecord> records = layer.execute(update);
+		
+		String updatedWKT = "LINESTRING (4214724.387523849 8880923.057915369, 4214648.5268391855 8881065.598204594, 4214645.579287704 8881071.128362853, 4214602.863938585 8881152.560950926, 4214590.79019744 8881175.568857124, 4214537.852061339 8881259.48607473, 4214507.109029424 8881341.783257904, 4214495.300119692 8881361.733703097, 4214456.54268533 8881386.346124297, 4214446.579885175 8881393.61100593, 4214411.8652233295 8881418.92081886, 4214372.929042781 8881431.486282624, 4214344.937774361 8881443.541860292, 4214294.855928422 8881453.90549495, 4214277.974253805 8881455.199932678, 4214266.0975965895 8881456.107396355)";
+		Node node = layer.getIndex().get(55l).getGeomNode();
+		Geometry updatedGeometry = layer.getGeometryEncoder().decodeGeometry(node);
+	
 		assertEquals(2, records.size());
+		assertEquals(updatedWKT, updatedGeometry.toString());
+		if (debug) {
+			printTestResults("testTransformUpdate", records);
+		}
 	}
 	
 	@Test
@@ -79,6 +91,9 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 		Update update = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
 		List<SpatialDatabaseRecord> records = layer.execute(update);
 		assertEquals(2, records.size());
+		if (debug) {
+			printTestResults("testTransformUpdate2", records);
+		}
 	}
 	
 	@Test
@@ -86,24 +101,32 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 		Update update = new ST_Reverse();
 		List<SpatialDatabaseRecord> records = layer.execute(update);
 		assertEquals(2, records.size());
+		if (debug) {
+			printTestResults("testReverseUpdate", records);
+		}
 	}
 	
 	@Test
 	public void testSimplify() throws Exception {
 		Update update = new ST_Simplify();
-		List<SpatialDatabaseRecord> results = layer.execute(update);
-		assertEquals(2, results.size());
-		assertEquals(Dataset.wkt, results.get(1).getGeometry().toText());
+		List<SpatialDatabaseRecord> records = layer.execute(update);
+		assertEquals(2, records.size());
+		assertEquals(Dataset.wkt, records.get(1).getGeometry().toText());
+		if (debug) {
+			printTestResults("testSimplify", records);
+		}
 	}
 	
 	@Test
 	public void testUnion() throws Exception {
 		Update update = new ST_Union(wktReader.read(Dataset.wkt2));
-		List<SpatialDatabaseRecord> results = layer.execute(update);
-		assertEquals(2, results.size());
-
+		List<SpatialDatabaseRecord> records = layer.execute(update);
+		assertEquals(2, records.size());
 		String expected = "MULTILINESTRING ((12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317, 12.9735859 56.0552154, 12.9738426 56.0553521, 12.9747403 56.0559176, 12.9757125 56.056313, 12.9759293 56.0564416, 12.9760919 56.0567821, 12.9761463 56.0568715, 12.9763358 56.057183, 12.9763358 56.0575008, 12.9763764 56.0577353, 12.9762985 56.0581325, 12.9762427 56.058262, 12.9762034 56.0583531), (13.9639158 56.070904, 13.9639658 56.0710206, 13.9654342 56.0711966))";
-		assertEquals(expected, results.get(0).getGeometry().toString());
+		assertEquals(expected, records.get(0).getGeometry().toString());
+		if (debug) {
+			printTestResults("testUnion", records);
+		}
 	}
 	
 	private void loadTestOsmData(String layerName, int commitInterval)
@@ -116,6 +139,16 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 		importer.importFile(getBatchInserter(), osmPath);
 		reActivateDatabase(false, false, false);
 		importer.reIndex(graphDb(), commitInterval);
+	}
+	
+	private void printTestResults(String mode,
+			List<SpatialDatabaseRecord> results) {
+		System.out.println("----------------------  " + mode
+				+ "  -------------------");
+		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
+			System.out.println(spatialDatabaseRecord.getResult());
+		}
+		System.out.println("------------------------------------------------");
 	}
 
 
