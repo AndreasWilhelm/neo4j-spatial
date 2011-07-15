@@ -33,7 +33,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTWriter;
 
 /**
- * <p>Represent the geometry as Well-Known Text (WKT).</p>
+ * <p>The <code>ST_AsBinary</code> class represent the geometry as Well-Known Text (WKT).</p>
  * 
  * <h3>For example:</h3>
  * LINESTRING (12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317)

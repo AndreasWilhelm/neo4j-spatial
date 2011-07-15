@@ -35,8 +35,9 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
 /**
+ * Returns the start {@link Point} of a {@link Geometry}
  * 
- * @author Andreas
+ * @author Andreas Wilhelm
  *
  */
 public class ST_StartPoint extends ST_Insert {

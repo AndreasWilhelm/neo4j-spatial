@@ -34,7 +34,7 @@ import com.vividsolutions.jts.io.ByteOrderValues;
 import com.vividsolutions.jts.io.WKBWriter;
 
 /**
- * Represent the geometry as Well-Known Binary (WKB).
+ * The <code>ST_AsBinary</code> class represent the geometry as Well-Known Binary (WKB).
  * 
  * <h2>For example:</h2> <code>
  * 01020000000800000003322A5F86ED2940EA93DC6113094C40CAECE2E

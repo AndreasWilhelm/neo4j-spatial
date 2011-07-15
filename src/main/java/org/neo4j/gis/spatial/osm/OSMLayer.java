@@ -376,6 +376,12 @@ public class OSMLayer extends DynamicLayer {
 	public void update(long geomNodeId, Geometry geometry) {
 
 		Node geomIndexNode = this.getDatabase().getNodeById(geomNodeId);
+		
+		//TODO: update it and not delete it.
+		Relationship rel = geomIndexNode.getSingleRelationship(OSMRelation.GEOM, Direction.INCOMING);
+		if(rel != null) {
+			rel.delete();
+		}
 
 		this.getGeometryEncoder().encodeGeometry(geometry, geomIndexNode);
 
