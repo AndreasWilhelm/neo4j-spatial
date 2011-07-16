@@ -21,8 +21,8 @@ package org.neo4j.gis.spatial.query.geometry.outputs;
 
 import java.util.List;
 
-import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.GeodeticCalculator;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseException;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
@@ -34,7 +34,6 @@ import org.neo4j.graphdb.Node;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -74,27 +73,26 @@ public class ST_DistanceInMeters extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = this.decodeGeometry(node);
 		SpatialDatabaseRecord record = null;
-		//TODO: Every impl. of the GeometryEncoder should be generated 
+		// TODO: Every impl. of the GeometryEncoder should be generated
 		// geometries with SRID.
 		geom.setSRID(4326);
 		if (geom.getSRID() == other.getSRID()) {
-			
+
 			DistanceOp distanceOp = new DistanceOp(geom, other);
 			Coordinate[] coords = distanceOp.nearestPoints();
 
 			Coordinate coord = coords[0];
 			Coordinate otherCoord = coords[1];
 
-			try {
-				double distanceInMeter = JTS.orthodromicDistance(coord,
-						otherCoord, this.crs);
-				record = new SpatialDatabaseRecordImpl(layer, node);
-				record.setResult(distanceInMeter);
-				records.add(record);
-				return record;
-			} catch (TransformException e) {
-				throw new SpatialDatabaseException(e.getMessage());
-			}
+			GeodeticCalculator gc = new GeodeticCalculator(this.crs);
+			gc.setStartingGeographicPoint(coord.x, coord.y);
+			gc.setDestinationGeographicPoint(otherCoord.x, otherCoord.y);
+			double distanceInMeter = gc.getOrthodromicDistance();
+
+			record = new SpatialDatabaseRecordImpl(layer, node);
+			record.setResult(distanceInMeter);
+			records.add(record);
+			return record;
 
 		} else {
 			throw new SpatialDatabaseException(

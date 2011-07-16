@@ -30,6 +30,8 @@ import org.neo4j.gis.spatial.operation.Select;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_DistanceInMeters;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_DistanceInMiles;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_LengthInMeters;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_LengthInMiles;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistance;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistanceInMeter;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_MaxDistanceInMiles;
@@ -90,6 +92,30 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 			this.layer = spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void testLengthInMeters() throws Exception {
+
+		Select select = new ST_LengthInMeters();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(results.size(), 2);
+		assertEquals(639.2762070150728, results.get(0).getResult());
+		assertEquals(292.8106275851124, results.get(1).getResult());
+		if (debug) {
+			printTestResults("testLengthInMeters", results);
+		}
+	}
+	
+	public void testLengthInMiles() throws Exception {
+
+		Select select = new ST_LengthInMiles();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(results.size(), 2);
+		assertEquals(0.3972276960291628, results.get(0).getResult());
+		assertEquals(0.18194403247318888, results.get(1).getResult());
+		if (debug) {
+			printTestResults("testLengthInMiles", results);
 		}
 	}
 
@@ -331,7 +357,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		Select select = new ST_DistanceInMeters(geom);
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
-		assertEquals("1598.0427692270064", results.get(0).getResult().toString());
+		assertEquals("1444.2025387102333", results.get(0).getResult().toString());
 		if (debug) {
 			printTestResults("testDistanceInMeter", results);
 		}
@@ -343,7 +369,7 @@ public class TestSearchGeoprocessing extends Neo4jTestCase {
 		Select select = new ST_DistanceInMiles(geom);
 		List<SpatialDatabaseRecord> results = layer.execute(select);
 		assertEquals(2, results.size());
-		assertEquals("0.9929774335573542", results.get(0).getResult().toString());
+		assertEquals("0.8973855756809164", results.get(0).getResult().toString());
 		if (debug) {
 			printTestResults("testDistanceInMiles", results);
 		}
