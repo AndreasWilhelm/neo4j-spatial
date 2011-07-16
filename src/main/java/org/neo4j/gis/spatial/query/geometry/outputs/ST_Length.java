@@ -26,23 +26,34 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-
+/**
+ * The <code>ST_Length</code> class returns the length in units of spatial
+ * reference system. For areal geometries their perimeter will be returned.
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_Length extends AbstractReadOperation {
 
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
-		
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
+
 		record.setResult(geom.getLength());
 		records.add(record);
 		return record;
 	}
-	
+
 }

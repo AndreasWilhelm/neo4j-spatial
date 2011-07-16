@@ -33,20 +33,25 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * The <code>ST_MaxDistance</code> function returns the maximal distance
- * between the two geometries in the coordinate reference system.
+ * The <code>ST_MaxDistance</code> class returns the maximal distance between
+ * the two geometries in units of the reference system.
  * 
  * @author Andreas Wilhelm
  * 
  */
 public class ST_MaxDistance extends AbstractReadOperation {
 
+	// The geometry from which to calculate the distance.
 	private Geometry other;
+	// The maximal distance between the two geometries.
 	private double maxDistance = 0;
 
 	/**
+	 * Calculate the maximal distance between the given geometry and the
+	 * geometry from the layer query.
 	 * 
 	 * @param other
+	 *            the geometry from which to calculate the distance.
 	 */
 	public ST_MaxDistance(Geometry other) {
 		this.other = other;
@@ -59,61 +64,80 @@ public class ST_MaxDistance extends AbstractReadOperation {
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		clear();
-		
+
 		Geometry geometry = decodeGeometry(node);
 
 		getFarthestPoints(geometry, this.other);
-		
+
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node, geometry);
-		record.setResult(maxDistance);
+		record.setResult(this.maxDistance);
 		records.add(record);
 		return record;
 	}
-	
-	
+
+	/**
+	 * Determine the farthest points between the given geometries and sets the
+	 * maximal distance between this points.
+	 * 
+	 * @param geom1
+	 *            the geometry to determine the farthest point.
+	 * @param geom2
+	 *            the geometry to determine the farthest point.
+	 * @return Returns the farthest point coordinates between the given
+	 *         geometries.
+	 */
 	protected Coordinate[] getFarthestPoints(Geometry geom1, Geometry geom2) {
-		
+
 		Coordinate[] farthestPoints = new Coordinate[2];
-		
+
+		// Calculate the distance between every point of the given two
+		// geometries.
 		for (Coordinate coord : geom1.getCoordinates()) {
 			double longitude = coord.x;
 			double latitude = coord.y;
 			double altitude = coord.z;
-		
+
 			for (Coordinate otherCoord : geom2.getCoordinates()) {
-				
+
 				double otherLongitude = otherCoord.x;
 				double otherLatitude = otherCoord.y;
 				double otherAltitude = otherCoord.z;
-	
-				double longitudeDistance = otherLongitude-longitude;
-				double latitudeDistance = otherLatitude-latitude;
-				Double altitudeDistance = otherAltitude-altitude;
-				
+
+				double longitudeDistance = otherLongitude - longitude;
+				double latitudeDistance = otherLatitude - latitude;
+				Double altitudeDistance = otherAltitude - altitude;
+
 				double distance = -1;
-				
-				if(altitudeDistance.isNaN()) {
-					 distance = Math.sqrt(longitudeDistance*longitudeDistance +
-								latitudeDistance*latitudeDistance);
+
+				if (altitudeDistance.isNaN()) {
+					distance = Math.sqrt(longitudeDistance * longitudeDistance
+							+ latitudeDistance * latitudeDistance);
 				} else {
-					 distance = Math.sqrt(longitudeDistance*longitudeDistance +
-								latitudeDistance*latitudeDistance +
-								altitudeDistance*altitudeDistance);
+					distance = Math.sqrt(longitudeDistance * longitudeDistance
+							+ latitudeDistance * latitudeDistance
+							+ altitudeDistance * altitudeDistance);
 				}
 
-				if(distance > maxDistance) {
+				// Determine of if the distance of the current points is larger
+				// than the current maximal distance.
+				if (distance > maxDistance) {
+					// Sets the new maximal distance and farthestPoints
 					maxDistance = distance;
-					farthestPoints[0] = new Coordinate(longitude, latitude, altitude);
-					farthestPoints[1] =  new Coordinate(otherLongitude, otherLatitude, otherAltitude);
+					farthestPoints[0] = new Coordinate(longitude, latitude,
+							altitude);
+					farthestPoints[1] = new Coordinate(otherLongitude,
+							otherLatitude, otherAltitude);
 				}
 			}
-		
+
 		}
 		return farthestPoints;
 	}
-	
-	
+
+	/**
+	 * Sets the maximal distance between the two geometries to 0.
+	 */
 	protected void clear() {
 		maxDistance = 0;
 	}

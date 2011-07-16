@@ -40,8 +40,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
 
 /**
- * The <code>ST_DistanceInMeter</code> function returns the minimum distance in
- * meter. The Spatial Reference System Identifier(SRID) of the other geometry
+ * The <code>ST_DistanceInMeter</code> class returns the minimum distance in
+ * meters. The Spatial Reference System Identifier(SRID) of the other geometry
  * must be the same as the SRID of layer geometry, else a
  * SpatialDatabaseException will be thrown.
  * 
@@ -50,14 +50,24 @@ import com.vividsolutions.jts.operation.distance.DistanceOp;
  */
 public class ST_DistanceInMeters extends AbstractReadOperation {
 
+	// The geometry from which to calculate the distance.
 	private Geometry other;
+	// The CoordinateReferenceSystem from the given geometry.
 	private CoordinateReferenceSystem crs = null;
 
 	/**
+	 * Calculate the minimum distance between the given geometry and the
+	 * geometry from the layer query.
 	 * 
 	 * @param other
+	 *            the geometry from which to calculate the distance.
 	 * @throws FactoryException
+	 *             if the creation of the CoordinateReferenceSystem failed for
+	 *             an other reason.
 	 * @throws NoSuchAuthorityCodeException
+	 *             if the SRID of the given geometry could not be found.
+	 * 
+	 * 
 	 */
 	public ST_DistanceInMeters(Geometry other)
 			throws NoSuchAuthorityCodeException, FactoryException {
@@ -73,8 +83,7 @@ public class ST_DistanceInMeters extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = this.decodeGeometry(node);
 		SpatialDatabaseRecord record = null;
-		// TODO: Every impl. of the GeometryEncoder should be generated
-		// geometries with SRID.
+		// TODO: Every impl. of the GeometryEncoder should be generated geometries with SRID.
 		geom.setSRID(4326);
 		if (geom.getSRID() == other.getSRID()) {
 

@@ -33,7 +33,7 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Represent the geometry as GeoJSON.
+ * The <code>ST_AsGeoJSON</code> class represent the {@link Geometry} as GeoJSON.
  * 
  * @author Andreas Wilhelm
  * 
@@ -47,12 +47,12 @@ public class ST_AsGeoJSON extends AbstractReadOperation {
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		GeometryJSON gjson = new GeometryJSON();
-		
+
 		Geometry geom = decodeGeometry(node);
 		String geojson = gjson.toString(geom);
-	
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(geojson);
 		records.add(record);
 		return record;

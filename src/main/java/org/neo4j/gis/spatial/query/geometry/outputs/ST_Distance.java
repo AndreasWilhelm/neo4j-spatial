@@ -31,17 +31,23 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * minimum distance 
+ * The <code>ST_Distance</code> class returns the minimum distance between two
+ * geometries in units of spatial reference system.
+ * 
  * @author Andreas Wilhelm
  * 
  */
 public class ST_Distance extends AbstractReadOperation {
 
+	// The geometry from which to calculate the distance.
 	private Geometry other;
 
 	/**
+	 * Calculate the minimum distance between the given geometry and the
+	 * geometry from the layer query.
 	 * 
 	 * @param other
+	 *            the geometry from which to calculate the distance.
 	 */
 	public ST_Distance(Geometry other) {
 		this.other = other;
@@ -55,10 +61,8 @@ public class ST_Distance extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = decodeGeometry(node);
 		double distance = geom.distance(other);
-
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
-
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(distance);
 		records.add(record);
 		return record;

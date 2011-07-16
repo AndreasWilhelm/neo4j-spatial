@@ -20,6 +20,7 @@
 package org.neo4j.gis.spatial.query.geometry.outputs;
 
 import java.io.ByteArrayOutputStream;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -35,9 +36,8 @@ import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 import org.geotools.xml.Encoder;
 import com.vividsolutions.jts.geom.Geometry;
-
 /**
- * Represent the geometry as KML.
+ * The <code>ST_AsKML</code> class represent the {@link Geometry} as KML.
  * 
  * @author Andreas Wilhelm
  * 

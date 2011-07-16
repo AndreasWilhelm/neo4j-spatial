@@ -27,30 +27,43 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
-
+/**
+ * The <code>ST_LengthInMeters</code> class returns the length of the
+ * geometry in meters.
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_LengthInMeters extends AbstractReadOperation {
-	
 
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		Geometry geom = decodeGeometry(node);
+		Geometry geometry = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
+
+		GeodeticCalculator geodeticCalculator = new GeodeticCalculator(
+				layer.getCoordinateReferenceSystem());
 		
-		GeodeticCalculator geodeticCalculator = new GeodeticCalculator(layer.getCoordinateReferenceSystem());
-		Coordinate[] coords = geom.getCoordinates();
-		
+		Coordinate[] coords = geometry.getCoordinates();
+
 		double totalLength = 0;
-		
+
+		// Accumulate the orthodromic distance for every point relation of the given geometry. 
 		for (int i = 0; i < (coords.length - 1); i++) {
 			Coordinate c1 = coords[i];
-			Coordinate c2 = coords[i+1];
+			Coordinate c2 = coords[i + 1];
 			geodeticCalculator.setStartingGeographicPoint(c1.x, c1.y);
 			geodeticCalculator.setDestinationGeographicPoint(c2.x, c2.y);
 			totalLength += geodeticCalculator.getOrthodromicDistance();

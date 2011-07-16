@@ -24,10 +24,22 @@ import java.util.List;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
+/**
+ * The <code>ST_LengthInMeters</code> class returns the length of the
+ * geometry in miles.
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_LengthInMiles extends ST_LengthInMeters {
 
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 

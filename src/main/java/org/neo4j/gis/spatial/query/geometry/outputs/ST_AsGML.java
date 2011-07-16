@@ -19,7 +19,6 @@
  */
 package org.neo4j.gis.spatial.query.geometry.outputs;
 
-
 import java.util.List;
 
 import org.neo4j.gis.spatial.Layer;
@@ -34,13 +33,13 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.gml2.GMLWriter;
 
 /**
- * Represent the geometry as GML.
+ * The <code>ST_AsGML</code> class represent the {@link Geometry} as GML.
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public class ST_AsGML extends AbstractReadOperation {
-	
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
@@ -50,7 +49,8 @@ public class ST_AsGML extends AbstractReadOperation {
 		Geometry geometry = this.decodeGeometry(node);
 		GMLWriter gmlWriter = new GMLWriter();
 		String gml = gmlWriter.write(geometry);
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(gml);
 		records.add(record);
 		return record;

@@ -39,7 +39,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * The <code>ST_MaxDistanceInMeter</code> function returns the maximal distance
+ * The <code>ST_MaxDistanceInMeter</code> class returns the maximal distance
  * in meter. The Spatial Reference System Identifier(SRID) of the other geometry
  * must be the same as the SRID of layer geometry, else a
  * SpatialDatabaseException will be thrown.
@@ -48,15 +48,25 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  */
 public class ST_MaxDistanceInMeter extends ST_MaxDistance {
-
+	
+	// The geometry from which to calculate the distance.
 	private Geometry other = null;
+	// The CoordinateReferenceSystem from the given geometry.
 	private CoordinateReferenceSystem crs = null;
 
 	/**
+	 * Calculate the maximal distance between the given geometry and the
+	 * geometry from the layer query.
 	 * 
 	 * @param other
+	 *            the geometry from which to calculate the distance.
 	 * @throws FactoryException
+	 *             if the creation of the CoordinateReferenceSystem failed for
+	 *             an other reason.
 	 * @throws NoSuchAuthorityCodeException
+	 *             if the SRID of the given geometry could not be found.
+	 * 
+	 * 
 	 */
 	public ST_MaxDistanceInMeter(Geometry other)
 			throws NoSuchAuthorityCodeException, FactoryException {

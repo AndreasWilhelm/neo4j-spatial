@@ -26,22 +26,33 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+/**
+ * The <code>ST_Area</code> class returns the area of this {@link Geometry}.
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_Area extends AbstractReadOperation {
 
+	/**
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 *      List)
+	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
-		
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
+
 		record.setResult(geom.getArea());
 		records.add(record);
 		return record;
 	}
-	
+
 }
