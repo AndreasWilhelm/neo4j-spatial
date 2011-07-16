@@ -35,8 +35,8 @@ import org.neo4j.gis.spatial.query.geometry.outputs.ST_AsKML;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_Buffer;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_Distance;
 import org.neo4j.gis.spatial.query.geometry.outputs.ST_Length;
-import org.neo4j.gis.spatial.query.geometry.processing.ST_Collect;
-
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_LengthInMeters;
+import org.neo4j.gis.spatial.query.geometry.outputs.ST_LengthInMiles;
 import com.vividsolutions.jts.io.WKTReader;
 
 /**
@@ -66,6 +66,30 @@ public class TestSearchGeometyOutputs extends Neo4jTestCase {
 			this.layer = spatialService.getLayer(Dataset.LAYER_NAME);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void testLengthInMeters() throws Exception {
+
+		Select select = new ST_LengthInMeters();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(results.size(), 2);
+		assertEquals(639.2762070150728, results.get(0).getResult());
+		assertEquals(292.8106275851124, results.get(1).getResult());
+		if (debug) {
+			printTestResults("testLengthInMeters", results);
+		}
+	}
+	
+	public void testLengthInMiles() throws Exception {
+
+		Select select = new ST_LengthInMiles();
+		List<SpatialDatabaseRecord> results = layer.execute(select);
+		assertEquals(results.size(), 2);
+		assertEquals(0.3972276960291628, results.get(0).getResult());
+		assertEquals(0.18194403247318888, results.get(1).getResult());
+		if (debug) {
+			printTestResults("testLengthInMiles", results);
 		}
 	}
 	
