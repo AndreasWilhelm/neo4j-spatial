@@ -35,6 +35,14 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
 
+/**
+ * The <code>ST_ShortestLine</code> class returns a {@link LineString} with
+ * points of the given geometry and this geometry, that have the shortest distance
+ * to between it.
+ * 
+ * @author Andreas Wilhelm
+ *
+ */
 public class ST_ShortestLine extends AbstractReadOperation {
 	
 	private Geometry other = null;

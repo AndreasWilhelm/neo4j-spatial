@@ -33,7 +33,8 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Find geometries that have no point in common with the given geometry
+ * The <code>ST_Disjoint</code> class returns geometries that have no point in
+ * common with the given geometry.
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

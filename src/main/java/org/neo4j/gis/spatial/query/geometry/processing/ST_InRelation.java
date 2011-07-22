@@ -32,7 +32,9 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Returned geometries have the specified relation with the given geometry
+ * The <code>ST_InRelation</code> class return geometries have the specified
+ * relation with the given geometry. For more information, see the
+ * OpenGIS Simple Features Specification at DE-9IM.
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

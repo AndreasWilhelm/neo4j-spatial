@@ -32,10 +32,10 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Find geometries that overlap the given geometry check if the geometries have
- * some but not all points in common, they have the same dimension, and the
- * intersection of the interiors of the two geometries has the same dimension as
- * the geometries themselves
+ * The <code>ST_Overlap</code> class returns geometries that overlap the
+ * given geometry check if the geometries have some but not all points in
+ * common, they have the same dimension, and the intersection of the interiors
+ * of the two geometries has the same dimension as the geometries themselves.
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

@@ -31,9 +31,11 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * The <code>ST_Centroid</code> class returns the centroid {@link Point} of this
+ * {@link Geometry}.
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public class ST_Centroid extends AbstractReadOperation {
 
@@ -41,11 +43,11 @@ public class ST_Centroid extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(geometry.getCentroid());
 		records.add(record);
 		return record;
 	}
-	
+
 }

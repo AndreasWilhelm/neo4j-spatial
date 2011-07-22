@@ -32,7 +32,8 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Find geometries that are within the given geometry
+ * The <code>ST_Within</code> class returns geometries that are within the given
+ * geometry.
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

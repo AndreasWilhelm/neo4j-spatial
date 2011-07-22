@@ -31,14 +31,15 @@ import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-
 /**
- * Find geometries that touch the given geometry.
+ * The <code>ST_Touch</code> class returns geometries that touch the given
+ * geometry. Touch means that at least one point in common, but their interiors
+ * do not intersect. The geometry dimension must be at least 1. 
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */
 public class ST_Touch extends AbstractReadOperation {
-	
+
 	private Geometry other = null;
 
 	public ST_Touch(Geometry other) {
@@ -57,9 +58,9 @@ public class ST_Touch extends AbstractReadOperation {
 			record = new SpatialDatabaseRecordImpl(layer, node);
 			record.setResult(geom);
 			records.add(record);
-		} 
+		}
 		return record;
-		
+
 	}
 
 }

@@ -32,14 +32,26 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * 
+ * <p>
+ * The <code>ST_Difference</code> class returns a the part of {@link Geometry}
+ * that the node geometry does not intersect with the provided other geometry
+ * <p>
  * 
  * @author Andreas Wilhelm
  */
 public class ST_Difference extends AbstractReadOperation {
 
+	// The geometry to determine the difference between it and the node
+	// geometry.
 	private Geometry other = null;
 
+	/**
+	 * Construct a {@link Geometry} to determine the difference between it and
+	 * the node geometry
+	 * 
+	 * @param other
+	 *            the {@link Geometry} to determine.
+	 */
 	public ST_Difference(Geometry other) {
 		this.other = other;
 	}

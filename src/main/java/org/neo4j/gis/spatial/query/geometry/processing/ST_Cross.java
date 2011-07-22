@@ -32,8 +32,11 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Find geometries that have some but not all interior points in common with the
- * given geometry
+ * <p>
+ * The
+ * <code>ST_Cross<code> class returns geometries that have some but not all interior points in common with the
+ * given geometry.
+ * </p>
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */
