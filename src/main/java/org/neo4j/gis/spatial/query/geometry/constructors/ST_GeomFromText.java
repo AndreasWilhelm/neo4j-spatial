@@ -34,8 +34,9 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 
 /**
- * The <code>ST_GeomFromText</code> creates a geometry node from a Well-known
- * Text(WKT).
+ * <p>
+ * The <code>ST_GeomFromText</code> class create a {@link Geometry} from a
+ * provided Well-known Text(WKT).
  * 
  * @author Andreas Wilhelm
  * 
@@ -44,6 +45,7 @@ public class ST_GeomFromText extends AbstractFullOperation {
 
 	private WKTReader wktReader = new WKTReader();
 	private int index = 0;
+
 	/**
 	 * Creates a geometry node from a Well-known Text(WKT).
 	 * 
@@ -73,12 +75,12 @@ public class ST_GeomFromText extends AbstractFullOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		
+
 		Geometry geometry = this.getGeometries().get(this.index++);
-		
+
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node, geometry);
-		record.setResult( geometry);
+		record.setResult(geometry);
 		records.add(record);
 		return record;
 	}
