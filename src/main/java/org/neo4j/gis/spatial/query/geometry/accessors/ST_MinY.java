@@ -32,6 +32,19 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
+
+/**
+ * <p>
+ * The <code>ST_MinY</code> class returns the minimal extend latitude of the Geometry.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>56.0538436</code>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_MinY extends AbstractReadOperation {
 
 	/**

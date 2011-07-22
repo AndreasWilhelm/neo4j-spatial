@@ -29,12 +29,21 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * <p>
+ * The <code>ST_Envelope</code> class returns the maximal extends of the
+ * Geometry as a {@link Envelope} object.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>Env[12.9710302 : 12.9763764, 56.0538436 : 56.0583531]</code>
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public class ST_Envelope extends AbstractReadOperation {
 	

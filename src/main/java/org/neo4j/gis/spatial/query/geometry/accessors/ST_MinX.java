@@ -32,6 +32,19 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
+
+/**
+ * <p>
+ * The <code>ST_MinX</code> class returns the minimal extend longitude of the Geometry.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code></code>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_MinX extends AbstractReadOperation {
 
 	/**
