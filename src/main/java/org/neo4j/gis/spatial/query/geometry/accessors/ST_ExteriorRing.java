@@ -34,6 +34,15 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
+/**
+ * <p>
+ * The <code>ST_ExteriorRing</code> class returns a {@link LineString} representing the
+ * exterior ring of a polygonal @link {@link Geometry} or null.
+ * </p>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_ExteriorRing extends AbstractReadOperation {
 
 	/**
@@ -42,18 +51,18 @@ public class ST_ExteriorRing extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		
+
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node);
 		LineString lineString = null;
 
 		Geometry geometry = decodeGeometry(node);
-		if(geometry instanceof Polygon) {
+		if (geometry instanceof Polygon) {
 			Polygon polygon = (Polygon) geometry;
 			lineString = polygon.getExteriorRing();
-		} else if(geometry instanceof MultiPolygon) {
+		} else if (geometry instanceof MultiPolygon) {
 			MultiPolygon multiPolygon = (MultiPolygon) geometry;
-			Polygon polygon = (Polygon) multiPolygon.getGeometryN(0);	
+			Polygon polygon = (Polygon) multiPolygon.getGeometryN(0);
 			lineString = polygon.getExteriorRing();
 		}
 

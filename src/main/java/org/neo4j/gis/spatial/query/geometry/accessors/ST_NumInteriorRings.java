@@ -33,6 +33,17 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 
+
+/**
+ * <p>
+ * The <code>ST_NumInteriorRings</code> class returns the count of interior rings of the first polygonal {@link Geometry}.
+ * </p>
+ * 
+ * <code></code>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_NumInteriorRings extends AbstractReadOperation {
 	
 	/**

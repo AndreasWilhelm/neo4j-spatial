@@ -30,9 +30,23 @@ import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 
+/**
+ * <p>
+ * The <code>ST_NumGeometries</code> class returns the Geometry count of the
+ * {@link GeometryCollection} or 1 if its not a GeometryCollection.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>4</code>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_NumGeometries extends AbstractReadOperation {
-	
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
@@ -41,11 +55,11 @@ public class ST_NumGeometries extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(geometry.getNumGeometries());
 		records.add(record);
 		return record;
 	}
-	
+
 }

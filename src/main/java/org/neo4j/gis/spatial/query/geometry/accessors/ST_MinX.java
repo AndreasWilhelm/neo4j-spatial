@@ -35,12 +35,12 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * <p>
- * The <code>ST_MinX</code> class returns the minimal extend longitude of the Geometry.
+ * The <code>ST_MinX</code> class returns the minimal extend longitude of the {@link Geometry}.
  * </p>
  * 
  * <h3>For example:</h3>
  * 
- * <code></code>
+ * <code>12.9710302</code>
  * 
  * @author Andreas Wilhelm
  * 

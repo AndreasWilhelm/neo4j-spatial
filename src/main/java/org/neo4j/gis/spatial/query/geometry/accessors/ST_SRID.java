@@ -31,10 +31,18 @@ import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+
 /**
+ * <p>
+ * The <code>ST_SRID</code> class returns the Spatial Reference System identifier(SRID) number of this {@link Geometry}.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>4326</code>
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public class ST_SRID extends AbstractReadOperation {
 	
