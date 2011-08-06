@@ -32,10 +32,18 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
+
 /**
+ * <p>
+ * The <code>ST_MaxY</code> class returns the maximal extend latitude of the Geometry.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>56.0711966</code>
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public class ST_MaxY extends AbstractReadOperation {
 	

@@ -33,7 +33,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Find geometries that covers the given geometry
+ * <p>The <code>ST_Cover<code> class returns geometries that covers the given geometry</p>
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

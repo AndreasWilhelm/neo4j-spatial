@@ -33,10 +33,23 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
+/**
+ * <p>
+ * The <code>ST_PointN</code> class returns the {@link Point} at the given index
+ * from a LineString {@link Geometry}.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>POINT (12.9710302 56.0538436)</code>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_PointN extends AbstractReadOperation {
 
 	int index = -1;
-	
+
 	public ST_PointN(int index) {
 		this.index = index;
 	}
@@ -50,11 +63,11 @@ public class ST_PointN extends AbstractReadOperation {
 		Geometry geometry = decodeGeometry(node);
 
 		Point point = null;
-		//TODO: circularstring
+		// TODO: circularstring
 		if (geometry instanceof LineString) {
 			LineString lineString = (LineString) geometry;
 			point = lineString.getPointN(index);
-			
+
 		}
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node);

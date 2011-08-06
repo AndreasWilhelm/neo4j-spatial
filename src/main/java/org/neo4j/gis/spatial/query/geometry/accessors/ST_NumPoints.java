@@ -31,8 +31,21 @@ import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+/**
+ * <p>
+ * The <code>ST_NumPoints</code> class returns count of the {@link Geometry}
+ * vertexes.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>16</code>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_NumPoints extends AbstractReadOperation {
-	
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
@@ -41,11 +54,11 @@ public class ST_NumPoints extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(geometry.getNumPoints());
 		records.add(record);
 		return record;
 	}
-	
+
 }

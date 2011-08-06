@@ -32,12 +32,20 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * <p>
+ * The <code>ST_Dimension</code> class returns the dimension of this Geometry.
+ * The two-dimensional euclidean space dimension could be 0(e.g.: Point), 1(e.g.: LineString) or 2.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * <code>Input: LINESTRING (12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317, 12.9735859 56.0552154, 12.9738426 56.0553521, 12.9747403 56.0559176, 12.9757125 56.056313, 12.9759293 56.0564416, 12.9760919 56.0567821, 12.9761463 56.0568715, 12.9763358 56.057183, 12.9763358 56.0575008, 12.9763764 56.0577353, 12.9762985 56.0581325, 12.9762427 56.058262, 12.9762034 56.0583531)</code>
+ * <code>Output: 1</code>
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public class ST_Dimension extends AbstractReadOperation {
-	
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
@@ -46,11 +54,11 @@ public class ST_Dimension extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(geometry.getDimension());
 		records.add(record);
 		return record;
 	}
-	
+
 }

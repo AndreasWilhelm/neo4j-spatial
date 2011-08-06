@@ -35,6 +35,9 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.operation.distance.DistanceOp;
 
 /**
+ * The <code>ST_WithinDistance</code> class returns geometries that are in the
+ * given distance to the given geometry.
+ * 
  * @author Davide Savazzi, Andreas Wilhelm
  */
 public class ST_WithinDistance extends AbstractReadOperation {

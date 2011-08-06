@@ -37,9 +37,12 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
+ * The <code>ST_LongestLine</code> class returns a {@link LineString} with
+ * points of the given geometry and this geometry, that have the longest distance
+ * to between it.
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
 public class ST_LongestLine extends ST_MaxDistance {
 
@@ -51,8 +54,8 @@ public class ST_LongestLine extends ST_MaxDistance {
 	 * @throws FactoryException
 	 * @throws NoSuchAuthorityCodeException
 	 */
-	public ST_LongestLine(Geometry other)
-			throws NoSuchAuthorityCodeException, FactoryException {
+	public ST_LongestLine(Geometry other) throws NoSuchAuthorityCodeException,
+			FactoryException {
 		super(other);
 		this.other = other;
 	}
@@ -68,8 +71,10 @@ public class ST_LongestLine extends ST_MaxDistance {
 		Geometry geometry = decodeGeometry(node);
 
 		GeometryFactory geometryFactory = new GeometryFactory();
-		Coordinate[] farthestPoints = super.getFarthestPoints(geometry, this.other);
-	    LineString lineString = geometryFactory.createLineString(farthestPoints);
+		Coordinate[] farthestPoints = super.getFarthestPoints(geometry,
+				this.other);
+		LineString lineString = geometryFactory
+				.createLineString(farthestPoints);
 
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node, geometry);
@@ -78,5 +83,5 @@ public class ST_LongestLine extends ST_MaxDistance {
 		return record;
 
 	}
-	
+
 }

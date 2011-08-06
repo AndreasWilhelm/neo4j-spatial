@@ -34,6 +34,12 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
+ * <p>
+ * The <code>ST_Simplify</code> class returns the simplified {@link Geometry}.
+ * Which simplified means to using the Douglas-Peucker algorithm to reducing the
+ * number of coordinate points in the {@link Geometry}. It works only with
+ * LINESTRING and MULTIPOINT Geometries.
+ * </p>
  * 
  * @author Andreas Wilhelm
  * 
@@ -47,25 +53,27 @@ public class ST_Simplify extends AbstractFullOperation {
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = this.decodeGeometry(node);
+		Geometry simplifiedGeometry = simplify(geom);
 		SpatialDatabaseRecord databaseRecord = new SpatialDatabaseRecordImpl(
-				layer, node, simplify(geom));
-		databaseRecord.setResult(simplify(geom));
+				layer, node, simplifiedGeometry);
+		databaseRecord.setResult(simplifiedGeometry);
 		records.add(databaseRecord);
 		return databaseRecord;
 	}
 
 	/**
-	 * Douglas-Peuker
+	 * Using the Douglas-Peucker algorithm to reducing the number of coordinate
+	 * points in the {@link Geometry}.
 	 * 
-	 * @return
+	 * @return Returns the simplified {@link Geometry}.
 	 */
 	private Geometry simplify(Geometry geometry) {
-		
+
 		DouglasPeuckerLineSimplifier simplifier = new DouglasPeuckerLineSimplifier(
 				geometry.getCoordinates());
 
-		GeometryFactory geometryFactory = new GeometryFactory(geometry
-				.getPrecisionModel(), geometry.getSRID());
+		GeometryFactory geometryFactory = new GeometryFactory(
+				geometry.getPrecisionModel(), geometry.getSRID());
 
 		switch (Geometries.get(geometry)) {
 

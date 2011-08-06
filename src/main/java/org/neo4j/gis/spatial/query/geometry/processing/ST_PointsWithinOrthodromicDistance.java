@@ -38,7 +38,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * coordinates in degrees. Algorithm reference:
  * http://www.movable-type.co.uk/scripts/latlong-db.html
  * 
- * @author Davide Savazzi, Andreas Wilhelm
+ * @author Davide Savazzi
  */
 public class ST_PointsWithinOrthodromicDistance extends AbstractReadOperation {
 	//TODO some srid has different earthRadiusInKm

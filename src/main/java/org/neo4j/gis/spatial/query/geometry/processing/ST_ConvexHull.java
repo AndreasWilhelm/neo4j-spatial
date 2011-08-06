@@ -32,6 +32,9 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * The
+ * <code>ST_ConvexHull<code> class return the smallest convex Polygon that contains all the points in the
+ * Geometry.
  * 
  * @author Andreas Wilhelm
  * 
@@ -44,11 +47,12 @@ public class ST_ConvexHull extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		
+
 		Geometry geometry = decodeGeometry(node);
 		Geometry targetGeometry = geometry.convexHull();
-		
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node, targetGeometry);
+
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node, targetGeometry);
 		record.setResult(targetGeometry);
 		records.add(record);
 		return record;

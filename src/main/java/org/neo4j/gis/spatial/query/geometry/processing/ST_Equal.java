@@ -31,8 +31,10 @@ import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
 
-
 /**
+ * The <code>ST_Equal</code> class returns geometries that are equal to
+ * the given one.
+ * 
  * @author Davide Savazzi, Andreas Wilhelm
  */
 public class ST_Equal extends AbstractReadOperation {
@@ -56,8 +58,8 @@ public class ST_Equal extends AbstractReadOperation {
 			record = new SpatialDatabaseRecordImpl(layer, node);
 			record.setResult(geom);
 			records.add(record);
-		} 
+		}
 		return record;
-		
+
 	}
 }

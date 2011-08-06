@@ -32,22 +32,26 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Find geometries that contain the given geometry
+ * The <code>ST_Contain</code> class returns geometries that contain the given
+ * {@link Geometry}.
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */
 public class ST_Contain extends AbstractReadOperation {
 
+	// The geometry to determine if it is in this geometry.
 	private Geometry other = null;
 
 	/**
+	 * Construct a Geometry to determine if it is in this geometry.
 	 * 
 	 * @param other
+	 *            the geometry to determine if it is in this geometry.
 	 */
 	public ST_Contain(Geometry other) {
 		this.other = other;
 	}
-	
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
@@ -57,7 +61,8 @@ public class ST_Contain extends AbstractReadOperation {
 
 		Geometry geom = this.decodeGeometry(node);
 		if (geom.contains(this.other)) {
-			SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node);
+			SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+					node);
 			record.setResult(geom);
 			records.add(record);
 			return record;

@@ -34,6 +34,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
+ * The <code>ST_IntersectWindow</code> class returns 
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

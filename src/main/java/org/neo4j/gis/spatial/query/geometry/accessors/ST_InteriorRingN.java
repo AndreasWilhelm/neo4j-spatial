@@ -33,14 +33,36 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 
+/**
+ * <p>
+ * The <code>ST_InteriorRingN</code> class returns the interior
+ * {@link LineString} ring on the provided index of a polygonal Geometry or
+ * null.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code></code>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_InteriorRingN extends AbstractReadOperation {
-	
+
+	// The index value.
 	int index = -1;
-	
+
+	/**
+	 * Construct a LineString with the provided index value for a interior LineString ring
+	 * of a polygonal Geometry.
+	 * 
+	 * @param index
+	 *            the index value
+	 */
 	public ST_InteriorRingN(int index) {
 		this.index = index;
 	}
-	
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
@@ -49,16 +71,16 @@ public class ST_InteriorRingN extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = decodeGeometry(node);
 		LineString lineString = null;
-		
-		if(geometry instanceof Polygon) {
+
+		if (geometry instanceof Polygon) {
 			Polygon polygon = (Polygon) geometry;
 			polygon.getInteriorRingN(index);
-		} 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
+		}
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(lineString);
 		records.add(record);
 		return record;
 	}
-	
+
 }

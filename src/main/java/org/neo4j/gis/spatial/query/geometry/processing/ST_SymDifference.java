@@ -32,6 +32,9 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * The <code>ST_SymDifference</code> class returns a {@link Geometry} with the
+ * points that have a symmetric difference of this Geometry with the given
+ * geometry.
  * 
  * @author Andreas Wilhelm
  * 
@@ -50,11 +53,12 @@ public class ST_SymDifference extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		
+
 		Geometry geometry = decodeGeometry(node);
 		Geometry targetGeometry = geometry.symDifference(this.other);
-		
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer, node, targetGeometry);
+
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node, targetGeometry);
 		record.setResult(targetGeometry);
 		records.add(record);
 		return record;

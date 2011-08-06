@@ -33,7 +33,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
- * Find empty geometries
+ * The <code>ST_Empty</code> class returns geometries that are empty.
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

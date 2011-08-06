@@ -32,7 +32,10 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Find geometries covered by the given geometry
+ * <p>
+ * The <code>ST_CoveredBy</code> class returns geometries covered by the given
+ * geometry.
+ * </p>
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

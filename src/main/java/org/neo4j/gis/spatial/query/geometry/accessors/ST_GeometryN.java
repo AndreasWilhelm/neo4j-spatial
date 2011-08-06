@@ -30,14 +30,26 @@ import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 
+/**
+ * <p>
+ * The <code>ST_GeometryN</code> class returns a {@link Geometry} on the given
+ * index of a {@link GeometryCollection} or the Geometry if it is not a
+ * GeometryCollection.
+ * </p>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_GeometryN extends AbstractReadOperation {
-	
+
 	int index = -1;
-	
+
 	public ST_GeometryN(int index) {
 		this.index = index;
 	}
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
@@ -46,7 +58,6 @@ public class ST_GeometryN extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geometry = decodeGeometry(node);
 		Geometry geom = geometry.getGeometryN(index);
-
 
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node);

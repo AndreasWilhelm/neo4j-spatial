@@ -32,7 +32,7 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * The spatial type function <code>ST_Invalid</code>
+ * The <code>ST_Invalid</code> class returns geometries which are invalid.
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */

@@ -32,9 +32,17 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * BOX(12.9710302 12.9763764,56.0538436 56.0583531)
- * @author Andreas
- *
+ * <p>
+ * The <code>ST_Box2D</code> class returns the maximal extends of the
+ * Geometry longitude and latitude in following order: BOX(minX, maxX, minY, maxY). 
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>BOX(12.9710302 12.9763764,56.0538436 56.0583531)</code>
+ * 
+ * @author Andreas Wilhelm
+ * 
  */
 public class ST_Box2D extends AbstractReadOperation {
 
@@ -42,15 +50,16 @@ public class ST_Box2D extends AbstractReadOperation {
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		Geometry geom = decodeGeometry(node);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
-		
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
+
 		Envelope envelope = geom.getEnvelopeInternal();
 		String env = envelope.toString();
-		String bbox = env.replace("Env[", "BOX(").replace("]", ")").replace(" :", "").replace(", ", ",");
+		String bbox = env.replace("Env[", "BOX(").replace("]", ")")
+				.replace(" :", "").replace(", ", ",");
 		record.setResult(bbox);
 		records.add(record);
 		return record;
 	}
-	
+
 }

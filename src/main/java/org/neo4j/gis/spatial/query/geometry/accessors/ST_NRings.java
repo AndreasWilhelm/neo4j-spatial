@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.query.geometry.processing;
+package org.neo4j.gis.spatial.query.geometry.accessors;
 
 import java.util.List;
 
@@ -29,50 +29,54 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
-
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.operation.distance.DistanceOp;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * The <code>ST_ShortestLine</code> class returns a {@link LineString} with
- * points of the given geometry and this geometry, that have the shortest distance
- * to between it.
+ * The <code>ST_NRings</code> class returns the number of rings(outer and
+ * interior ring) if it is a polygonal geometry.
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
-public class ST_ShortestLine extends AbstractReadOperation {
-	
-	private Geometry other = null;
+public class ST_NRings extends AbstractReadOperation {
 
-	/**
-	 * 
-	 * @param other
-	 */
-	public ST_ShortestLine(Geometry other) {
-		this.other = other;
-	}
-	
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		
 		Geometry geometry = decodeGeometry(node);
-		
-		GeometryFactory geometryFactory = new GeometryFactory();
-		DistanceOp distanceOp = new DistanceOp(geometry, this.other);
-	    LineString lineString = geometryFactory.createLineString(distanceOp.nearestPoints());
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node, lineString);
-		record.setResult(lineString);
+		int numRing = 0;
+
+		if (geometry instanceof Polygon) {
+			Polygon polygon = (Polygon) geometry;
+			if (polygon.getExteriorRing() != null) {
+				numRing++;
+			}
+
+			numRing = polygon.getNumInteriorRing();
+		} else if (geometry instanceof MultiPolygon) {
+			MultiPolygon multiPolygon = (MultiPolygon) geometry;
+			// Get the number of interior rings for every polygon..
+			for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
+				Polygon polygon = (Polygon) multiPolygon.getGeometryN(i);
+				numRing += polygon.getNumInteriorRing();
+				// if outer ring is not null add it to the count
+				if (polygon.getExteriorRing() != null) {
+					numRing++;
+				}
+			}
+
+		}
+
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
+		record.setResult(numRing);
 		records.add(record);
 		return record;
 	}
-	
 }

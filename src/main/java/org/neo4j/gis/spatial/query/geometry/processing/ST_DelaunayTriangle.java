@@ -29,13 +29,20 @@ import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
 
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.triangulate.DelaunayTriangulationBuilder;
 
+/**
+ * <p>
+ * The <code>ST_DelaunayTriangle</code> class returns the computed Delaunay triangulation as a polygon Geometry. 
+ * </p>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_DelaunayTriangle extends AbstractReadOperation {
-	
+
 	private double tolerance = 0.0d;
 
 	/**
@@ -43,10 +50,12 @@ public class ST_DelaunayTriangle extends AbstractReadOperation {
 	 */
 	public ST_DelaunayTriangle() {
 	}
-	
+
 	/**
 	 * 
 	 * @param tolerance
+	 *            the snapping tolerance which will be used to improved the
+	 *            robustness of the triangulation computation.
 	 */
 	public ST_DelaunayTriangle(double tolerance) {
 		this.tolerance = tolerance;
@@ -65,12 +74,12 @@ public class ST_DelaunayTriangle extends AbstractReadOperation {
 		builder.setSites(geometry);
 		builder.setTolerance(this.tolerance);
 		Geometry trianglesGeometry = builder.getTriangles(geometryFactory);
-		
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node, trianglesGeometry);
+
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node, trianglesGeometry);
 		record.setResult(trianglesGeometry);
 		records.add(record);
 		return record;
 	}
-	
+
 }

@@ -31,6 +31,19 @@ import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Geometry;
 
+
+/**
+ * <p>
+ * The <code>ST_GeometryType</code> class returns the name of this Geometry.
+ * </p>
+ * 
+ * <h3>For example:</h3>
+ * 
+ * <code>LineString</code>
+ * 
+ * @author Andreas Wilhelm
+ * 
+ */
 public class ST_GeometryType extends AbstractReadOperation {
 
 	/**

@@ -33,32 +33,40 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * Search graph for the closest geometry to the given geometry.
+ * <p>
+ * <code>ST_Closest</code> class returns the closest {@link Geometry} to the
+ * given geometry. If another geometry has the same distance as the closest
+ * Geometry then both will be returned.
+ * </p>
  * 
  * @author Davide Savazzi, Andreas Wilhelm
  */
 public class ST_Closest extends AbstractReadOperation {
-	
-	//
+
+	// The geometry to determine which one is close to this.
 	private Geometry other;
-	//
+	// The max extent of the geometry to determine which one is close to this.
 	private Envelope envelope;
-	//
+	// Contains the tmp. min. distance of the current closest Geometry.
 	private double minDistance = Double.MAX_VALUE;
-	
 
 	/**
+	 * Construct a {@link Geometry} to find the close geometry node.
 	 * 
 	 * @param other
+	 *            the geometry to use for finding the closest geometry to it.
 	 */
 	public ST_Closest(Geometry other) {
 		this(other, null);
 	}
 
 	/**
+	 * Construct a {@link Geometry} to find the close geometry node.
 	 * 
 	 * @param other
+	 *            the geometry to use for finding the closest geometry to it.
 	 * @param envelope
+	 *            the max extent of the other geometry.
 	 */
 	public ST_Closest(Geometry other, Envelope envelope) {
 		this.other = other;
@@ -69,7 +77,7 @@ public class ST_Closest extends AbstractReadOperation {
 		}
 
 	}
-	
+
 	/**
 	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
@@ -88,7 +96,7 @@ public class ST_Closest extends AbstractReadOperation {
 				// Remove old entries.
 				records.clear();
 				records.add(record);
-			} else if(distance == minDistance) {
+			} else if (distance == minDistance) {
 				record = new SpatialDatabaseRecordImpl(layer, node);
 				record.setResult(geometry);
 				records.add(record);

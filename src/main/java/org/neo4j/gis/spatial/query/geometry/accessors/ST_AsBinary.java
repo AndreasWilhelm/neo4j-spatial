@@ -34,9 +34,12 @@ import com.vividsolutions.jts.io.ByteOrderValues;
 import com.vividsolutions.jts.io.WKBWriter;
 
 /**
- * The <code>ST_AsBinary</code> class represent the geometry as Well-Known Binary (WKB).
+ * <p>
+ * The <code>ST_AsBinary</code> class returns the Geometry as Well-Known Binary
+ * (WKB).
+ * </p>
  * 
- * <h2>For example:</h2> <code>
+ * <h3>For example:</h3> <code>
  * 01020000000800000003322A5F86ED2940EA93DC6113094C40CAECE2E
  * C8CED2940D02BF93317094C403EE136644DEE29400F4B5EF81C094C40
  * A06F0B96EAEE29403B66EABF18094C407E26B15A4FEF29402684B3001
@@ -60,8 +63,8 @@ public class ST_AsBinary extends AbstractReadOperation {
 		byte[] wkb = wkbWriter.write(geometry);
 		String hex = WKBWriter.toHex(wkb);
 
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node);
 		record.setResult(hex);
 		records.add(record);
 		return record;

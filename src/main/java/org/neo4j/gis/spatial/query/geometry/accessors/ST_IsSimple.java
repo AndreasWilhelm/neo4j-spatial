@@ -32,11 +32,10 @@ import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * The <code>ST_IsSimpley</code> class returns true if {@link Geometry} is simple. 
- * 
+ * <p>The <code>ST_IsSimpley</code> class returns true if {@link Geometry} is simple. 
  * A Geometry is simple when the only self-intersections are 
  * at the boundary points. A geometry is also simple when it is empty, a valid
- * polygonal geometry or a point which has no repeated points.
+ * polygonal geometry or a point which has no repeated points.</p>
 
  * @author Andreas Wilhelm
  *
