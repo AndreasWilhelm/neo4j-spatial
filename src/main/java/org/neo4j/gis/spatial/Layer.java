@@ -19,9 +19,10 @@
  */
 package org.neo4j.gis.spatial;
 
+import java.util.Iterator;
 import java.util.List;
 
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
@@ -156,13 +157,13 @@ public interface Layer {
 	Object getStyle();
 	
 	/**
-	 * Execute a spatial type select query on the layer.
+	 * Execute a spatial type search query on the layer.
 	 * 
-	 * @param select the select query.
+	 * @param search the search query.
 	 * @return Returns a search result list with {@link SpatialDatabaseRecord}.
 	 * @throws SpatialDatabaseException 
 	 */
-	List<SpatialDatabaseRecord> execute(Select select) throws SpatialDatabaseException;
+	Iterator<SpatialDatabaseRecord> execute(Search search) throws SpatialDatabaseException;
 	
 
 }

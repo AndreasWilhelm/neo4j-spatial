@@ -17,35 +17,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.query.geometry.accessors;
+package org.neo4j.gis.spatial.query.geometry.constructors;
 
 import java.util.List;
 
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
-import org.neo4j.gis.spatial.operation.AbstractReadOperation;
+import org.neo4j.gis.spatial.operation.AbstractFullOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
 import org.neo4j.gis.spatial.operation.SpatialQuery;
 import org.neo4j.graphdb.Node;
 
-import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
- * <p>
- * The <code>ST_MaxX</code> class returns the maximal extend longitude of the Geometry.
- * </p>
- * 
- * <h3>For example:</h3>
- * 
- * <code>12.9763764</code>
  * 
  * @author Andreas Wilhelm
- * 
+ *
  */
-public class ST_MaxX extends AbstractReadOperation {
+public class ST_BuildArea extends AbstractFullOperation {
+
+	private GeometryCollection geometryCollection;
+	private Geometry[] geometries;
+
+	public ST_BuildArea() {
+		GeometryFactory factory = null;
+		geometryCollection = new GeometryCollection(geometries, factory);
+	}
+
 
 	/**
 	 * @see SpatialQuery#onIndexReference(OperationType, Node, Layer,
@@ -53,16 +55,11 @@ public class ST_MaxX extends AbstractReadOperation {
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
-		Geometry geom = decodeGeometry(node);
-
-		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(
-				layer, node);
-		
-		Envelope envelope = geom.getEnvelopeInternal();
-		
-		record.setResult(envelope.getMaxX());
+		Geometry geometry = decodeGeometry(node);
+		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
+				node, geometry);
+		record.setResult(geometry);
 		records.add(record);
 		return record;
 	}
-	
 }

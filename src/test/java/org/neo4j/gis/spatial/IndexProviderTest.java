@@ -77,6 +77,8 @@ public class IndexProviderTest
         
     }
     
+    /*
+    
     @Test
     public void testWithinDistanceIndex() {
         LayerNodeIndex index = new LayerNodeIndex( "layer1", db, new HashMap<String, String>() );
@@ -99,7 +101,7 @@ public class IndexProviderTest
         
         
     }
-
+*/
     private static String createTempDir() throws IOException {
         File d = File.createTempFile( "neo4j-test", "dir" );
         if ( !d.delete() )

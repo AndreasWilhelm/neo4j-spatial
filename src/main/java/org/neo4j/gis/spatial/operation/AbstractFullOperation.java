@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * <p>
  * The <code>AbstractWriteOperation</code> is the abstract implementation of the
- * {@link Insert}, {@link Select}, {@link Update} and {@link Delete} interface.
+ * {@link Insert}, {@link Search}, {@link Update} and {@link Delete} interface.
  * </p>
  * 
  * <p>

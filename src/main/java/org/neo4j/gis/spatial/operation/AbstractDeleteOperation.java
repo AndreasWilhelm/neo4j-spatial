@@ -19,14 +19,14 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionImpl;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 
 /**
  * <p>
  * The <code>AbstractReadOperation</code> is the abstract implementation of the
- * {@link Delete} and {@link Select} interface.
+ * {@link Delete} and {@link Search} interface.
  * </p>
  * 
  * <p>
@@ -43,7 +43,7 @@ public abstract class AbstractDeleteOperation extends AbstractReadOperation impl
 	 * @see Delete#addRestriction(RestrictionType, String)
 	 */
 	public void addRestriction(RestrictionType restrictionType, String value) {
-		Restriction restriction = new Restriction(restrictionType, value);
+		RestrictionImpl restriction = new RestrictionImpl(restrictionType, value);
 		this.restrictions.put(restriction.getKey(), restriction);
 	}
 	

@@ -24,7 +24,7 @@ import java.util.Set;
 
 import org.neo4j.gis.spatial.operation.Delete;
 import org.neo4j.gis.spatial.operation.Insert;
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.gis.spatial.operation.Update;
 import org.neo4j.graphdb.Node;
 
@@ -100,7 +100,7 @@ public class SpatialIndexPerformanceProxy implements SpatialIndexReader {
 
     private SpatialIndexReader spatialIndex;
 
-	public List<SpatialDatabaseRecord> execute(Select select) {
+	public List<SpatialDatabaseRecord> execute(Search select) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.query;
+package org.neo4j.gis.spatial.query.geometry.outputs;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
+import org.neo4j.gis.spatial.operation.SpatialQuery;
 import org.neo4j.graphdb.Node;
 
 /**
@@ -35,16 +35,17 @@ import org.neo4j.graphdb.Node;
  * @author Andreas Wilhelm
  * 
  */
-public class ST_Select extends AbstractReadOperation {
+public class ST_Geometry extends AbstractReadOperation {
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 * @see SpatialQuery#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node);
+		record.setResult(decodeGeometry(node));
 		records.add(record);
 		return record;
 	}

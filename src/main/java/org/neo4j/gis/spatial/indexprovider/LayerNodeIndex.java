@@ -25,7 +25,7 @@ import java.util.Map;
 import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_PointsWithinOrthodromicDistance;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Within;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -107,7 +107,7 @@ public class LayerNodeIndex implements Index<Node>
         {
             Map<?, ?> p = (Map<?, ?>) params;
             Double[] bounds = (Double[]) p.get( ENVELOPE_PARAMETER );
-            Select withinQuery = new ST_Within(
+            Search withinQuery = new ST_Within(
                     layer.getGeometryFactory().toGeometry(
                             new Envelope( bounds[0], bounds[1], bounds[2], bounds[3] ) ) );
             layer.execute( withinQuery );
@@ -120,7 +120,7 @@ public class LayerNodeIndex implements Index<Node>
 			Map<?, ?> p = (Map<?, ?>) params;
 			Double[] point = (Double[]) p.get( POINT_PARAMETER );
 			Double distance = (Double) p.get( DISTANCE_IN_KM_PARAMETER );
-			Select withinDistanceQuery = 
+			Search withinDistanceQuery = 
 				new ST_PointsWithinOrthodromicDistance( new Coordinate( point[1], point[0] ), distance);
 			layer.execute( withinDistanceQuery );
 			List<SpatialDatabaseRecord> res = withinDistanceQuery.getResults();

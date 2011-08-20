@@ -24,7 +24,7 @@ import java.util.List;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
+import org.neo4j.gis.spatial.operation.SpatialQuery;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
@@ -62,7 +62,7 @@ public class ST_DistanceInMiles extends ST_DistanceInMeters {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 * @see SpatialQuery#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,

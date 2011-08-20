@@ -26,8 +26,7 @@ import java.util.List;
 import org.geotools.data.DataStore;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.neo4j.gis.spatial.DynamicLayer.LayerConfig;
-import org.neo4j.gis.spatial.geotools.data.Neo4jSpatialDataStore;
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.gis.spatial.osm.OSMDataset;
 import org.neo4j.gis.spatial.osm.OSMDataset.Way;
 import org.neo4j.gis.spatial.osm.OSMDataset.WayPoint;
@@ -70,13 +69,14 @@ public class TestsForDocs extends Neo4jTestCase {
 				System.out.println("Warning: index count zero: " + layer.getName());
 			}
 			System.out.println("Layer '" + layer.getName() + "' has " + layer.getIndex().count() + " entries in the index");
-			DataStore store = new Neo4jSpatialDataStore(database);
+			/*DataStore store = new Neo4jSpatialDataStore(database);
 			SimpleFeatureCollection features = store.getFeatureSource(layer.getName()).getFeatures();
 			System.out.println("Layer '" + layer.getName() + "' has " + features.size() + " features");
 			assertEquals("FeatureCollection.size for layer '" + layer.getName() + "' not the same as index count", layer.getIndex()
 					.count(), features.size());
 			if (layer instanceof OSMLayer)
 				checkOSMAPI(layer);
+				*/
 		} finally {
 			database.shutdown();
 		}
@@ -139,7 +139,7 @@ public class TestsForDocs extends Neo4jTestCase {
 			System.out.println("Have " + spatialIndex.count() + " geometries in " + spatialIndex.getLayerBoundingBox());
 
 			Envelope bbox = new Envelope(12.94, 12.96, 56.04, 56.06);
-			Select searchQuery = new ST_IntersectWindow(bbox);
+			Search searchQuery = new ST_IntersectWindow(bbox);
 			layer.execute(searchQuery);
 			List<SpatialDatabaseRecord> results = searchQuery.getResults();
 			doGeometryTestsOnResults(bbox, results);
@@ -169,7 +169,7 @@ public class TestsForDocs extends Neo4jTestCase {
 
 		checkIndexAndFeatureCount("highway");
 	}
-
+	/*
 	public void testExportShapefileFromOSM() throws Exception {
 		super.shutdownDatabase(true);
 		deleteDatabase(true);
@@ -190,7 +190,7 @@ public class TestsForDocs extends Neo4jTestCase {
 			database.shutdown();
 		}
 	}
-
+	
 	public void testExportShapefileFromQuery() throws Exception {
 		super.shutdownDatabase(true);
 		deleteDatabase(true);
@@ -207,7 +207,7 @@ public class TestsForDocs extends Neo4jTestCase {
 			System.out.println("Have " + spatialIndex.count() + " geometries in " + spatialIndex.getLayerBoundingBox());
 
 			Envelope bbox = new Envelope(12.94, 12.96, 56.04, 56.06);
-			Select searchQuery = new ST_IntersectWindow(bbox);
+			Search searchQuery = new ST_IntersectWindow(bbox);
 			layer.execute(searchQuery);
 			List<SpatialDatabaseRecord> results = searchQuery.getResults();
 
@@ -221,7 +221,7 @@ public class TestsForDocs extends Neo4jTestCase {
 			database.shutdown();
 		}
 	}
-
+	*/
 	private void doGeometryTestsOnResults(Envelope bbox, List<SpatialDatabaseRecord> results) {
 		System.out.println("Found " + results.size() + " geometries in " + bbox);
 		Geometry geometry = results.get(0).getGeometry();

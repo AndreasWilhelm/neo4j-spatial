@@ -26,7 +26,7 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractDeleteOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
+import org.neo4j.gis.spatial.operation.SpatialQuery;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 import org.neo4j.graphdb.Node;
 
@@ -56,7 +56,7 @@ public class ST_Delete extends AbstractDeleteOperation {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 * @see SpatialQuery#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
@@ -65,5 +65,9 @@ public class ST_Delete extends AbstractDeleteOperation {
 				node);
 		return record;
 	}
+
+
+
+
 
 }

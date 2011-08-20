@@ -19,7 +19,7 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionImpl;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 
@@ -29,7 +29,7 @@ import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
  * 
  * @author Andreas Wilhelm
  */
-public interface Update extends SpatialTypeOperation {
+public interface Update extends SpatialQuery {
 
 	/**
 	 * Add a restriction to filter the update operation.
@@ -44,7 +44,7 @@ public interface Update extends SpatialTypeOperation {
 	/**
 	 * Returns a list with restrictions of this update query.
 	 * 
-	 * @return Returns a list with {@link Restriction}.
+	 * @return Returns a list with {@link RestrictionImpl}.
 	 */
 	public abstract RestrictionMap getRestrictions();
 }

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geometry.editors;
+package org.neo4j.gis.spatial.geometry;
 
 import java.io.File;
 import java.util.List;
@@ -116,7 +116,7 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 			printTestResults("testSimplify", records);
 		}
 	}
-	
+	/*
 	@Test
 	public void testUnion() throws Exception {
 		Update update = new ST_Union(wktReader.read(Dataset.wkt2));
@@ -128,7 +128,7 @@ public class TestUpdateGeometyEditors extends Neo4jTestCase {
 			printTestResults("testUnion", records);
 		}
 	}
-	
+	*/
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;

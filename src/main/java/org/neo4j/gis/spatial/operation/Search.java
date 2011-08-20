@@ -22,17 +22,17 @@ package org.neo4j.gis.spatial.operation;
 import java.util.List;
 
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
-import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionImpl;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 
 /**
- * The <code>Select</code> interface provides the public APIs to execute search
+ * The <code>Search</code> interface provides the public APIs to execute search
  * operations.
  * 
  * @author Andreas Wilhelm
  */
-public interface Select extends SpatialTypeOperation {
+public interface Search extends SpatialQuery {
 
 	/**
 	 * Return the result list of the search operation. If the search operation
@@ -41,7 +41,7 @@ public interface Select extends SpatialTypeOperation {
 	 * @return Returns a list of {@link #SpatialDatabaseRecord},
 	 */
 	public abstract List<SpatialDatabaseRecord> getResults();
-
+	
 	/**
 	 * Add a restriction to filter search operation.
 	 * 
@@ -55,7 +55,7 @@ public interface Select extends SpatialTypeOperation {
 	/**
 	 * Returns a list with restrictions of this update query.
 	 * 
-	 * @return Returns a list with {@link Restriction}.
+	 * @return Returns a list with {@link RestrictionImpl}.
 	 */
 	public abstract RestrictionMap getRestrictions();
 }

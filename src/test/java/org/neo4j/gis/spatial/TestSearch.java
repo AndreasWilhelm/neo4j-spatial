@@ -21,7 +21,7 @@ package org.neo4j.gis.spatial;
 
 import java.util.List;
 
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_IntersectWindow;
 import org.neo4j.graphdb.Transaction;
 
@@ -75,7 +75,7 @@ public class TestSearch extends Neo4jTestCase {
 				for (double y = miny; y < maxy; y = y + interval) {
 					tx = graphDb().beginTx();
 					try {
-						Select searchQuery = new ST_IntersectWindow(new Envelope(x, x + interval, y, y + interval));
+						Search searchQuery = new ST_IntersectWindow(new Envelope(x, x + interval, y, y + interval));
 
 						long qStart = System.currentTimeMillis();
 						layer.execute(searchQuery);
@@ -130,7 +130,7 @@ public class TestSearch extends Neo4jTestCase {
 				SpatialDatabaseService spatialService = new SpatialDatabaseService(graphDb());
 				Layer layer = spatialService.getLayer("roads");
 				
-				Select searchQuery = new ST_IntersectWindow(new Envelope(xmin, xmax, ymin, ymax));
+				Search searchQuery = new ST_IntersectWindow(new Envelope(xmin, xmax, ymin, ymax));
 				layer.execute(searchQuery);
 				List<SpatialDatabaseRecord> results = searchQuery.getResults();
 				System.out.println("Search returned: " + results);

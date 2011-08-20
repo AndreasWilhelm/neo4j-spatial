@@ -29,7 +29,7 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
+import org.neo4j.gis.spatial.operation.SpatialQuery;
 import org.neo4j.graphdb.Node;
 import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
@@ -110,7 +110,7 @@ public class ST_Transform extends AbstractFullOperation {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 * @see SpatialQuery#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,

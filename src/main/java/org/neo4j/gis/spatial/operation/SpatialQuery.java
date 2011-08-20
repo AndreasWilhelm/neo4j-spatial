@@ -27,12 +27,12 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.graphdb.Node;
 
 /**
- * This <code>SpatialTypeQuery</code> interface provides the base APIs to
+ * This <code>SpatialQuery</code> interface provides the base APIs to
  * execute spatial type operations.
  * 
  * @author Andreas Wilhelm
  */
-public interface SpatialTypeOperation {
+public interface SpatialQuery {
 
 	/**
 	 * Sets the data layer of the spatial type operation.
@@ -67,5 +67,25 @@ public interface SpatialTypeOperation {
 	 */
 	public abstract SpatialDatabaseRecord onIndexReference(OperationType type, Node node,
 			Layer layer, List<SpatialDatabaseRecord> records);
+	
+	/**
+	 * 
+	 * @param nThreads
+	 */
+	public abstract void setThreadPoolSize(int nThreads);
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract int getThreadPoolSize();
+	
+	
+	
+	//next: TODO replace the other with this:
+	//public abstract SpatialDatabaseRecord onIndexReference(
+	//Node node, Geometry nodeGeometry,
+	//Collection<SpatialDatabaseRecord> records);
 
 }

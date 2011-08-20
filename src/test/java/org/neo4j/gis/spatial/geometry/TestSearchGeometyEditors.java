@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial.geometry.editors;
+package org.neo4j.gis.spatial.geometry;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.query.geometry.editors.ST_Reverse;
 import org.neo4j.gis.spatial.query.geometry.editors.ST_Simplify;
@@ -70,55 +70,55 @@ public class TestSearchGeometyEditors extends Neo4jTestCase {
 	public void testTransformSearch() throws Exception {
 		
 		CoordinateReferenceSystem crs = CRS.decode("EPSG:2002");
-		Select select = new ST_Transform(crs);
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
+		Search select = new ST_Transform(crs);
+		layer.execute(select);
+		assertEquals(2, select.getResults().size());
 		if (debug) {
-			printTestResults("testTransformSearch", results);
+			printTestResults("testTransformSearch", select.getResults());
 		}
 	}
 
 	@Test
 	public void testTransformSearch2() throws Exception {
-		Select select = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
+		Search select = new ST_Transform(Dataset.WORLD_MERCATOR_SRID);
+		layer.execute(select);
+		assertEquals(2, select.getResults().size());
 		if (debug) {
-			printTestResults("testTransformSearch2", results);
+			printTestResults("testTransformSearch2", select.getResults());
 		}
 	
 	}
 
 	@Test
 	public void testReverseSearch() throws Exception {
-		Select select = new ST_Reverse();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
+		Search select = new ST_Reverse();
+		layer.execute(select);
+		assertEquals(2, select.getResults().size());
 		if (debug) {
-			printTestResults("testReverseSearch", results);
+			printTestResults("testReverseSearch", select.getResults());
 		}
 	}
 	
 	public void testSimplify() throws Exception {
 
-		Select select = new ST_Simplify();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		assertEquals(Dataset.wkt, results.get(1).getGeometry().toText());
+		Search select = new ST_Simplify();
+		layer.execute(select);
+		assertEquals(2, select.getResults().size());
+		assertEquals(Dataset.wkt, select.getResults().get(1).getGeometry().toText());
 		if (debug) {
-			printTestResults("testSimplify", results);
+			printTestResults("testSimplify", select.getResults());
 		}
 	}
 	
 	public void testUnion() throws Exception {
-		Select select = new ST_Union(wktReader.read(Dataset.wkt2));
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
+		Search select = new ST_Union(wktReader.read(Dataset.wkt2));
+		layer.execute(select);
+		assertEquals(2, select.getResults().size());
 
 		String expected = "MULTILINESTRING ((12.9710302 56.0538436, 12.9726158 56.0546985, 12.9726773 56.0547317, 12.9735859 56.0552154, 12.9738426 56.0553521, 12.9747403 56.0559176, 12.9757125 56.056313, 12.9759293 56.0564416, 12.9760919 56.0567821, 12.9761463 56.0568715, 12.9763358 56.057183, 12.9763358 56.0575008, 12.9763764 56.0577353, 12.9762985 56.0581325, 12.9762427 56.058262, 12.9762034 56.0583531), (13.9639158 56.070904, 13.9639658 56.0710206, 13.9654342 56.0711966))";
-		assertEquals(expected, results.get(0).getResult().toString());
+		assertEquals(expected, select.getResults().get(0).getResult().toString());
 		if (debug) {
-			printTestResults("testUnion", results);
+			printTestResults("testUnion", select.getResults());
 		}
 	}
 

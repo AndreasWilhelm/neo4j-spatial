@@ -26,7 +26,7 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
+import org.neo4j.gis.spatial.operation.SpatialQuery;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -46,7 +46,7 @@ public class ST_Cover extends AbstractReadOperation {
 	}
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 * @see SpatialQuery#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,

@@ -19,8 +19,14 @@
  */
 package org.neo4j.gis.spatial.operation;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import org.neo4j.gis.spatial.GeometryEncoder;
 import org.neo4j.gis.spatial.Layer;
+import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.graphdb.Node;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -49,11 +55,19 @@ public abstract class AbstractOperation {
 	private CoordinateReferenceSystem crs = null;
 	// Contains the delete restrictions.
 	protected RestrictionMap restrictions;
+	//
+	private int threadPoolSize = 8;
+	//
+	private List<SpatialDatabaseRecord> record = null;
+	
+	
+	
 	/**
 	 * Default constructor.
 	 */
 	public AbstractOperation() {
 		this.restrictions = new RestrictionMap();
+		this.record = Collections.synchronizedList(new ArrayList<SpatialDatabaseRecord>());
 	}
 
 	/**
@@ -95,23 +109,39 @@ public abstract class AbstractOperation {
 	 * @param crs
 	 *            The {@link CoordinateReferenceSystem} of the {@link Layer}
 	 *            which execute this operation.
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	protected void setCoordinateReferenceSystem(CoordinateReferenceSystem crs) throws Exception {
-		
-		//if(this.layer instanceof EditableLayer) {
-			this.crs = crs;
-			//EditableLayer editLayer = (EditableLayer) this.layer;
-		//	editLayer.setCoordinateReferenceSystem(this.crs);
-		//} else {
-			//TODO: Exception which extends from SpatialTypeException.
-			//throw new Exception();
-		//}
+	protected void setCoordinateReferenceSystem(CoordinateReferenceSystem crs)
+			throws Exception {
+
+		// if(this.layer instanceof EditableLayer) {
+		this.crs = crs;
+		// EditableLayer editLayer = (EditableLayer) this.layer;
+		// editLayer.setCoordinateReferenceSystem(this.crs);
+		// } else {
+		// TODO: Exception which extends from SpatialTypeException.
+		// throw new Exception();
+		// }
 
 	}
 
 	/**
-	 * @see GeometryEncoder#encodeGeometry(Geometry, org.neo4j.graphdb.PropertyContainer)
+	 * @see SpatialQuery#getThreadPoolSize()
+	 */
+	public int getThreadPoolSize() {
+		return threadPoolSize;
+	}
+
+	/**
+	 * @see SpatialQuery#setThreadPoolSize(int)
+	 */
+	public void setThreadPoolSize(int nThreads) {
+		this.threadPoolSize = nThreads;
+	}
+
+	/**
+	 * @see GeometryEncoder#encodeGeometry(Geometry,
+	 *      org.neo4j.graphdb.PropertyContainer)
 	 */
 	protected void encodeGeometry(Geometry geometry, Node node) {
 		this.layer.getGeometryEncoder().encodeGeometry(geometry, node);
@@ -130,4 +160,13 @@ public abstract class AbstractOperation {
 	protected Geometry decodeGeometry(Node node) {
 		return this.layer.getGeometryEncoder().decodeGeometry(node);
 	}
+	
+
+	/**
+	 * @see Search#getResults()
+	 */
+	public List<SpatialDatabaseRecord> getResults()  {
+		return record;
+	}
+	
 }

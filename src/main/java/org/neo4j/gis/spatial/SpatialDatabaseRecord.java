@@ -64,9 +64,10 @@ public interface SpatialDatabaseRecord extends Constants,
 	
 	/**
 	 * Returns the spatial type function result for this record.
+	 * @param <T>
 	 * @return the spatial type function result.
 	 */
-	public Object getResult();
+	public <T> T getResult();
 
 	/**
 	 * Not all geometry records have the same attribute set, so we should test

@@ -27,7 +27,7 @@ import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractFullOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
+import org.neo4j.gis.spatial.operation.SpatialQuery;
 import org.neo4j.graphdb.Node;
 import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
 import com.vividsolutions.jts.geom.Geometry;
@@ -47,7 +47,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 public class ST_Simplify extends AbstractFullOperation {
 
 	/**
-	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
+	 * @see SpatialQuery#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,

@@ -17,31 +17,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.gis.spatial;
+package org.neo4j.gis.spatial.geometry;
 
 import java.io.File;
 import java.util.List;
 
-import org.junit.Test;
+import org.neo4j.gis.spatial.Neo4jTestCase;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
-import org.neo4j.gis.spatial.geometry.editors.Dataset;
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.geometry.Dataset;
+import org.neo4j.gis.spatial.operation.Insert;
 import org.neo4j.gis.spatial.osm.OSMImporter;
 import org.neo4j.gis.spatial.osm.OSMLayer;
-import org.neo4j.gis.spatial.query.ST_Select;
+import org.neo4j.gis.spatial.query.geometry.constructors.ST_GeomFromText;
+import org.neo4j.graphdb.Node;
 
 /**
- * A simple testcase to test the search operation.
+ * Testcase to test following spatial type functions:
+ *  - ST_GeomFromText
+ *  - ..
  * 
  * @author Andreas Wilhelm
- *
+ * 
  */
-public class ST_TestSelect extends Neo4jTestCase {
+public class TestInsertGeometyConstructors extends Neo4jTestCase {
 
 	private SpatialDatabaseService spatialService = null;
 	private OSMLayer layer = null;
-	private boolean debug = true;
 
 	protected void setUp(boolean deleteDb, boolean useBatchInserter,
 			boolean autoTx) throws Exception {
@@ -55,40 +57,32 @@ public class ST_TestSelect extends Neo4jTestCase {
 		}
 	}
 
-	@Test
-	public void testSearch() throws Exception {
-
-		Select select = new ST_Select();
-		List<SpatialDatabaseRecord> results = layer.execute(select);
-		assertEquals(2, results.size());
-		if (debug) {
-			printTestResults("testSelect", results);
-		}
+	public void testInsertWithGeomFromText() throws Exception {
+		String wellKnownText = "LINESTRING (30 10, 10 30, 40 40)";
+		String propertyKey = "networklevel";
+		int propertyValue = 15;
+		
+		Insert insert = new ST_GeomFromText(wellKnownText);
+		insert.addProperty(propertyKey, propertyValue);
+		List<SpatialDatabaseRecord> records = this.layer.execute(insert);
+		
+		Node nNode = this.layer.getIndex().get(73l).getGeomNode();
+		
+		assertNotNull(nNode);
+		assertEquals(nNode.getProperty(propertyKey), propertyValue);
+		assertEquals(1, records.size());
 	}
 
 	private void loadTestOsmData(String layerName, int commitInterval)
 			throws Exception {
 		String osmPath = Dataset.OSM_DIR + File.separator + layerName;
-		if (debug) {
-			System.out.println("\n=== Loading layer " + layerName + " from "
-					+ osmPath + " ===");
-		}
+		System.out.println("\n=== Loading layer " + layerName + " from "
+				+ osmPath + " ===");
 		reActivateDatabase(false, true, false);
 		OSMImporter importer = new OSMImporter(layerName);
 		importer.importFile(getBatchInserter(), osmPath);
 		reActivateDatabase(false, false, false);
 		importer.reIndex(graphDb(), commitInterval);
-	}
-
-	private void printTestResults(String mode,
-			List<SpatialDatabaseRecord> results) {
-		System.out.println("----------------------  " + mode
-				+ "  -------------------");
-		for (SpatialDatabaseRecord spatialDatabaseRecord : results) {
-			System.out.println("Id: " + spatialDatabaseRecord.getId() + "; "
-					+ "Geometry:" + spatialDatabaseRecord.getGeometry());
-		}
-		System.out.println("------------------------------------------------");
 	}
 
 }

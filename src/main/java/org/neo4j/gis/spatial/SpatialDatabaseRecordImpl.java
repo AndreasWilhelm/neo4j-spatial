@@ -75,17 +75,7 @@ public class SpatialDatabaseRecordImpl implements SpatialDatabaseRecord {
 		return geomNode;
 	}
 	
-	/**
-	 * This method returns a simple integer representation of the geometry. Some
-	 * geometry encoders store this directly as a property of the geometry node,
-	 * while others might store this information elsewhere in the graph, or
-	 * deduce it from other factors of the data model. See the GeometryEncoder
-	 * for information about mapping from the data model to the geometry.
-	 * 
-	 * @return integer representation of a geometry
-	 * @deprecated This method is of questionable value, since it is better to
-	 *             query the geometry object directly, outside the result
-	 */
+
 	public int getType() {
 		//TODO: Get the type from the geometryEncoder
 		return SpatialDatabaseService.convertJtsClassToGeometryType(getGeometry().getClass());

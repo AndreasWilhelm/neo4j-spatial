@@ -64,7 +64,7 @@ import org.neo4j.graphdb.Node;
  * @author Andreas Wilhelm
  * 
  */
-public class Restriction {
+public class RestrictionImpl {
 
 	// Restriction input value which could be a property value or a key=value
 	// pair.
@@ -89,7 +89,7 @@ public class Restriction {
 	 *            The restriction value which could be just a property or a
 	 *            key=value pair, such as highway=residential.
 	 */
-	public Restriction(RestrictionType restrictionType, String property) {
+	public RestrictionImpl(RestrictionType restrictionType, String property) {
 		this.restrictionType = restrictionType;
 		determineProperty(property);
 	}

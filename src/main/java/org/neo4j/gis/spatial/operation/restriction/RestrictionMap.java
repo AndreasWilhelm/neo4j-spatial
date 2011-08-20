@@ -30,7 +30,7 @@ import org.neo4j.graphdb.Node;
  * @author Andreas Wilhelm
  *
  */
-public class RestrictionMap extends HashMap<String, Restriction>  {
+public class RestrictionMap extends HashMap<String, RestrictionImpl>  {
 	
 	/**
 	 * 
@@ -43,7 +43,7 @@ public class RestrictionMap extends HashMap<String, Restriction>  {
 	 * @param node Return true when the given node has no restriction.
 	 */
 	public boolean determineNode(Node node) {
-		for (Restriction res : this.values()) {
+		for (RestrictionImpl res : this.values()) {
 			if(res.hasRestriction(node)) return false;
 		}
 		return true;

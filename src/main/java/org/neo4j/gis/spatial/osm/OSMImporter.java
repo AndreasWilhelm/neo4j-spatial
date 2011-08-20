@@ -72,10 +72,6 @@ public class OSMImporter implements Constants {
     public static String INDEX_NAME_USER = "user";
     public static String INDEX_NAME_NODE = "node";
     public static String INDEX_NAME_WAY = "node";
-    
-
-    
-    
 
     protected boolean nodesProcessingFinished = false;
     private String layerName;

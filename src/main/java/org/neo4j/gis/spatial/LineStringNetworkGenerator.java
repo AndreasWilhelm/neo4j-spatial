@@ -21,7 +21,7 @@ package org.neo4j.gis.spatial;
 
 import java.util.List;
 
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_Intersect;
 import org.neo4j.graphdb.Node;
 
@@ -98,7 +98,7 @@ public class LineStringNetworkGenerator {
 	protected void addEdgePoint(Node edge, Geometry edgePoint) {
 		if (buffer != null) edgePoint = edgePoint.buffer(buffer.doubleValue());
 		
-		Select search = new ST_Intersect(edgePoint);
+		Search search = new ST_Intersect(edgePoint);
 		pointsLayer.execute(search);
 		List<SpatialDatabaseRecord> results = search.getResults();
 		if (results.size() == 0) {

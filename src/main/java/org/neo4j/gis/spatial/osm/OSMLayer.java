@@ -43,10 +43,10 @@ import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Instances of this class represent the primary layer of the OSM Dataset. It
- * extends the DynamicLayer class becauase the OSM dataset can have many layers.
+ * extends the DynamicLayer class because the OSM dataset can have many layers.
  * Only one is primary, the layer containing all ways. Other layers are dynamic.
  * 
- * @author craig, andreas
+ * @author Craig Taverner, Andreas Wilhelm
  * @since 1.0.0
  */
 public class OSMLayer extends DynamicLayer {
@@ -300,6 +300,8 @@ public class OSMLayer extends DynamicLayer {
 				StopEvaluator.END_OF_GRAPH,
 				ReturnableEvaluator.ALL_BUT_START_NODE, OSMRelation.NODE,
 				Direction.OUTGOING, OSMRelation.NEXT, Direction.OUTGOING);
+		
+		
 
 		for (Node node : traverser.getAllNodes()) {
 			// Delete relationship of the subnode.
@@ -320,8 +322,7 @@ public class OSMLayer extends DynamicLayer {
 		}
 		startNode.delete();
 		
-	}
-	
+	}	
 
 	/**
 	 * Reconnect the relationships between the other geom nodes.
@@ -377,7 +378,7 @@ public class OSMLayer extends DynamicLayer {
 
 		Node geomIndexNode = this.getDatabase().getNodeById(geomNodeId);
 		
-		//TODO: update it and not delete it.
+		//TODO: update really and not delete it and add it.
 		Relationship rel = geomIndexNode.getSingleRelationship(OSMRelation.GEOM, Direction.INCOMING);
 		if(rel != null) {
 			rel.delete();

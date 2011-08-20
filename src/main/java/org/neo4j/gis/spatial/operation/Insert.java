@@ -34,7 +34,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * @author Andreas Wilhelm
  */
-public interface Insert extends SpatialTypeOperation {
+public interface Insert extends SpatialQuery {
 
 	/**
 	 * Add a property to a single node.

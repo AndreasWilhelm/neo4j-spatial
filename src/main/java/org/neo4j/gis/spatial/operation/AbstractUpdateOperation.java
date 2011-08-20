@@ -20,12 +20,12 @@
 package org.neo4j.gis.spatial.operation;
 
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
-import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionImpl;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 
 /**
  * <p>The <code>AbstractUpdateOperation</code> is the abstract implementation of the
- * {@link Update}, {@link Delete} and {@link Select} interface.</p>
+ * {@link Update}, {@link Delete} and {@link Search} interface.</p>
  * 
  * <p>
  * This class should be extend by spatial type implementation which should be
@@ -49,7 +49,7 @@ public abstract class AbstractUpdateOperation extends AbstractDeleteOperation im
 	 * @see Update#addRestriction(RestrictionType, String)
 	 */
 	public void addRestriction(RestrictionType restrictionType, String value) {
-		Restriction restriction = new Restriction(restrictionType, value);
+		RestrictionImpl restriction = new RestrictionImpl(restrictionType, value);
 		this.restrictions.put(restriction.getKey(), restriction);
 	}
 }

@@ -21,6 +21,7 @@ package org.neo4j.gis.spatial;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.neo4j.gis.spatial.RTreeIndex.RecordCounter;
 import org.neo4j.gis.spatial.geotools.data.Neo4jFeatureBuilder;
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.DynamicRelationshipType;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -159,31 +160,6 @@ public class DynamicLayer extends EditableLayerImpl {
             }
         }
 
-        private class FilteredSearch implements SearchQuery {
-            private SearchQuery delegate;
-            public FilteredSearch(SearchQuery delegate) {
-                this.delegate = delegate;
-            }
-
-            public List<SpatialDatabaseRecord> getResults() {
-                return delegate.getResults();
-            }
-
-            public void setLayer(Layer layer) {
-                delegate.setLayer(layer);
-            }
-
-            public boolean needsToVisit(Envelope indexNodeEnvelope) {
-                return delegate.needsToVisit(indexNodeEnvelope);
-            }
-
-            public void onIndexReference(Node geomNode) {
-                if (queryLeafNode(geomNode)) {
-                    delegate.onIndexReference(geomNode);
-                }
-            }
-        }
-
         private boolean queryIndexNode(Envelope indexNodeEnvelope) {
             return true;
         }
@@ -201,9 +177,6 @@ public class DynamicLayer extends EditableLayerImpl {
 			return counter.getResult();
 		}
 
-		public void executeSearch(final SearchQuery search) {
-			index.executeSearch(new FilteredSearch(search));
-		}
     }
 
 	/**
@@ -318,30 +291,6 @@ public class DynamicLayer extends EditableLayerImpl {
 			index.visit(counter, index.getIndexRoot());
 			return counter.getResult();
 		}
-
-		public void executeSearch(final SearchQuery search) {
-			index.executeSearch(new SearchQuery() {
-
-				public List<SpatialDatabaseRecord> getResults() {
-					return search.getResults();
-				}
-
-				public void setLayer(Layer layer) {
-					search.setLayer(layer);
-				}
-
-				public boolean needsToVisit(Envelope indexNodeEnvelope) {
-					return search.needsToVisit(indexNodeEnvelope);
-				}
-
-				public void onIndexReference(Node geomNode) {
-					if (queryLeafNode(geomNode)) {
-						search.onIndexReference(geomNode);
-					}
-				}
-			});
-		}
-
 	}
 
 	/**
@@ -490,7 +439,7 @@ public class DynamicLayer extends EditableLayerImpl {
 		}
 
 	
-		public List<SpatialDatabaseRecord> execute(Select select) {
+		public Iterator<SpatialDatabaseRecord> execute(Search select) {
 			// TODO Auto-generated method stub
 			return null;
 		}

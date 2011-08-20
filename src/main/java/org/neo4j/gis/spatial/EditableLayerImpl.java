@@ -164,7 +164,6 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 						OperationType.INSERT, spatialNode, this, records);
 
 				// TODO spatialtype props and realtions..
-				// TODO mehrere geoms ST_Network(List<Geometry>);
 
 				// Create relationships.
 				for (NodeRelation relation : relationships) {
@@ -196,7 +195,7 @@ public class EditableLayerImpl extends DefaultLayer implements EditableLayer {
 	}
 
 	/**
-	 * workaround...
+	 * workaround...should be replaced as soon the new rtreeindex is ready..
 	 * 
 	 * @return
 	 */

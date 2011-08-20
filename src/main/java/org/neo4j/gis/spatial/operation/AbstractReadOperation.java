@@ -19,17 +19,14 @@
  */
 package org.neo4j.gis.spatial.operation;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.neo4j.gis.spatial.SpatialDatabaseRecord;
-import org.neo4j.gis.spatial.operation.restriction.Restriction;
+import org.neo4j.gis.spatial.operation.restriction.RestrictionImpl;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionMap;
 import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
 
 /**
  * <p>
  * The <code>AbstractReadOperation</code> is the abstract implementation of the
- * {@link Select} interface.
+ * {@link Search} interface.
  * </p>
  * 
  * <p>
@@ -41,37 +38,23 @@ import org.neo4j.gis.spatial.operation.restriction.RestrictionType;
  * 
  */
 public abstract class AbstractReadOperation extends AbstractOperation
-		implements Select {
-
-	// Contains the search results.
-	private List<SpatialDatabaseRecord> results;
+		implements Search {
 
 	/**
-	 * Default constructor.
-	 */
-	public AbstractReadOperation() {
-		this.results = new ArrayList<SpatialDatabaseRecord>();
-	}
-
-	/**
-	 * @see Select#getResults()
-	 */
-	public List<SpatialDatabaseRecord> getResults() {
-		return this.results;
-	}
-
-	/**
-	 * @see Select#addRestriction(RestrictionType, String)
+	 * @see Search#addRestriction(RestrictionType, String)
 	 */
 	public void addRestriction(RestrictionType restrictionType, String value) {
-		Restriction restriction = new Restriction(restrictionType, value);
+		RestrictionImpl restriction = new RestrictionImpl(restrictionType, value);
 		this.restrictions.put(restriction.getKey(), restriction);
 	}
 	
 	/**
-	 * @see Select#getRestrictions()
+	 * @see Search#getRestrictions()
 	 */
 	public RestrictionMap getRestrictions() {
 		return this.restrictions;
 	}
+	
+	
+	
 }

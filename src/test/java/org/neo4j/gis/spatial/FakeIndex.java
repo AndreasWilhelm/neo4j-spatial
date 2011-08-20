@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.graphdb.Node;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -101,7 +101,7 @@ public class FakeIndex implements SpatialIndexReader, Constants {
 	}
 
 
-	public List<SpatialDatabaseRecord> execute(Select select) {
+	public List<SpatialDatabaseRecord> execute(Search select) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.neo4j.gis.spatial.operation.Select;
+import org.neo4j.gis.spatial.operation.Search;
 import org.neo4j.gis.spatial.query.geometry.processing.ST_PointsWithinOrthodromicDistance;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -46,19 +46,19 @@ public class SimplePointLayer extends EditableLayerImpl {
 		Envelope extent = new Envelope(point);
 		extent.expandToInclude(point.x - width / 2.0, point.y - height / 2.0);
 		extent.expandToInclude(point.x + width / 2.0, point.y + height / 2.0);
-		Select distanceQuery = new ST_PointsWithinOrthodromicDistance(point,
+		Search distanceQuery = new ST_PointsWithinOrthodromicDistance(point,
 				extent);
 		return findClosestPoints(distanceQuery);
 	}
 
 	public List<SpatialDatabaseRecord> findClosestPointsTo(Coordinate point,
 			double distanceInKm) {
-		Select distanceQuery = new ST_PointsWithinOrthodromicDistance(point,
+		Search distanceQuery = new ST_PointsWithinOrthodromicDistance(point,
 				distanceInKm);
 		return findClosestPoints(distanceQuery);
 	}
 
-	private List<SpatialDatabaseRecord> findClosestPoints(Select distanceQuery) {
+	private List<SpatialDatabaseRecord> findClosestPoints(Search distanceQuery) {
 		this.execute(distanceQuery);
 		List<SpatialDatabaseRecord> results = distanceQuery.getResults();
 		Collections.sort(results, new Comparator<SpatialDatabaseRecord>() {
