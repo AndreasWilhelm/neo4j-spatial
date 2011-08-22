@@ -21,107 +21,41 @@ package org.neo4j.gis.spatial.query.geometry.outputs;
 
 import java.util.List;
 
+import org.geotools.geojson.geom.GeometryJSON;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseRecordImpl;
 import org.neo4j.gis.spatial.operation.AbstractReadOperation;
 import org.neo4j.gis.spatial.operation.OperationType;
-import org.neo4j.gis.spatial.operation.SpatialQuery;
+import org.neo4j.gis.spatial.operation.SpatialTypeOperation;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 
 import com.vividsolutions.jts.geom.Geometry;
 
 /**
- * The <code>ST_AsGeoJSON</code> class represent the {@link Geometry} and/or the
- * relationship(with the relationship properties) and the node properties as
- * GeoJSON.
+ * The <code>ST_AsGeoJSON</code> class represent the {@link Geometry} as GeoJSON.
  * 
  * @author Andreas Wilhelm
  * 
  */
 public class ST_AsGeoJSON extends AbstractReadOperation {
 
-	// Identifier to add node properties to the GeoJSON.
-	private boolean enableProperties = false;
-	// Identifier to add relationships and the relation properties to the
-	// GeoJSON.
-	private boolean enableRelationships = false;
-
 	/**
-	 * Create a valid GeoJSON String that contains only the geometry.
-	 */
-	public ST_AsGeoJSON() {
-	}
-
-	/**
-	 * Create a valid GeoJSON String that contains the geometry and the node
-	 * properties/and or relationships with its property values.
-	 * 
-	 * @param enableProperties
-	 *            add node properties to the GeoJSON.
-	 * @param enableRelationships
-	 *            add relationships and its properties to the GeoJSON.
-	 */
-	public ST_AsGeoJSON(boolean enableProperties, boolean enableRelationships) {
-		this.enableProperties = enableProperties;
-		this.enableRelationships = enableRelationships;
-	}
-
-	/**
-	 * @see SpatialQuery#onIndexReference(OperationType, Node, Layer,
+	 * @see SpatialTypeOperation#onIndexReference(OperationType, Node, Layer,
 	 *      List)
 	 */
 	public SpatialDatabaseRecord onIndexReference(OperationType type,
 			Node node, Layer layer, List<SpatialDatabaseRecord> records) {
+		GeometryJSON gjson = new GeometryJSON();
 
 		Geometry geom = decodeGeometry(node);
-		StringBuilder relations = new StringBuilder();
-		StringBuilder nodeProperties = new StringBuilder();
+		String geojson = gjson.toString(geom);
 
-		// Determine if the properties should be added.
-		if (this.enableProperties) {
-			// Add every property key-value pair.
-			for (String key : node.getPropertyKeys()) {
-				nodeProperties.append(key + ":" + node.getProperty(key));
-			}
-		}
-
-		// Determine if the relations should be added.
-		if (this.enableRelationships) {
-			// Add every Relationship.
-			for (Relationship rel : node.getRelationships()) {
-				relations.append("RelationshipType" + ":" + rel.getType());
-				for (String relkey : rel.getPropertyKeys()) {
-					relations.append(relkey + ":" + node.getProperty(relkey));
-				}
-			}
-		}
-
-		
 		SpatialDatabaseRecord record = new SpatialDatabaseRecordImpl(layer,
 				node);
-
-		record.setResult(this.convert2json(geom, nodeProperties, relations));
+		record.setResult(geojson);
 		records.add(record);
 		return record;
-	}
-
-	/**
-	 * Generate a GeoJSON from a given {@link Geometry} and/or relationships and node properties.
-	 * 
-	 * @param geometry
-	 *            the Geometry to convert.
-	 * @param properties
-	 * @param relations
-	 * @return the converted geometry as a valid GeoJSON.
-	 */
-	private String convert2json(Geometry geometry,
-			StringBuilder nodeProperties, StringBuilder relations) {
-
-		
-		
-		return null;
 	}
 
 }
